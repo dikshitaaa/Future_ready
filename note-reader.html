@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Note Reader | FutureReady</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            min-height: 100vh;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            padding: 20px;
+        }
+        .note-paper {
+            background: linear-gradient(white, #fef9e6);
+            max-width: 800px;
+            margin: 50px auto;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        .note-paper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 30px;
+            background: linear-gradient(135deg, #f5a623, #f7d44a);
+            border-radius: 20px 20px 0 0;
+        }
+        .note-header {
+            padding: 50px 40px 20px 40px;
+            border-bottom: 2px dashed #e2e8f0;
+        }
+        .note-title {
+            font-size: 32px;
+            font-weight: bold;
+            color: #1e293b;
+            margin-bottom: 15px;
+            font-family: 'Georgia', serif;
+        }
+        .note-meta {
+            display: flex;
+            gap: 20px;
+            color: #64748b;
+            font-size: 12px;
+            font-family: 'Arial', sans-serif;
+            flex-wrap: wrap;
+        }
+        .note-content {
+            padding: 30px 40px;
+            font-size: 17px;
+            line-height: 1.8;
+            color: #334155;
+            min-height: 350px;
+            font-family: 'Georgia', serif;
+            white-space: pre-wrap;
+        }
+        .note-footer {
+            padding: 20px 40px 40px 40px;
+            border-top: 1px solid #f1f5f9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fef9e6;
+            border-radius: 0 0 20px 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .btn-back {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-back:hover {
+            transform: scale(1.05);
+        }
+        .btn-edit {
+            background: #f59e0b;
+            color: white;
+            padding: 10px 25px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            border: none;
+        }
+        .btn-edit:hover {
+            background: #d97706;
+            transform: scale(1.05);
+        }
+        .btn-delete {
+            background: #ef4444;
+            color: white;
+            padding: 10px 25px;
+            border-radius: 40px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-delete:hover {
+            background: #dc2626;
+            transform: scale(1.05);
+        }
+        .not-found {
+            text-align: center;
+            padding: 60px 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            max-width: 500px;
+            margin: 50px auto;
+        }
+        .not-found h2 {
+            font-size: 28px;
+            margin-bottom: 15px;
+            color: white;
+        }
+        .not-found p {
+            color: #9ca3af;
+            margin-bottom: 25px;
+        }
+        .not-found a {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 40px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .bookmark-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 28px;
+            opacity: 0.3;
+        }
+        @media (max-width: 600px) {
+            .note-paper { margin: 20px; }
+            .note-title { font-size: 24px; }
+            .note-content { font-size: 15px; padding: 20px; }
+            .note-header { padding: 40px 20px 15px 20px; }
+            .note-footer { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="noteContainer"></div>
+
+<script>
+    // Get note id from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const noteId = urlParams.get('id');
+
+    // Load notes from localStorage
+    let notes = [];
+    const saved = localStorage.getItem('myNotes');
+    if (saved) {
+        try {
+            notes = JSON.parse(saved);
+        } catch(e) {
+            notes = [];
+        }
+    }
+
+    const note = notes.find(n => n.id === noteId);
+    const container = document.getElementById('noteContainer');
+
+    function escapeHtml(text) {
+        if (!text) return '';
+        return text.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    function countWords(text) {
+        if (!text) return 0;
+        return text.trim().split(/\s+/).filter(w => w.length > 0).length;
+    }
+
+    function getTimeAgo(dateStr) {
+        if (!dateStr) return 'Recently';
+        return dateStr.split(' ')[0];
+    }
+
+    function deleteNoteAndGoBack(id) {
+        if (confirm('Are you sure you want to delete this note?')) {
+            let allNotes = [];
+            const savedNotes = localStorage.getItem('myNotes');
+            if (savedNotes) {
+                try {
+                    allNotes = JSON.parse(savedNotes);
+                } catch(e) {}
+            }
+            allNotes = allNotes.filter(n => n.id !== id);
+            localStorage.setItem('myNotes', JSON.stringify(allNotes));
+            window.location.href = 'notes-diary.html';
+        }
+    }
+
+    function editNoteAndGoBack(id) {
+        window.location.href = 'notes-diary.html?edit=' + id;
+    }
+
+    if (!note) {
+        container.innerHTML = `
+            <div class="not-found">
+                <div style="font-size: 60px; margin-bottom: 15px;">📭</div>
+                <h2>Note Not Found</h2>
+                <p>The note you're looking for doesn't exist or has been deleted.</p>
+                <a href="notes-diary.html">← Back to Notes Diary</a>
+            </div>
+        `;
+    } else {
+        container.innerHTML = `
+            <div class="note-paper">
+                <div class="bookmark-icon">🔖</div>
+                <div class="note-header">
+                    <h1 class="note-title">${escapeHtml(note.title)}</h1>
+                    <div class="note-meta">
+                        <span>📅 ${escapeHtml(note.date)}</span>
+                        <span>📝 ${countWords(note.content)} words</span>
+                        <span>⭐ ${getTimeAgo(note.date)}</span>
+                    </div>
+                </div>
+                <div class="note-content">
+                    ${escapeHtml(note.content) || '<em style="color: #94a3b8;">No content written yet.</em>'}
+                </div>
+                <div class="note-footer">
+                    <a href="notes-diary.html" class="btn-back">← Back to Notes</a>
+                    <div style="display: flex; gap: 12px;">
+                        <button onclick="editNoteAndGoBack('${note.id}')" class="btn-edit">✏️ Edit</button>
+                        <button onclick="deleteNoteAndGoBack('${note.id}')" class="btn-delete">🗑️ Delete</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    window.deleteNoteAndGoBack = deleteNoteAndGoBack;
+    window.editNoteAndGoBack = editNoteAndGoBack;
+</script>
+</body>
+</html>

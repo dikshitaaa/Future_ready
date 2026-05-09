@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Dashboard | LOGRA</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    * { font-family: 'Inter', sans-serif; }
+    body {
+        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+        background-attachment: fixed;
+        color: white;
+        min-height: 100vh;
+    }
+    .dashboard-card {
+        background: rgba(255,255,255,0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 20px;
+        transition: all 0.3s;
+    }
+    .dashboard-card:hover {
+        transform: translateY(-3px);
+        border-color: #3b82f6;
+    }
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: bold;
+        background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<div class="sticky top-0 z-50 backdrop-blur-xl bg-black/40 border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+            <div class="text-2xl">📊</div>
+            <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">My Dashboard</h1>
+        </div>
+        <div class="flex gap-3">
+            <a href="index.html" class="bg-white/10 hover:bg-white/20 px-5 py-2 rounded-full transition">🏠 Home</a>
+            <a href="logout.html" id="logoutBtn" class="bg-red-600/50 hover:bg-red-600 px-5 py-2 rounded-full transition">🚪 Logout</a>
+        </div>
+    </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-6 py-10">
+    <!-- Welcome Section -->
+    <div class="text-center mb-10">
+        <div class="text-6xl mb-3">👋</div>
+        <h1 class="text-4xl font-black bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-2" id="welcomeName">Welcome!</h1>
+        <p class="text-gray-300">Track your career journey, saved careers, and progress</p>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-5 mb-10">
+        <div class="dashboard-card p-5 text-center">
+            <div class="text-3xl mb-2">⭐</div>
+            <div class="stat-number" id="savedCount">0</div>
+            <div class="text-gray-400 text-sm">Saved Careers</div>
+        </div>
+        <div class="dashboard-card p-5 text-center">
+            <div class="text-3xl mb-2">👁️</div>
+            <div class="stat-number" id="viewedCount">0</div>
+            <div class="text-gray-400 text-sm">Careers Viewed</div>
+        </div>
+        <div class="dashboard-card p-5 text-center">
+            <div class="text-3xl mb-2">🏆</div>
+            <div class="stat-number" id="badgeCount">0</div>
+            <div class="text-gray-400 text-sm">Badges Earned</div>
+        </div>
+        <div class="dashboard-card p-5 text-center">
+            <div class="text-3xl mb-2">🔥</div>
+            <div class="stat-number" id="streakCount">0</div>
+            <div class="text-gray-400 text-sm">Day Streak</div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Left Column - Saved Careers -->
+        <div class="lg:col-span-2">
+            <div class="dashboard-card p-6">
+                <h2 class="text-xl font-bold mb-4 flex items-center gap-2">⭐ Saved Careers</h2>
+                <div id="savedCareersList" class="space-y-3">
+                    <div class="text-center text-gray-400 py-8">No saved careers yet. Click ⭐ on any career to save it!</div>
+                </div>
+            </div>
+
+            <div class="dashboard-card p-6 mt-6">
+                <h2 class="text-xl font-bold mb-4 flex items-center gap-2">🕐 Recently Viewed</h2>
+                <div id="recentList" class="flex flex-wrap gap-3">
+                    <div class="text-gray-400">No recent careers explored</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column - Quick Actions & Progress -->
+        <div>
+            <div class="dashboard-card p-6 mb-6">
+                <h2 class="text-xl font-bold mb-4 flex items-center gap-2">⚡ Quick Actions</h2>
+                <div class="space-y-3">
+                    <a href="quiz.html" class="block bg-gradient-to-r from-blue-600 to-purple-600 p-3 rounded-xl text-center hover:scale-105 transition">📝 Take Career Quiz</a>
+                    <a href="careers.html" class="block bg-white/10 p-3 rounded-xl text-center hover:bg-white/20 transition">🎯 Browse All Careers</a>
+                    <a href="resume-builder.html" class="block bg-white/10 p-3 rounded-xl text-center hover:bg-white/20 transition">📄 Build Resume</a>
+                    <a href="daily-challenge.html" class="block bg-white/10 p-3 rounded-xl text-center hover:bg-white/20 transition">🔥 Daily Challenge</a>
+                </div>
+            </div>
+
+            <div class="dashboard-card p-6">
+                <h2 class="text-xl font-bold mb-3 flex items-center gap-2">💡 Daily Tip</h2>
+                <p id="dailyTip" class="text-gray-300 text-sm leading-relaxed">The best time to start is now! Every expert was once a beginner. Keep learning and growing! 🚀</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Get current user
+    let currentUser = JSON.parse(localStorage.getItem('lograUser'));
+    
+    if (!currentUser) {
+        // Redirect to login if not logged in
+        window.location.href = 'code.html';
+    }
+    
+    // Display welcome name
+    document.getElementById('welcomeName').innerHTML = `Welcome, ${currentUser.name.split(' ')[0]}! 👋`;
+    
+    // Get data from localStorage
+    let savedCareers = JSON.parse(localStorage.getItem('savedCareers') || '[]');
+    let exploredCareers = JSON.parse(localStorage.getItem('exploredCareers') || '[]');
+    let careerBadges = JSON.parse(localStorage.getItem('careerBingoBadges') || '{}');
+    let challengeStats = JSON.parse(localStorage.getItem('dailyChallengeStats') || '{streak:0}');
+    
+    // Calculate total badges
+    let totalBadges = 0;
+    for (let career in careerBadges) {
+        totalBadges += careerBadges[career].length;
+    }
+    
+    // Update stats
+    document.getElementById('savedCount').innerText = savedCareers.length;
+    document.getElementById('viewedCount').innerText = exploredCareers.length;
+    document.getElementById('badgeCount').innerText = totalBadges;
+    document.getElementById('streakCount').innerText = challengeStats.streak || 0;
+    
+    // Render saved careers
+    function renderSavedCareers() {
+        const container = document.getElementById('savedCareersList');
+        if (savedCareers.length === 0) {
+            container.innerHTML = '<div class="text-center text-gray-400 py-8">No saved careers yet. Click ⭐ on any career to save it!</div>';
+            return;
+        }
+        container.innerHTML = savedCareers.map(career => `
+            <div class="bg-white/5 p-3 rounded-xl flex justify-between items-center">
+                <a href="roadmap.html?career=${encodeURIComponent(career)}" class="flex-1 hover:text-blue-400 transition">
+                    🎯 ${career}
+                </a>
+                <button onclick="removeSaved('${career}')" class="text-red-400 hover:text-red-300 px-3 py-1 rounded-full text-sm">Remove</button>
+            </div>
+        `).join('');
+    }
+    
+    // Remove saved career
+    function removeSaved(career) {
+        savedCareers = savedCareers.filter(c => c !== career);
+        localStorage.setItem('savedCareers', JSON.stringify(savedCareers));
+        renderSavedCareers();
+        document.getElementById('savedCount').innerText = savedCareers.length;
+    }
+    
+    // Render recent careers
+    function renderRecent() {
+        const container = document.getElementById('recentList');
+        if (exploredCareers.length === 0) {
+            container.innerHTML = '<div class="text-gray-400">No recent careers explored</div>';
+            return;
+        }
+        let recent = exploredCareers.slice(-6).reverse();
+        container.innerHTML = recent.map(career => `
+            <a href="roadmap.html?career=${encodeURIComponent(career)}" class="bg-white/10 px-4 py-2 rounded-full hover:bg-white/20 transition text-sm">
+                ${career}
+            </a>
+        `).join('');
+    }
+    
+    // Daily tips
+    const tips = [
+        "🎯 Set small daily goals - consistency beats intensity!",
+        "📚 Spend at least 30 minutes learning something new every day.",
+        "💡 The best investment you can make is in yourself!",
+        "🚀 Don't wait for opportunities - create them!",
+        "⭐ Save careers you love and review them weekly.",
+        "📝 Take the career quiz to discover your perfect path!",
+        "🔗 Network with professionals in your dream field.",
+        "🎓 Certifications can boost your career by 40%!"
+    ];
+    document.getElementById('dailyTip').innerHTML = tips[Math.floor(Math.random() * tips.length)];
+    
+    // Logout function
+    document.getElementById('logoutBtn').addEventListener('click', function(e) {
+        e.preventDefault();
+        localStorage.removeItem('lograUser');
+        window.location.href = 'index.html';
+    });
+    
+    // Make functions global
+    window.removeSaved = removeSaved;
+    
+    // Initialize
+    renderSavedCareers();
+    renderRecent();
+</script>
+</body>
+</html>

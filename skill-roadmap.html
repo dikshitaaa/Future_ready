@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Complete Career Roadmaps | FutureReady</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    * { font-family: 'Inter', sans-serif; }
+    body {
+        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+        background-attachment: fixed;
+        color: white;
+        min-height: 100vh;
+    }
+    .skill-card {
+        background: rgba(255,255,255,0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.1);
+        transition: all 0.3s;
+        cursor: pointer;
+        border-radius: 16px;
+    }
+    .skill-card:hover {
+        transform: translateY(-5px);
+        border-color: #3b82f6;
+        box-shadow: 0 10px 30px rgba(59,130,246,0.2);
+    }
+    .skill-card.active {
+        border-color: #3b82f6;
+        background: rgba(59,130,246,0.2);
+    }
+    .roadmap-step {
+        background: rgba(255,255,255,0.03);
+        border-left: 4px solid #3b82f6;
+        transition: 0.2s;
+        cursor: pointer;
+        border-radius: 12px;
+    }
+    .roadmap-step:hover {
+        background: rgba(59,130,246,0.1);
+        transform: translateX(8px);
+    }
+    .interview-item {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.1);
+        transition: 0.2s;
+        border-radius: 12px;
+        padding: 12px;
+        margin-bottom: 8px;
+    }
+    .interview-item:hover {
+        background: rgba(16,185,129,0.1);
+        transform: translateX(5px);
+        border-color: #10b981;
+    }
+    .category-tab {
+        transition: all 0.2s;
+        cursor: pointer;
+        border-radius: 40px;
+    }
+    .category-tab.active {
+        background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    }
+    .btn-interview {
+        background: rgba(16,185,129,0.2);
+        border: 1px solid rgba(16,185,129,0.3);
+        transition: all 0.2s;
+        cursor: pointer;
+    }
+    .btn-interview:hover {
+        background: rgba(16,185,129,0.4);
+        transform: scale(1.02);
+    }
+    .modal {
+        background: rgba(0,0,0,0.95);
+        backdrop-filter: blur(10px);
+    }
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<div class="sticky top-0 z-50 backdrop-blur-xl bg-black/40 border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <div class="text-2xl">📚</div>
+            <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Complete Career Roadmaps</h1>
+        </div>
+        <div class="flex gap-3">
+            <a href="index.html" class="bg-white/10 hover:bg-white/20 px-5 py-2 rounded-full transition">🏠 Home</a>
+            <a href="dashboard.html" class="bg-gradient-to-r from-blue-600 to-purple-600 px-5 py-2 rounded-full hover:scale-105 transition">📊 Dashboard</a>
+        </div>
+    </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-6 py-10">
+    <div class="text-center mb-10">
+        <div class="text-6xl mb-3">📖</div>
+        <h1 class="text-5xl font-black bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-3">
+            Complete Career Roadmaps
+        </h1>
+        <p class="text-gray-300 text-lg">Choose any career • Get roadmap • Practice interview questions</p>
+    </div>
+
+    <!-- Category Tabs -->
+    <div class="flex flex-wrap justify-center gap-3 mb-8">
+        <button class="category-tab active px-5 py-2 rounded-full" data-cat="tech">💻 Technology</button>
+        <button class="category-tab bg-white/10 hover:bg-white/20 px-5 py-2 rounded-full" data-cat="medical">🩺 Medical</button>
+        <button class="category-tab bg-white/10 hover:bg-white/20 px-5 py-2 rounded-full" data-cat="engineering">⚙️ Engineering</button>
+        <button class="category-tab bg-white/10 hover:bg-white/20 px-5 py-2 rounded-full" data-cat="government">🏛️ Government</button>
+        <button class="category-tab bg-white/10 hover:bg-white/20 px-5 py-2 rounded-full" data-cat="commerce">💼 Commerce</button>
+        <button class="category-tab bg-white/10 hover:bg-white/20 px-5 py-2 rounded-full" data-cat="arts">🎨 Arts</button>
+        <button class="category-tab bg-white/10 hover:bg-white/20 px-5 py-2 rounded-full" data-cat="other">🌍 Other</button>
+    </div>
+
+    <!-- Category Grids -->
+    <div id="techGrid" class="category-grid grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-10"></div>
+    <div id="medicalGrid" class="category-grid grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-10 hidden"></div>
+    <div id="engineeringGrid" class="category-grid grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-10 hidden"></div>
+    <div id="governmentGrid" class="category-grid grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-10 hidden"></div>
+    <div id="commerceGrid" class="category-grid grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-10 hidden"></div>
+    <div id="artsGrid" class="category-grid grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-10 hidden"></div>
+    <div id="otherGrid" class="category-grid grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-10 hidden"></div>
+
+    <!-- Roadmap Display -->
+    <div class="bg-white/5 rounded-2xl p-8">
+        <div id="skillTitle" class="text-3xl font-bold text-blue-400 mb-6 flex items-center gap-3">
+            <span>💻</span> Software Developer Roadmap
+        </div>
+        
+        <!-- Progress Bar -->
+        <div class="mb-6 p-4 bg-white/5 rounded-xl">
+            <div class="flex justify-between mb-2">
+                <span class="text-sm">Learning Progress</span>
+                <span id="progressPercent" class="text-sm text-blue-400">0%</span>
+            </div>
+            <div class="h-2 bg-white/20 rounded-full overflow-hidden">
+                <div id="progressFill" class="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full" style="width: 0%"></div>
+            </div>
+            <p class="text-xs text-gray-400 mt-2">✅ Click on steps to mark as completed</p>
+        </div>
+        
+        <div id="roadmapContent" class="space-y-3 mb-6"></div>
+        
+        <!-- Interview Questions Button -->
+        <div class="mt-6 text-center">
+            <button id="showInterviewBtn" class="btn-interview px-6 py-3 rounded-full font-semibold inline-flex items-center gap-2">
+                📋 View Interview Questions
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Interview Questions Modal -->
+<div id="interviewModal" class="fixed inset-0 modal hidden items-center justify-center z-[100] p-4">
+    <div class="w-full max-w-3xl bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl border border-green-500/30 max-h-[80vh] overflow-y-auto">
+        <div class="sticky top-0 bg-gradient-to-r from-green-600 to-emerald-600 p-4 rounded-t-2xl flex justify-between items-center">
+            <h2 id="modalTitle" class="text-xl font-bold">📋 Interview Questions</h2>
+            <button id="closeModalBtn" class="text-white text-2xl hover:scale-110 transition">&times;</button>
+        </div>
+        <div id="modalContent" class="p-5 space-y-3"></div>
+    </div>
+</div>
+
+<script>
+    // Complete Career Data - ALL 60+ CAREERS
+    const careersData = {
+        // ========== TECHNOLOGY (15 careers) ==========
+        "Software Developer": {
+            icon: "💻", steps: ["Learn Programming Fundamentals", "Master Data Structures & Algorithms", "Version Control with Git", "Database Management", "OOP & Design Patterns", "Build REST APIs", "Build 5+ Projects", "Prepare for Interviews", "Apply for Jobs"],
+            questions: ["Tell me about yourself", "Why do you want to be a developer?", "Explain OOP concepts", "Difference between abstract class and interface?", "Explain polymorphism", "Stack vs Queue?", "Binary search algorithm", "Time complexity of quicksort?", "Normalization in databases", "SQL vs NoSQL?", "Explain REST API", "GET vs POST?", "What is MVC?", "What is dependency injection?", "Explain SOLID principles", "Git vs GitHub?", "What is a deadlock?", "Multithreading vs multiprocessing?", "Your greatest strength?", "Why should we hire you?"]
+        },
+        "Web Developer": {
+            icon: "🌐", steps: ["HTML5 & CSS3", "Responsive Design", "JavaScript ES6+", "React.js", "Node.js & Express", "MongoDB/PostgreSQL", "Authentication", "Deployment", "Build Portfolio"],
+            questions: ["HTML5 vs HTML?", "Explain CSS box model", "Flexbox vs Grid?", "How to center a div?", "What is responsive design?", "Explain media queries", "var vs let vs const?", "Explain closures", "What is event loop?", "Promises vs async/await?", "React vs Angular?", "Explain React hooks", "What is virtual DOM?", "Props vs state?", "What is Redux?", "MongoDB vs PostgreSQL?", "Explain JWT", "What is CI/CD?"]
+        },
+        "App Developer": {
+            icon: "📱", steps: ["Java/Kotlin or Swift", "Mobile UI/UX", "Flutter/React Native", "State Management", "REST APIs & Firebase", "Build Apps", "Testing", "Publish App"],
+            questions: ["Android Activity lifecycle", "Activity vs Fragment?", "What is Intent?", "RecyclerView?", "Serializable vs Parcelable?", "MVVM architecture", "ViewModel and LiveData", "Room Database?", "Dependency injection?", "iOS ViewController lifecycle", "Optionals in Swift", "Delegation pattern", "Core Data?", "Auto Layout?", "Flutter vs React Native?"]
+        },
+        "AI Engineer": {
+            icon: "🤖", steps: ["Advanced Python", "Mathematics", "Machine Learning", "Deep Learning", "Computer Vision/NLP", "MLOps", "Deploy Models", "Kaggle"],
+            questions: ["Bias vs variance?", "What is overfitting?", "Confusion matrix?", "Cross-validation?", "Bagging vs boosting?", "Gradient descent?", "L1 vs L2 regularization?", "Decision tree algorithm", "What is SVM?", "Explain PCA", "Neural network?", "Activation functions", "Backpropagation?", "CNN architecture", "RNN vs LSTM?", "Transfer learning?", "Transformer architecture", "What is GAN?"]
+        },
+        "Data Scientist": {
+            icon: "📊", steps: ["Python Basics", "Statistics", "Data Wrangling", "Visualization", "Machine Learning", "Big Data", "Portfolio"],
+            questions: ["Supervised vs Unsupervised?", "p-value?", "Normal distribution?", "Hypothesis testing?", "Correlation vs causation?", "Standard deviation?", "Central limit theorem?", "Confidence interval?", "ANOVA test?", "Linear regression?", "Bayesian statistics?", "Data wrangling?", "Feature engineering?", "Missing values handling?", "Outlier detection?", "EDA process?", "A/B testing?", "Time series forecasting?"]
+        },
+        "Cyber Security Analyst": {
+            icon: "🔒", steps: ["Networking", "Linux", "Security Tools", "Web Security", "Cryptography", "Certifications", "Practice CTF"],
+            questions: ["What is CIA triad?", "Symmetric vs asymmetric encryption?", "What is firewall?", "IDS vs IPS?", "What is DDoS attack?", "Explain SQL injection", "What is XSS?", "Explain CSRF", "What is phishing?", "Man-in-the-middle attack?", "Hashing vs encryption?", "SSL/TLS handshake?", "What is VPN?", "Port scanning?", "Wireshark usage?", "Penetration testing?", "Social engineering?"]
+        },
+        "Cloud Engineer": {
+            icon: "☁️", steps: ["Networking", "Linux", "Docker", "AWS/Azure/GCP", "Kubernetes", "Terraform", "CI/CD", "Get Certified"],
+            questions: ["What is cloud computing?", "IaaS vs PaaS vs SaaS?", "What is EC2?", "What is S3?", "Explain VPC", "What is IAM?", "RDS vs DynamoDB?", "What is Lambda?", "CloudFormation vs Terraform?", "What is Route53?", "ELB and Auto Scaling?", "What is CloudFront?", "What is Docker?", "Docker vs VM?", "What is Kubernetes?", "What is CI/CD pipeline?"]
+        },
+        "Machine Learning Engineer": {
+            icon: "🤖", steps: ["Python Advanced", "Mathematics", "ML Algorithms", "Deep Learning", "Model Deployment", "MLOps", "Kaggle"],
+            questions: ["Bias-variance tradeoff", "Regularization L1/L2", "Gradient descent variants", "Cross-validation methods", "Ensemble methods", "Feature selection", "Hyperparameter tuning", "Model evaluation metrics", "Neural network architecture", "Loss functions", "Optimizers", "Batch vs stochastic gradient descent", "Overfitting solutions", "Data augmentation", "Transfer learning", "Model monitoring", "ML pipeline"]
+        },
+        "DevOps Engineer": {
+            icon: "⚙️", steps: ["Linux Admin", "Scripting", "Docker", "Kubernetes", "CI/CD", "Cloud", "Monitoring", "Security"],
+            questions: ["What is DevOps?", "CI/CD pipeline stages", "Git branching strategy", "Docker vs VM", "Kubernetes architecture", "Helm charts", "Terraform vs Ansible", "Jenkins pipeline", "Monitoring tools", "Logging strategies", "Infrastructure as Code", "Blue-green deployment", "Canary deployment", "DevSecOps practices"]
+        },
+        "Data Analyst": {
+            icon: "📈", steps: ["Excel", "SQL", "Python", "Statistics", "Visualization", "Dashboard", "Business Analysis"],
+            questions: ["Excel functions", "SQL joins", "Python pandas", "Statistical analysis", "Data cleaning", "Data visualization tools", "Tableau vs Power BI", "Dashboard design principles", "KPI definition", "Business metrics", "A/B testing", "Reporting best practices"]
+        },
+        "Blockchain Developer": {
+            icon: "⛓️", steps: ["Cryptography", "Solidity", "Smart Contracts", "Ethereum", "Web3.js", "DApps", "Security"],
+            questions: ["What is blockchain?", "Consensus mechanisms", "Proof of Work vs Proof of Stake", "Smart contracts", "Ethereum Virtual Machine", "Gas fees", "Solidity language", "ERC20 vs ERC721", "DeFi concepts", "NFT standards", "Wallet types", "Blockchain security"]
+        },
+        "Game Developer": {
+            icon: "🎮", steps: ["C#/C++", "Unity/Unreal", "Game Physics", "Graphics", "AI in Games", "Multiplayer", "Optimization"],
+            questions: ["Game engines comparison", "Unity vs Unreal", "Object pooling", "Game loop", "Collision detection", "Rendering pipeline", "Shader programming", "Animation systems", "Pathfinding algorithms", "Multiplayer networking", "Game optimization", "Memory management"]
+        },
+        "UI/UX Designer": {
+            icon: "🎨", steps: ["Design Principles", "Figma/Adobe XD", "User Research", "Wireframing", "Prototyping", "Usability Testing", "Portfolio"],
+            questions: ["Design thinking process", "User personas", "Journey mapping", "Wireframing tools", "Prototyping methods", "Usability testing", "Heuristic evaluation", "Accessibility standards", "Design systems", "Color theory", "Typography principles", "Responsive design"]
+        },
+        "Full Stack Developer": {
+            icon: "🏗️", steps: ["HTML/CSS/JS", "React/Angular", "Node.js", "Databases", "REST APIs", "Authentication", "Deployment", "Testing"],
+            questions: ["Frontend vs backend", "State management", "REST vs GraphQL", "Database indexing", "Authentication methods", "JWT vs sessions", "CORS", "Web security", "Performance optimization", "Testing types", "CI/CD for full stack", "Deployment platforms"]
+        },
+
+        // ========== MEDICAL (10 careers) ==========
+        "Doctor (MBBS)": {
+            icon: "👨‍⚕️", steps: ["NEET-UG", "MBBS Degree", "Internship", "NEET-PG", "Specialization", "Residency", "Practice"],
+            questions: ["Why medicine?", "Handling stress?", "Difficult patient interaction?", "Staying updated?", "Clinical experience?", "Medical emergencies?", "Work-life balance?", "Why this specialization?", "Ethical dilemmas?", "Patient communication?", "ECG interpretation?", "Common diagnoses?", "Treatment protocols?"]
+        },
+        "Surgeon": {
+            icon: "🔪", steps: ["MBBS", "MS General Surgery", "Surgical Residency", "Super Specialization", "Practice"],
+            questions: ["Why surgery?", "Surgical complications?", "Pre-op planning?", "Difficult surgery handling?", "Wound healing principles?", "Laparoscopic vs open?", "Post-op complications?", "Robotic surgery?", "Surgical emergencies?", "Trauma management?", "Surgical techniques?"]
+        },
+        "Dentist": {
+            icon: "🦷", steps: ["NEET-UG", "BDS Degree", "Internship", "NEET-MDS", "Specialization", "Practice"],
+            questions: ["Why dentistry?", "Common procedures?", "Dental anxiety handling?", "Root canal treatment?", "Crowns vs bridges?", "Dental implants?", "Caries diagnosis?", "Periodontitis treatment?", "Pediatric dentistry?", "Orthodontic treatment?"]
+        },
+        "Pharmacist": {
+            icon: "💊", steps: ["D.Pharm/B.Pharm", "Internship", "License Exam", "Hospital/Retail", "Specialization"],
+            questions: ["Drug interactions", "Pharmacy calculations", "Medication safety", "Patient counseling", "Drug storage", "Prescription handling", "Generic vs brand", "Clinical pharmacy", "Hospital pharmacy", "Community pharmacy"]
+        },
+        "Nurse": {
+            icon: "👩‍⚕️", steps: ["B.Sc Nursing", "Clinical Training", "RN License", "Specialization", "Hospital Work"],
+            questions: ["Patient care", "Vital signs monitoring", "Medication administration", "Wound care", "Emergency response", "Patient education", "Infection control", "Documentation", "Team collaboration", "Compassionate care"]
+        },
+        "Physiotherapist": {
+            icon: "💪", steps: ["BPT Degree", "Internship", "License", "Specialization", "Practice"],
+            questions: ["Rehabilitation techniques", "Exercise prescription", "Manual therapy", "Electrotherapy", "Post-surgical rehab", "Sports injuries", "Neurological conditions", "Pediatric physio", "Geriatric care", "Patient assessment"]
+        },
+        "Psychologist": {
+            icon: "🧠", steps: ["BA Psychology", "MA Psychology", "Internship", "RCI License", "Practice"],
+            questions: ["Therapy approaches", "Cognitive behavioral therapy", "Psychological assessment", "Diagnostic criteria", "Client rapport", "Ethical guidelines", "Confidentiality", "Crisis intervention", "Child psychology", "Corporate psychology"]
+        },
+        "Radiologist": {
+            icon: "📷", steps: ["MBBS", "MD Radiology", "Training", "Fellowship", "Practice"],
+            questions: ["X-ray interpretation", "CT scan principles", "MRI physics", "Ultrasound techniques", "Contrast agents", "Radiation safety", "Image quality", "Interventional radiology", "Tumor imaging", "Emergency radiology"]
+        },
+        "Cardiologist": {
+            icon: "❤️", steps: ["MBBS", "MD Medicine", "DM Cardiology", "Fellowship", "Practice"],
+            questions: ["ECG interpretation", "Echocardiography", "Angiography", "Heart failure management", "Arrhythmia treatment", "Hypertension guidelines", "Lipid management", "Cardiac emergencies", "Preventive cardiology", "Interventional cardiology"]
+        },
+        "Veterinary Doctor": {
+            icon: "🐾", steps: ["NEET", "BVSc Degree", "Internship", "Specialization", "Practice"],
+            questions: ["Animal diseases", "Vaccination schedules", "Surgical procedures", "Emergency care", "Zoonotic diseases", "Pet nutrition", "Large animal medicine", "Wildlife medicine", "Clinical diagnosis", "Animal behavior"]
+        },
+
+        // ========== ENGINEERING (8 careers) ==========
+        "Mechanical Engineer": {
+            icon: "🔧", steps: ["B.Tech Mechanical", "CAD Software", "Internship", "Core Subjects", "Projects", "GATE", "Job Apply"],
+            questions: ["Thermodynamics laws", "Carnot cycle", "Stress-strain curve", "Ductile vs brittle", "Heat exchangers", "Bernoulli's principle", "Types of gears", "Bearings types", "Manufacturing processes", "CNC machining", "CAD vs CAM", "FEA analysis", "HVAC systems"]
+        },
+        "Civil Engineer": {
+            icon: "🏗️", steps: ["B.Tech Civil", "AutoCAD/Revit", "Site Survey", "Structural Design", "Projects", "GATE", "Job Apply"],
+            questions: ["Types of foundations", "Concrete mix design", "What is RCC?", "Beam design", "Column types", "Slab design", "Soil classification", "Compaction methods", "Surveying instruments", "Levelling methods", "CPM vs PERT"]
+        },
+        "Electrical Engineer": {
+            icon: "⚡", steps: ["B.Tech Electrical", "Power Systems", "PLC/SCADA", "Internship", "Projects", "GATE", "Job Apply"],
+            questions: ["Ohm's law", "AC vs DC", "Three-phase power", "Power factor", "Transformer types", "Induction motor", "Synchronous motor", "Circuit breakers", "Earthing", "PLC applications", "SCADA systems", "Renewable energy"]
+        },
+        "Electronics Engineer": {
+            icon: "📡", steps: ["B.Tech ECE", "PCB Design", "Embedded Systems", "VLSI", "IoT", "Projects", "Job Apply"],
+            questions: ["Semiconductor physics", "Diodes and transistors", "Op-amp circuits", "Digital logic gates", "Microcontroller vs microprocessor", "Embedded C", "PCB design", "VLSI design flow", "Signal processing", "Communication systems"]
+        },
+        "Robotics Engineer": {
+            icon: "🤖", steps: ["B.Tech Robotics", "ROS", "C++/Python", "Embedded Systems", "Projects", "Internship", "Job Apply"],
+            questions: ["Robot kinematics", "ROS architecture", "Sensor integration", "Actuators types", "Control systems", "Computer vision", "Path planning", "SLAM algorithms", "Human-robot interaction", "Industrial robotics"]
+        },
+        "Aerospace Engineer": {
+            icon: "🚀", steps: ["B.Tech Aerospace", "Aerodynamics", "Propulsion", "CAD/CFD", "Internship", "GATE", "Job Apply"],
+            questions: ["Aerodynamics principles", "Airfoil design", "Rocket propulsion", "Orbital mechanics", "Aircraft structures", "CFD analysis", "Wind tunnel testing", "Avionics systems", "Spacecraft design", "ISRO projects"]
+        },
+        "Automobile Engineer": {
+            icon: "🚗", steps: ["B.Tech Automobile", "Vehicle Dynamics", "Engine Systems", "CAD", "Internship", "Projects", "Job Apply"],
+            questions: ["Engine types", "Transmission systems", "Suspension design", "Braking systems", "Steering geometry", "Vehicle dynamics", "EV technology", "Autonomous vehicles", "Aerodynamics", "Materials in automobiles"]
+        },
+        "Biotech Engineer": {
+            icon: "🧬", steps: ["B.Tech Biotech", "Lab Techniques", "Bioinformatics", "Research", "Internship", "Higher Studies", "Job Apply"],
+            questions: ["Genetic engineering", "Fermentation technology", "Downstream processing", "Bioinformatics tools", "Molecular biology", "Cell culture", "Recombinant DNA", "Protein engineering", "Bioprocess design", "Pharmaceutical biotech"]
+        },
+
+        // ========== GOVERNMENT (10 careers) ==========
+        "IAS": {
+            icon: "🇮🇳", steps: ["UPSC Pattern", "NCERT Books", "Current Affairs", "Optional Subject", "Answer Writing", "Mock Tests", "Prelims", "Mains", "Interview"],
+            questions: ["Why civil services?", "Fundamental rights?", "Preamble of Constitution", "President vs Prime Minister?", "Parliamentary system", "Indian agriculture challenges", "Rural development vision", "Handle corruption?", "Finance Commission role", "Current economic challenges", "Education improvement ideas", "Environmental issues", "Leadership style"]
+        },
+        "IPS": {
+            icon: "👮", steps: ["UPSC Exam", "Physical Fitness", "Physical Test", "Interview", "SVPNPA Training", "Police Officer"],
+            questions: ["Why IPS?", "Law and order handling?", "Community policing?", "Riot management?", "Crime investigation", "Hostage situation", "Policing challenges", "Political pressure handling", "Fitness routine", "Stress management", "IPC sections knowledge", "Cyber crime handling", "Women safety approach"]
+        },
+        "IFS": {
+            icon: "🌍", steps: ["UPSC Exam", "Foreign Language", "International Relations", "Training", "Diplomat"],
+            questions: ["Why foreign service?", "International relations knowledge", "Foreign policy challenges", "Bilateral relations", "Multilateral diplomacy", "Consular services", "Passport/visa issues", "Global issues", "Trade agreements", "Soft power diplomacy"]
+        },
+        "SSC CGL Officer": {
+            icon: "📋", steps: ["SSC Pattern", "Quant/Reasoning", "English", "GK", "Mock Tests", "Interview", "Training"],
+            questions: ["Quant aptitude", "Reasoning ability", "English comprehension", "General awareness", "Current affairs", "Government schemes", "Budget knowledge", "Ministries functions", "Administrative procedures", "Office management"]
+        },
+        "Bank PO": {
+            icon: "🏦", steps: ["IBPS/SBI Exam", "Reasoning", "Quant", "English", "GA", "Interview", "Training", "PO Role"],
+            questions: ["Banking domain knowledge", "CRR and SLR", "Repo rate", "NPA management", "NEFT vs RTGS vs IMPS", "Current vs savings account", "KYC importance", "CIBIL score", "RBI functions", "Demonetization impact", "Loan types", "Customer handling", "Target achievement"]
+        },
+        "RBI Grade B": {
+            icon: "🏛️", steps: ["RBI Exam", "Economics", "Finance", "Management", "Interview", "Training"],
+            questions: ["Monetary policy", "Inflation targeting", "Banking regulation", "Currency management", "Payment systems", "Financial inclusion", "Economic indicators", "GDP calculation", "Fiscal vs monetary policy", "RBI Acts", "Banking supervision", "Financial stability"]
+        },
+        "Police Officer": {
+            icon: "👮‍♂️", steps: ["State PSC", "Physical Test", "Written Exam", "Interview", "Training", "Duty"],
+            questions: ["Law enforcement", "IPC/CRPC knowledge", "Evidence collection", "FIR registration", "Crime scene management", "Patrolling duties", "Traffic management", "Public dealing", "Emergency response", "Disaster management"]
+        },
+        "Army Officer": {
+            icon: "🪖", steps: ["NDA/CDS", "SSB Interview", "Medical", "IMA Training", "Commission"],
+            questions: ["Leadership qualities", "Physical fitness", "National security", "Military history", "Current deployments", "Weapon systems", "Tactical operations", "Soldier welfare", "Discipline", "Camaraderie"]
+        },
+        "Navy Officer": {
+            icon: "⚓", steps: ["NDA/CDS", "SSB Interview", "Medical", "Naval Academy", "Commission"],
+            questions: ["Maritime security", "Naval operations", "Ship technology", "Navigation systems", "Oceanography", "Coastal security", "Naval aviation", "Submarine operations", "Naval traditions", "Sea readiness"]
+        },
+        "Air Force Officer": {
+            icon: "✈️", steps: ["AFCAT/NDA", "SSB Interview", "Medical", "Air Force Academy", "Commission"],
+            questions: ["Aerial warfare", "Aircraft systems", "Flight safety", "Air defense", "Radar technology", "Missile systems", "Air power strategy", "Ground support", "Pilot training", "Air traffic control"]
+        },
+
+        // ========== COMMERCE (8 careers) ==========
+        "Chartered Accountant": {
+            icon: "📊", steps: ["CA Foundation", "Intermediate", "Articleship", "Final Exams", "ICAI Membership", "Practice"],
+            questions: ["Why CA?", "Auditing vs accounting", "GST tax slabs", "Audit types", "Direct vs indirect tax", "Depreciation methods", "IFRS vs IND AS", "TDS sections", "ITR filing", "Tax audit handling", "Ratio analysis", "Working capital", "Tally experience", "Forensic accounting", "Client handling"]
+        },
+        "Company Secretary": {
+            icon: "📜", steps: ["CS Foundation", "Executive", "Professional", "Training", "ICSI Member", "Practice"],
+            questions: ["Company law", "Board meetings", "Annual filings", "Corporate governance", "SEBI regulations", "ROC compliance", "Shareholder communications", "Legal documentation", "Secretarial audit", "Corporate ethics"]
+        },
+        "Investment Banker": {
+            icon: "💰", steps: ["Finance Degree/MBA", "Financial Modeling", "Excel Skills", "Internship", "CFA Prep", "Analyst"],
+            questions: ["DCF valuation", "LBO analysis", "Comps analysis", "M&A process", "IPO process", "Primary vs secondary market", "EBITDA explanation", "EV vs equity value", "Financial modeling", "Due diligence", "Bloomberg terminal", "Deal experience", "Market trends"]
+        },
+        "Financial Analyst": {
+            icon: "📈", steps: ["B.Com/BBA", "Excel", "Financial Modeling", "CFA Prep", "Internship", "Analyst Role"],
+            questions: ["Financial statements", "Ratio analysis", "Valuation methods", "Budgeting", "Forecasting", "Risk assessment", "Investment analysis", "Portfolio management", "Market research", "Data analysis", "Reporting tools"]
+        },
+        "Business Analyst": {
+            icon: "📋", steps: ["BBA/MBA", "SQL/Tableau", "Agile", "CBAP", "Internship", "BA Role"],
+            questions: ["Requirements gathering", "BRD vs FRD", "Use cases", "User stories", "Process mapping", "Gap analysis", "Stakeholder management", "Agile methodologies", "JIRA/Confluence", "Data analysis", "SQL queries", "Prototyping"]
+        },
+        "Stock Trader": {
+            icon: "📉", steps: ["Market Basics", "Technical Analysis", "Fundamental Analysis", "Paper Trading", "Risk Management", "Live Trading"],
+            questions: ["Candlestick patterns", "Support/resistance", "Moving averages", "RSI indicator", "MACD analysis", "Fundamental ratios", "Risk-reward ratio", "Position sizing", "Trading psychology", "Market timing", "Sector analysis", "News impact"]
+        },
+        "Entrepreneur": {
+            icon: "🚀", steps: ["Idea Validation", "Business Plan", "MVP", "Market Research", "Funding", "Scale", "Team Building"],
+            questions: ["Business idea", "Target market", "Competitive analysis", "Revenue model", "Customer acquisition", "Unit economics", "Funding strategy", "Team structure", "Growth plans", "Exit strategy", "Risk assessment", "Pitch preparation"]
+        },
+        "HR Manager": {
+            icon: "👥", steps: ["MBA HR", "Recruitment", "Labour Laws", "HR Analytics", "Internship", "HR Role"],
+            questions: ["Recruitment process", "Sourcing channels", "Interview techniques", "Onboarding", "Performance management", "Employee relations", "Compensation benefits", "HR policies", "Labour law compliance", "HRMS systems", "Data driven HR", "Employee engagement"]
+        },
+
+        // ========== ARTS (10 careers) ==========
+        "Graphic Designer": {
+            icon: "🎨", steps: ["Design Principles", "Photoshop/Illustrator", "Figma", "Typography", "Portfolio", "Freelancing", "Job Apply"],
+            questions: ["Design process", "Favorite project", "Software proficiency", "Color theory", "Typography basics", "Client feedback", "Handling revisions", "Design trends", "Creativity inspiration", "Deadline management", "UI vs UX", "Brand identity", "Portfolio review"]
+        },
+        "Fashion Designer": {
+            icon: "👗", steps: ["Fashion Degree", "Sketching", "Pattern Making", "Garment Construction", "Internship", "Label Launch"],
+            questions: ["Design inspiration", "Fashion trends", "Fabric knowledge", "Sketching skills", "Pattern making", "Draping techniques", "Embroidery knowledge", "Collection planning", "Fashion shows", "Brand building", "Retail experience"]
+        },
+        "Interior Designer": {
+            icon: "🪑", steps: ["Interior Course", "AutoCAD/SketchUp", "Space Planning", "Materials", "Portfolio", "Freelancing", "Firm Join"],
+            questions: ["Design style", "Space planning", "Lighting design", "Color schemes", "Material selection", "Furniture specification", "Client requirements", "Budget management", "Vendor coordination", "Project management", "3D visualization", "Portfolio presentation"]
+        },
+        "Photographer": {
+            icon: "📸", steps: ["Camera Basics", "Lighting", "Composition", "Editing", "Portfolio", "Freelancing", "Studio"],
+            questions: ["Camera settings", "Lighting techniques", "Composition rules", "Editing software", "Photo editing workflow", "Client handling", "Pricing strategy", "Equipment knowledge", "Portfolio strength", "Niche specialization", "Marketing approach"]
+        },
+        "Video Editor": {
+            icon: "🎬", steps: ["Premiere Pro", "Cutting/Transitions", "Color Grading", "After Effects", "Motion Graphics", "Portfolio"],
+            questions: ["Editing software", "Cutting techniques", "Transition styles", "Color grading process", "Audio mixing", "Motion graphics", "Effects usage", "Storytelling", "Client feedback", "Project management", "File organization", "Delivery formats"]
+        },
+        "Content Creator": {
+            icon: "📱", steps: ["Niche Selection", "Scripting", "Video Production", "Social Media", "SEO", "Consistent Posting", "Monetize"],
+            questions: ["Content niche", "Target audience", "Content ideas generation", "Scripting process", "Production equipment", "Editing workflow", "Platform strategy", "Growth tactics", "Engagement methods", "Monetization streams", "Brand collaborations", "Analytics tracking"]
+        },
+        "YouTuber": {
+            icon: "📺", steps: ["Niche", "Video Recording", "Editing", "SEO", "Thumbnails", "Consistent Uploads", "Monetize"],
+            questions: ["Channel niche", "Video topics", "Production quality", "Editing style", "SEO optimization", "Thumbnail design", "Title strategy", "Audience retention", "Growth strategies", "Sponsorship deals", "Ad revenue", "Community building"]
+        },
+        "Actor": {
+            icon: "🎭", steps: ["Acting School", "Method Acting", "Portfolio", "Auditions", "Networking", "Showreel", "Roles"],
+            questions: ["Training background", "Acting technique", "Character preparation", "Dialogue delivery", "Emotional range", "Physical transformation", "Audition experience", "Portfolio projects", "Industry networking", "Agent representation", "Dream roles", "Career goals"]
+        },
+        "Musician": {
+            icon: "🎵", steps: ["Instrument/Vocal", "Music Theory", "Practice", "Recording", "Performances", "Online Presence", "Release Music"],
+            questions: ["Instrument proficiency", "Music theory knowledge", "Practice routine", "Composition process", "Recording experience", "Live performance", "Stage presence", "Online platforms", "Fan engagement", "Collaborations", "Music releases", "Career direction"]
+        },
+        "Writer": {
+            icon: "✍️", steps: ["Reading", "Daily Writing", "Blog/Medium", "SEO Writing", "Freelance", "Publish", "Portfolio"],
+            questions: ["Writing style", "Daily routine", "Genre preference", "Published work", "Blog content", "SEO knowledge", "Freelance platforms", "Client projects", "Editing process", "Writer's block handling", "Creative process", "Writing goals"]
+        },
+
+        // ========== OTHER (10 careers) ==========
+        "Pilot": {
+            icon: "✈️", steps: ["DGCA Medical", "DGCA Exams", "CPL Training", "Type Rating", "Airline Interview", "First Officer", "Captain"],
+            questions: ["Why pilot?", "Aerodynamics principles", "Forces on aircraft", "Stall recovery", "VFR vs IFR", "Glide ratio", "Engine types", "Black box purpose", "Emergency handling", "Flying hours", "CRM principles", "Fatigue management"]
+        },
+        "Cabin Crew": {
+            icon: "🛫", steps: ["Hospitality Training", "Customer Service", "Apply Airlines", "Interview", "Safety Training", "Crew Member"],
+            questions: ["Customer service experience", "Emergency procedures", "Safety protocols", "First aid knowledge", "Communication skills", "Teamwork ability", "Conflict resolution", "Passenger handling", "Service standards", "Grooming standards", "Language skills"]
+        },
+        "Hotel Manager": {
+            icon: "🏨", steps: ["BHM Degree", "Internship", "Front Office", "Housekeeping", "F&B", "Operations", "Manager"],
+            questions: ["Hotel operations", "Guest satisfaction", "Staff management", "Budget control", "Revenue management", "Food and beverage", "Housekeeping standards", "Front desk procedures", "Event management", "Crisis handling", "Quality assurance"]
+        },
+        "Chef": {
+            icon: "🍳", steps: ["Culinary School", "Basic Techniques", "Commis Chef", "Cuisines", "Sous Chef", "Executive Chef", "Restaurant"],
+            questions: ["Culinary training", "Cooking techniques", "Cuisine specialties", "Kitchen management", "Team leadership", "Menu planning", "Cost control", "Food safety", "Plating skills", "Creativity in cooking", "Stress management", "Restaurant experience"]
+        },
+        "Teacher": {
+            icon: "📚", steps: ["Graduation", "B.Ed", "TET/CTET", "Internship", "School Apply", "Interview", "Teaching"],
+            questions: ["Teaching philosophy", "Classroom management", "Lesson planning", "Student assessment", "Parent communication", "Curriculum knowledge", "Subject expertise", "Educational technology", "Differentiated instruction", "Student motivation", "Professional development"]
+        },
+        "Professor": {
+            icon: "🎓", steps: ["Master's Degree", "NET/SET", "Research Papers", "PhD", "Assistant Professor", "Professor"],
+            questions: ["Research interests", "Teaching experience", "Publications", "PhD topic", "Funding secured", "Lab setup", "Student mentoring", "Curriculum development", "Conference presentations", "Academic collaborations", "Future research plans"]
+        },
+        "Lawyer": {
+            icon: "⚖️", steps: ["LLB Degree", "AIBE Exam", "Internship", "Practice", "Specialization", "High Court", "Supreme Court"],
+            questions: ["Why law?", "Area of interest", "Landmark judgments", "Legal research", "Drafting skills", "Courtroom experience", "Client counseling", "Negotiation skills", "Ethical dilemmas", "Case preparation", "Legal updates", "Career goals"]
+        },
+        "Judge": {
+            icon: "🏛️", steps: ["LLB", "Practice", "Judicial Exam", "Magistrate", "District Judge", "High Court", "Supreme Court"],
+            questions: ["Judicial philosophy", "Landmark rulings", "Case law knowledge", "Constitutional law", "Criminal procedure", "Civil procedure", "Evidence law", "Sentencing principles", "Court management", "Legal writing", "Judicial ethics"]
+        },
+        "Space Scientist": {
+            icon: "🛰️", steps: ["B.Tech Aerospace/Physics", "Master's", "PhD", "ISRO/NASA Intern", "Scientist", "Research"],
+            questions: ["Space research interest", "Satellite technology", "Rocket science", "Orbital mechanics", "Remote sensing", "Space exploration", "ISRO missions", "Chandrayaan/Mangalyaan", "Astrophysics concepts", "Research publications", "Space applications"]
+        },
+        "Journalist": {
+            icon: "📰", steps: ["Mass Comm Degree", "Reporting", "Writing", "Internship", "Reporter", "Editor", "Anchor"],
+            questions: ["News judgment", "Reporting experience", "Writing style", "Source verification", "Ethical standards", "Deadline pressure", "Beat specialization", "Interview techniques", "Digital journalism", "Social media use", "Media laws", "Career aspirations"]
+        }
+    };
+
+    // Get default for any career
+    function getDefaultData(career) {
+        return {
+            icon: "🎯",
+            steps: [`Research ${career} career`, `Get relevant education`, `Gain experience`, `Build network`, `Prepare resume`, `Apply for jobs`, `Continuous learning`],
+            questions: [`Why did you choose ${career}?`, `What are your strengths?`, `Tell me about yourself`, `Where do you see yourself in 5 years?`, `Why should we hire you?`]
+        };
+    }
+
+    // All careers list with categories
+    const allCareersByCategory = {
+        tech: ["Software Developer", "Web Developer", "App Developer", "AI Engineer", "Machine Learning Engineer", "Data Scientist", "Cyber Security Analyst", "Cloud Engineer", "DevOps Engineer", "Data Analyst", "Blockchain Developer", "Game Developer", "UI/UX Designer", "Full Stack Developer"],
+        medical: ["Doctor (MBBS)", "Surgeon", "Dentist", "Pharmacist", "Nurse", "Physiotherapist", "Psychologist", "Radiologist", "Cardiologist", "Veterinary Doctor"],
+        engineering: ["Mechanical Engineer", "Civil Engineer", "Electrical Engineer", "Electronics Engineer", "Robotics Engineer", "Aerospace Engineer", "Automobile Engineer", "Biotech Engineer"],
+        government: ["IAS", "IPS", "IFS", "SSC CGL Officer", "Bank PO", "RBI Grade B", "Police Officer", "Army Officer", "Navy Officer", "Air Force Officer"],
+        commerce: ["Chartered Accountant", "Company Secretary", "Investment Banker", "Financial Analyst", "Business Analyst", "Stock Trader", "Entrepreneur", "HR Manager"],
+        arts: ["Graphic Designer", "Fashion Designer", "Interior Designer", "Photographer", "Video Editor", "Content Creator", "YouTuber", "Actor", "Musician", "Writer"],
+        other: ["Pilot", "Cabin Crew", "Hotel Manager", "Chef", "Teacher", "Professor", "Lawyer", "Judge", "Space Scientist", "Journalist"]
+    };
+
+    let currentCareer = "Software Developer";
+    let completedSteps = JSON.parse(localStorage.getItem('skillProgress')) || {};
+
+    function updateProgress() {
+        const data = careersData[currentCareer] || getDefaultData(currentCareer);
+        let completed = 0;
+        for (let i = 0; i < data.steps.length; i++) {
+            if (completedSteps[`${currentCareer}_${i}`]) completed++;
+        }
+        const percent = Math.round((completed / data.steps.length) * 100);
+        document.getElementById('progressFill').style.width = percent + '%';
+        document.getElementById('progressPercent').textContent = percent + '%';
+    }
+
+    function toggleStep(index) {
+        const key = `${currentCareer}_${index}`;
+        if (completedSteps[key]) {
+            delete completedSteps[key];
+        } else {
+            completedSteps[key] = true;
+        }
+        localStorage.setItem('skillProgress', JSON.stringify(completedSteps));
+        
+        const stepDiv = document.querySelector(`.roadmap-step[data-index='${index}']`);
+        if (stepDiv) {
+            const check = stepDiv.querySelector('.step-check');
+            check.style.opacity = completedSteps[key] ? '1' : '0';
+        }
+        updateProgress();
+    }
+
+    function showInterviewQuestions() {
+        const data = careersData[currentCareer] || getDefaultData(currentCareer);
+        const modal = document.getElementById('interviewModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalContent = document.getElementById('modalContent');
+        
+        modalTitle.innerHTML = `📋 ${currentCareer} - Interview Questions (${data.questions.length} Questions)`;
+        modalContent.innerHTML = data.questions.map((q, i) => `
+            <div class="interview-item">
+                <div class="flex items-start gap-3">
+                    <div class="w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 text-sm font-bold shrink-0 mt-0.5">${i+1}</div>
+                    <p class="text-gray-200">${q}</p>
+                </div>
+            </div>
+        `).join('');
+        
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+
+    function showRoadmap(careerId) {
+        const data = careersData[careerId] || getDefaultData(careerId);
+        currentCareer = careerId;
+        
+        document.getElementById('skillTitle').innerHTML = `<span>${data.icon}</span> ${careerId} Roadmap`;
+        
+        const container = document.getElementById('roadmapContent');
+        container.innerHTML = "";
+        data.steps.forEach((step, idx) => {
+            const isCompleted = completedSteps[`${currentCareer}_${idx}`];
+            const stepDiv = document.createElement('div');
+            stepDiv.className = 'roadmap-step p-4 rounded-xl cursor-pointer';
+            stepDiv.setAttribute('data-index', idx);
+            stepDiv.onclick = () => toggleStep(idx);
+            stepDiv.innerHTML = `
+                <div class="flex items-center gap-3">
+                    <div class="w-6 h-6 rounded-full border-2 border-blue-500 flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full bg-blue-500 transition step-check" style="opacity: ${isCompleted ? '1' : '0'}"></div>
+                    </div>
+                    <span class="text-gray-200">${step}</span>
+                </div>
+            `;
+            container.appendChild(stepDiv);
+        });
+        
+        document.querySelectorAll('.skill-card').forEach(card => {
+            card.classList.remove('active');
+            if (card.dataset.skill === careerId) card.classList.add('active');
+        });
+        
+        updateProgress();
+    }
+
+    function renderAllCards() {
+        for (const [category, careers] of Object.entries(allCareersByCategory)) {
+            const grid = document.getElementById(`${category}Grid`);
+            if (grid) {
+                grid.innerHTML = careers.map(career => {
+                    const data = careersData[career] || getDefaultData(career);
+                    return `
+                        <div class="skill-card p-4 rounded-xl text-center ${currentCareer === career ? 'active' : ''}" data-skill="${career}">
+                            <div class="text-3xl mb-2">${data.icon}</div>
+                            <div class="font-semibold text-sm">${career.length > 22 ? career.substring(0, 20) + '..' : career}</div>
+                        </div>
+                    `;
+                }).join('');
+                
+                grid.querySelectorAll('.skill-card').forEach(card => {
+                    card.addEventListener('click', () => showRoadmap(card.dataset.skill));
+                });
+            }
+        }
+    }
+
+    // Category switching
+    document.querySelectorAll('.category-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.category-tab').forEach(t => {
+                t.classList.remove('active');
+                t.classList.add('bg-white/10');
+            });
+            tab.classList.add('active');
+            tab.classList.remove('bg-white/10');
+            
+            const category = tab.dataset.cat;
+            document.querySelectorAll('.category-grid').forEach(grid => grid.classList.add('hidden'));
+            document.getElementById(`${category}Grid`).classList.remove('hidden');
+        });
+    });
+
+    document.getElementById('showInterviewBtn').addEventListener('click', showInterviewQuestions);
+    document.getElementById('closeModalBtn').addEventListener('click', () => {
+        document.getElementById('interviewModal').classList.add('hidden');
+        document.getElementById('interviewModal').classList.remove('flex');
+    });
+    document.getElementById('interviewModal').addEventListener('click', (e) => {
+        if (e.target === document.getElementById('interviewModal')) {
+            document.getElementById('interviewModal').classList.add('hidden');
+            document.getElementById('interviewModal').classList.remove('flex');
+        }
+    });
+
+    renderAllCards();
+    showRoadmap("Software Developer");
+</script>
+</body>
+</html>

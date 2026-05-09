@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Career Counsellor | LOGRA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+        .chat-container {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 2rem;
+        }
+        .message {
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .typing-indicator span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #60a5fa;
+            margin: 0 2px;
+            animation: typing 1.4s infinite;
+        }
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+            30% { transform: translateY(-10px); opacity: 1; }
+        }
+        .suggestion-chip {
+            background: rgba(59,130,246,0.2);
+            border: 1px solid rgba(59,130,246,0.3);
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .suggestion-chip:hover {
+            background: rgba(59,130,246,0.4);
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<div class="sticky top-0 z-50 backdrop-blur-xl bg-black/40 border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+            <div class="text-2xl">🧠</div>
+            <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">AI Career Counsellor</h1>
+        </div>
+        <div class="flex gap-3">
+            <a href="index.html" class="bg-slate-700 hover:bg-slate-600 px-5 py-2 rounded-full transition">← Back to Home</a>
+            <a href="careers.html" class="bg-gradient-to-r from-blue-600 to-purple-600 px-5 py-2 rounded-full hover:scale-105 transition">🎯 Browse Careers</a>
+        </div>
+    </div>
+</div>
+
+<div class="max-w-4xl mx-auto px-6 py-8">
+    <!-- Header -->
+    <div class="text-center mb-8">
+        <div class="text-6xl mb-3">🤖</div>
+        <h1 class="text-4xl font-black bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-2">
+            Your Personal AI Career Guide
+        </h1>
+        <p class="text-gray-300">Ask me anything about careers, skills, education, or job opportunities!</p>
+    </div>
+
+    <!-- Chat Container -->
+    <div class="chat-container p-6 mb-6" style="height: 450px; overflow-y: auto;" id="chatMessages">
+        <div class="flex gap-3 mb-4 message">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white text-xl shrink-0">🤖</div>
+            <div class="bg-white/10 rounded-2xl p-4 max-w-[80%]">
+                <p class="text-gray-200">Hello! I'm your AI Career Counsellor. 👋</p>
+                <p class="text-gray-300 mt-2">I can help you with:</p>
+                <ul class="text-gray-300 mt-1 list-disc list-inside">
+                    <li>Finding the right career for you</li>
+                    <li>Educational paths and degrees</li>
+                    <li>Skills needed for specific jobs</li>
+                    <li>Salary expectations and growth</li>
+                    <li>Exam preparation tips</li>
+                </ul>
+                <p class="text-blue-400 mt-3">How can I help you today? 😊</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Suggestion Chips -->
+    <div class="flex flex-wrap gap-2 mb-4" id="suggestionChips">
+        <div class="suggestion-chip px-4 py-2 rounded-full text-sm">📱 Which career is best for me?</div>
+        <div class="suggestion-chip px-4 py-2 rounded-full text-sm">💻 How to become a Software Developer?</div>
+        <div class="suggestion-chip px-4 py-2 rounded-full text-sm">👨‍⚕️ Medical career roadmap?</div>
+        <div class="suggestion-chip px-4 py-2 rounded-full text-sm">💰 Highest paying jobs in India?</div>
+        <div class="suggestion-chip px-4 py-2 rounded-full text-sm">📚 Best courses after 12th?</div>
+        <div class="suggestion-chip px-4 py-2 rounded-full text-sm">🎯 How to prepare for UPSC?</div>
+    </div>
+
+    <!-- Input Area -->
+    <div class="flex gap-3">
+        <input type="text" id="userInput" placeholder="Type your question here..." 
+               class="flex-1 bg-white/10 border border-white/20 rounded-full px-6 py-4 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 transition">
+        <button id="sendBtn" class="bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-4 rounded-full font-semibold hover:scale-105 transition">
+            Send 📤
+        </button>
+    </div>
+</div>
+
+<script>
+    // AI Response Database
+    const aiResponses = {
+        greetings: [
+            "Hello! I'm here to help with your career questions. What would you like to know?",
+            "Hi there! Ask me anything about careers, skills, or education!",
+            "Welcome! I'm your AI Career Guide. How can I assist you today?"
+        ],
+        
+        // Career recommendations
+        "best career": "Based on current trends, some of the best careers include: 💻 Software Development, 🤖 AI/ML Engineering, ☁️ Cloud Computing, 🔒 Cyber Security, 📊 Data Science, and 👨‍⚕️ Healthcare. Which one interests you?",
+        
+        "software developer": "📱 **Path to become a Software Developer:**\n1. Learn programming (Python/Java/JavaScript)\n2. Master Data Structures & Algorithms\n3. Learn Git & version control\n4. Build projects (3-5)\n5. Prepare for interviews (LeetCode)\n6. Apply for internships\n\n⏱️ Duration: 4-8 months",
+        
+        "web developer": "🌐 **Web Developer Roadmap:**\n1. HTML, CSS, JavaScript\n2. React.js or Vue.js\n3. Node.js & Express\n4. MongoDB or PostgreSQL\n5. Build full-stack projects\n6. Deploy on Vercel/Netlify\n\n💰 Average Salary: 4-12 LPA",
+        
+        "data scientist": "📊 **Data Scientist Path:**\n1. Python (Pandas, NumPy)\n2. Statistics & Mathematics\n3. Machine Learning (Scikit-learn)\n4. Deep Learning (TensorFlow)\n5. SQL & Big Data\n6. Kaggle competitions\n\n🎓 Degree: B.Tech/MCA or Data Science certification",
+        
+        "ai engineer": "🤖 **AI Engineer Roadmap:**\n1. Advanced Python\n2. Mathematics (Linear Algebra, Calculus)\n3. Machine Learning algorithms\n4. Deep Learning (PyTorch/TensorFlow)\n5. NLP or Computer Vision\n6. MLOps & Deployment\n\n💰 Salary: 8-25 LPA",
+        
+        "doctor": "👨‍⚕️ **Medical Career Path:**\n1. Clear NEET-UG exam\n2. Complete MBBS (5.5 years)\n3. Internship\n4. NEET-PG for specialization\n5. MD/MS residency (3 years)\n6. Start practice\n\n⏱️ Total duration: 5-8 years",
+        
+        "engineer": "⚙️ **Engineering Branches:**\n• Computer Science (Highest demand)\n• Mechanical Engineering\n• Civil Engineering\n• Electrical Engineering\n• Electronics & Communication\n• Artificial Intelligence & ML\n\n🎓 Entrance: JEE Main/Advanced, BITSAT, VITEEE",
+        
+        "ca": "📊 **Chartered Accountant Path:**\n1. Register for CA Foundation (after 12th)\n2. Clear Foundation\n3. Intermediate + Articleship (3 years)\n4. Clear Final exams\n5. Get ICAI membership\n\n⏱️ Duration: 4-5 years\n💰 Salary: 7-20 LPA",
+        
+        "upsc": "🇮🇳 **UPSC Civil Services Preparation:**\n1. Understand syllabus (Prelims, Mains, Interview)\n2. NCERT books (6-12)\n3. Daily newspaper (The Hindu)\n4. Choose optional subject\n5. Answer writing practice\n6. Mock tests\n\n⏱️ Preparation: 1-2 years",
+        
+        "bank po": "🏦 **Bank PO Path:**\n1. Apply for IBPS PO/SBI PO\n2. Prepare Reasoning, Quant, English, GA\n3. Clear Prelims & Mains\n4. Interview round\n5. Probationary training\n6. Join as Assistant Manager\n\n💰 Salary: 7-12 LPA",
+        
+        "designer": "🎨 **Design Career Options:**\n• UI/UX Designer (Figma, Adobe XD)\n• Graphic Designer (Photoshop, Illustrator)\n• Fashion Designer (NIFT)\n• Interior Designer (AutoCAD)\n\n💰 Salary: 3-15 LPA",
+        
+        "salary": "💰 **Average Salaries in India (Freshers):**\n• Software Developer: 4-8 LPA\n• Data Scientist: 6-12 LPA\n• AI Engineer: 8-15 LPA\n• Doctor: 6-12 LPA\n• CA: 7-15 LPA\n• IAS: 12-18 LPA\n• Bank PO: 7-10 LPA\n• Graphic Designer: 3-6 LPA",
+        
+        "after 12th": "📚 **Courses after 12th:**\n\n**Science:** B.Tech, MBBS, B.Sc, B.Pharm\n**Commerce:** B.Com, BBA, CA, CS\n**Arts:** BA, B.Des, BJMC, Law\n\n**Skill-based:** Web Dev, Digital Marketing, Graphic Design, Data Science",
+        
+        "skills": "🔧 **In-Demand Skills 2024:**\n• Programming (Python, Java, JavaScript)\n• AI/ML & Data Science\n• Cloud Computing (AWS, Azure)\n• Cyber Security\n• UI/UX Design\n• Digital Marketing\n• Communication & Leadership",
+        
+        "default": "That's a great question! Let me help you. Could you tell me more about your educational background or what interests you? I can suggest careers based on:\n\n• Your stream (Science/Commerce/Arts)\n• Your interests (Tech/Creative/Medical/Business)\n• Your career goals (Salary/Stability/Growth)\n\nWhat would you like to know specifically? 🤔"
+    };
+    
+    // Keyword matching function
+    function getAIResponse(question) {
+        let q = question.toLowerCase();
+        
+        if (q.includes("hello") || q.includes("hi") || q.includes("hey")) {
+            return aiResponses.greetings[Math.floor(Math.random() * aiResponses.greetings.length)];
+        }
+        
+        if (q.includes("best career") || q.includes("which career") || q.includes("what career")) {
+            return aiResponses["best career"];
+        }
+        
+        if (q.includes("software") || q.includes("developer") || (q.includes("how to become") && q.includes("coder"))) {
+            return aiResponses["software developer"];
+        }
+        
+        if (q.includes("web developer") || q.includes("frontend") || q.includes("full stack")) {
+            return aiResponses["web developer"];
+        }
+        
+        if (q.includes("data scientist") || q.includes("data science")) {
+            return aiResponses["data scientist"];
+        }
+        
+        if (q.includes("ai engineer") || q.includes("artificial intelligence") || q.includes("machine learning")) {
+            return aiResponses["ai engineer"];
+        }
+        
+        if (q.includes("doctor") || q.includes("mbbs") || q.includes("medical")) {
+            return aiResponses["doctor"];
+        }
+        
+        if (q.includes("engineer") || q.includes("b.tech") || q.includes("engineering")) {
+            return aiResponses["engineer"];
+        }
+        
+        if (q.includes("ca") || q.includes("chartered accountant") || q.includes("commerce")) {
+            return aiResponses["ca"];
+        }
+        
+        if (q.includes("upsc") || q.includes("ias") || q.includes("ips") || q.includes("civil service")) {
+            return aiResponses["upsc"];
+        }
+        
+        if (q.includes("bank po") || q.includes("banking")) {
+            return aiResponses["bank po"];
+        }
+        
+        if (q.includes("designer") || q.includes("ui/ux") || q.includes("graphic")) {
+            return aiResponses["designer"];
+        }
+        
+        if (q.includes("salary") || q.includes("package") || q.includes("pay")) {
+            return aiResponses["salary"];
+        }
+        
+        if (q.includes("after 12th") || q.includes("12th ke baad") || q.includes("courses after")) {
+            return aiResponses["after 12th"];
+        }
+        
+        if (q.includes("skill") || q.includes("learn")) {
+            return aiResponses["skills"];
+        }
+        
+        return aiResponses["default"];
+    }
+    
+    // DOM elements
+    const chatMessages = document.getElementById('chatMessages');
+    const userInput = document.getElementById('userInput');
+    const sendBtn = document.getElementById('sendBtn');
+    
+    // Add message to chat
+    function addMessage(text, isUser = false) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `flex gap-3 mb-4 message`;
+        messageDiv.innerHTML = `
+            <div class="w-10 h-10 rounded-full ${isUser ? 'bg-green-600' : 'bg-gradient-to-r from-blue-500 to-purple-500'} flex items-center justify-center text-white text-xl shrink-0">
+                ${isUser ? '👤' : '🤖'}
+            </div>
+            <div class="${isUser ? 'bg-green-600/20' : 'bg-white/10'} rounded-2xl p-4 max-w-[80%]">
+                <p class="text-gray-200">${text.replace(/\n/g, '<br>')}</p>
+            </div>
+        `;
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+    
+    // Show typing indicator
+    function showTyping() {
+        const typingDiv = document.createElement('div');
+        typingDiv.className = 'flex gap-3 mb-4 message';
+        typingDiv.id = 'typingIndicator';
+        typingDiv.innerHTML = `
+            <div class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white text-xl shrink-0">🤖</div>
+            <div class="bg-white/10 rounded-2xl p-4">
+                <div class="typing-indicator flex gap-1">
+                    <span></span><span></span><span></span>
+                </div>
+            </div>
+        `;
+        chatMessages.appendChild(typingDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+    
+    function hideTyping() {
+        const typing = document.getElementById('typingIndicator');
+        if (typing) typing.remove();
+    }
+    
+    // Send message function
+    async function sendMessage() {
+        const message = userInput.value.trim();
+        if (!message) return;
+        
+        // Add user message
+        addMessage(message, true);
+        userInput.value = '';
+        
+        // Show typing indicator
+        showTyping();
+        
+        // Simulate AI thinking
+        setTimeout(() => {
+            hideTyping();
+            const response = getAIResponse(message);
+            addMessage(response, false);
+        }, 1000);
+    }
+    
+    // Event listeners
+    sendBtn.addEventListener('click', sendMessage);
+    userInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') sendMessage();
+    });
+    
+    // Suggestion chips
+    document.querySelectorAll('.suggestion-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+            userInput.value = chip.textContent;
+            sendMessage();
+        });
+    });
+    
+    // Auto-focus on input
+    userInput.focus();
+</script>
+</body>
+</html>

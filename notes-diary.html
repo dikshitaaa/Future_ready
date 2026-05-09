@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes Diary | FutureReady</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            min-height: 100vh;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .nav-bar {
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo span {
+            font-size: 28px;
+        }
+        .logo h1 {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #60a5fa, #a855f7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .nav-links a {
+            padding: 8px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            color: white;
+            margin-left: 10px;
+            transition: all 0.3s;
+        }
+        .nav-links a:first-child {
+            background: rgba(255,255,255,0.1);
+        }
+        .nav-links a:last-child {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 30px 20px;
+        }
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .hero-icon {
+            font-size: 60px;
+            margin-bottom: 10px;
+        }
+        .hero h2 {
+            font-size: 40px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #60a5fa, #a855f7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+        }
+        .card {
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 24px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        input, textarea {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 16px;
+            padding: 12px 16px;
+            width: 100%;
+            color: white;
+            outline: none;
+            box-sizing: border-box;
+        }
+        input:focus, textarea:focus {
+            border-color: #3b82f6;
+        }
+        .btn-save {
+            background: linear-gradient(135deg, #10b981, #059669);
+            padding: 12px 24px;
+            border-radius: 40px;
+            border: none;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .btn-clear {
+            background: rgba(255,255,255,0.1);
+            padding: 12px 24px;
+            border-radius: 40px;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+        .stats {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+        }
+        .stats-number {
+            font-size: 28px;
+            font-weight: bold;
+            color: #60a5fa;
+        }
+        .stats-label {
+            font-size: 12px;
+            color: #9ca3af;
+        }
+        .notes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            max-height: 550px;
+            overflow-y: auto;
+        }
+        .note-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 18px;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .note-card:hover {
+            transform: translateY(-5px);
+            border-color: #f59e0b;
+            background: rgba(245,158,11,0.1);
+        }
+        .note-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .note-date {
+            font-size: 10px;
+            color: #9ca3af;
+            background: rgba(255,255,255,0.05);
+            padding: 3px 8px;
+            border-radius: 50px;
+            display: inline-block;
+        }
+        .note-preview {
+            font-size: 13px;
+            color: #9ca3af;
+            margin-top: 10px;
+        }
+        .empty-notes {
+            text-align: center;
+            padding: 60px 20px;
+            color: #9ca3af;
+            grid-column: 1/-1;
+        }
+        .msg {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 13px;
+            display: none;
+        }
+        .msg.success {
+            background: rgba(16,185,129,0.2);
+            color: #4ade80;
+        }
+        .msg.error {
+            background: rgba(239,68,68,0.2);
+            color: #f87171;
+        }
+        .delete-all {
+            background: rgba(239,68,68,0.5);
+            padding: 6px 15px;
+            border-radius: 30px;
+            font-size: 12px;
+            border: none;
+            color: white;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .card-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        @media (max-width: 768px) {
+            .grid-2col {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="nav-bar">
+    <div class="logo">
+        <span>📔</span>
+        <h1>Notes Diary</h1>
+    </div>
+    <div class="nav-links">
+        <a href="index.html">🏠 Home</a>
+        <a href="dashboard.html">📊 Dashboard</a>
+    </div>
+</div>
+
+<div class="container">
+    <div class="hero">
+        <div class="hero-icon">📔</div>
+        <h2>My Notes Diary</h2>
+    </div>
+
+    <div class="grid-2col">
+        <!-- Left Side - Add Note -->
+        <div class="card">
+            <div class="card-title">✍️ Write New Note</div>
+            <input type="text" id="noteTitle" placeholder="Note Title...">
+            <textarea id="noteContent" rows="5" placeholder="Write your thoughts here..." style="margin-top: 15px;"></textarea>
+            <div style="display: flex; gap: 12px; margin-top: 15px;">
+                <button id="saveBtn" class="btn-save">💾 Save Note</button>
+                <button id="clearBtn" class="btn-clear">Clear</button>
+            </div>
+            <div id="msg" class="msg"></div>
+            <div class="stats">
+                <div><div class="stats-number" id="totalNotes">0</div><div class="stats-label">Notes</div></div>
+                <div><div class="stats-number" id="totalWords">0</div><div class="stats-label">Words</div></div>
+            </div>
+        </div>
+
+        <!-- Right Side - Notes List -->
+        <div class="card">
+            <div class="flex-between">
+                <div class="card-title">📋 My Notes</div>
+                <button id="deleteAllBtn" class="delete-all">Delete All</button>
+            </div>
+            <div id="notesContainer" class="notes-grid"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let notes = [];
+    let editId = null;
+
+    const saved = localStorage.getItem('myNotes');
+    if (saved) {
+        try { notes = JSON.parse(saved); } catch(e) { notes = []; }
+    }
+
+    // Check for edit parameter in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const editIdFromUrl = urlParams.get('edit');
+    if (editIdFromUrl) {
+        const noteToEdit = notes.find(n => n.id === editIdFromUrl);
+        if (noteToEdit) {
+            document.getElementById('noteTitle').value = noteToEdit.title;
+            document.getElementById('noteContent').value = noteToEdit.content;
+            editId = editIdFromUrl;
+            showMessage('✏️ Editing mode', false);
+        }
+        // Remove edit param from URL without reload
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
+    function saveToStorage() {
+        localStorage.setItem('myNotes', JSON.stringify(notes));
+        updateStats();
+        renderNotes();
+    }
+
+    function updateStats() {
+        document.getElementById('totalNotes').innerText = notes.length;
+        let words = 0;
+        notes.forEach(n => {
+            if (n.content) words += n.content.trim().split(/\s+/).filter(w => w.length > 0).length;
+            if (n.title && n.title !== 'Untitled') words += n.title.trim().split(/\s+/).filter(w => w.length > 0).length;
+        });
+        document.getElementById('totalWords').innerText = words;
+    }
+
+    function showMessage(text, isError) {
+        const msg = document.getElementById('msg');
+        msg.innerText = text;
+        msg.className = `msg ${isError ? 'error' : 'success'}`;
+        msg.style.display = 'block';
+        setTimeout(() => msg.style.display = 'none', 2500);
+    }
+
+    function escapeHtml(text) {
+        if (!text) return '';
+        return text.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
+    }
+
+    function renderNotes() {
+        const container = document.getElementById('notesContainer');
+        if (notes.length === 0) {
+            container.innerHTML = '<div class="empty-notes">📭<p>No notes yet. Create your first note!</p></div>';
+            return;
+        }
+        const sorted = [...notes].reverse();
+        container.innerHTML = sorted.map(n => `
+            <div class="note-card" onclick="location.href='note-reader.html?id=${n.id}'">
+                <div class="note-title">📌 ${escapeHtml(n.title)}</div>
+                <span class="note-date">📅 ${escapeHtml(n.date)}</span>
+                <div class="note-preview">${escapeHtml(n.content.substring(0, 80))}${n.content.length > 80 ? '...' : ''}</div>
+            </div>
+        `).join('');
+    }
+
+    function saveNote() {
+        const title = document.getElementById('noteTitle').value.trim();
+        const content = document.getElementById('noteContent').value.trim();
+        if (!title && !content) { showMessage('Please enter title or content!', true); return; }
+        
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) + ' ' + now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+        
+        if (editId) {
+            const idx = notes.findIndex(n => n.id === editId);
+            if (idx !== -1) {
+                notes[idx].title = title || 'Untitled';
+                notes[idx].content = content || '';
+                notes[idx].date = dateStr + ' (edited)';
+                showMessage('✅ Note updated!', false);
+                editId = null;
+            }
+        } else {
+            notes.push({ id: Date.now().toString(), title: title || 'Untitled', content: content || '', date: dateStr });
+            showMessage('✅ Note saved!', false);
+        }
+        document.getElementById('noteTitle').value = '';
+        document.getElementById('noteContent').value = '';
+        saveToStorage();
+    }
+
+    function deleteAllNotes() {
+        if (notes.length === 0) { showMessage('No notes to delete!', true); return; }
+        if (confirm('⚠️ Delete ALL notes? This cannot be undone!')) {
+            notes = [];
+            editId = null;
+            document.getElementById('noteTitle').value = '';
+            document.getElementById('noteContent').value = '';
+            saveToStorage();
+            showMessage('🗑️ All notes deleted!', false);
+        }
+    }
+
+    function clearForm() {
+        document.getElementById('noteTitle').value = '';
+        document.getElementById('noteContent').value = '';
+        editId = null;
+        showMessage('Form cleared', false);
+    }
+
+    document.getElementById('saveBtn').addEventListener('click', saveNote);
+    document.getElementById('clearBtn').addEventListener('click', clearForm);
+    document.getElementById('deleteAllBtn').addEventListener('click', deleteAllNotes);
+
+    updateStats();
+    renderNotes();
+</script>
+</body>
+</html>

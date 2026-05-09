@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>All Careers | LOGRA</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    * { font-family: 'Inter', sans-serif; }
+    body {
+        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+        background-attachment: fixed;
+        color: white;
+        min-height: 100vh;
+    }
+    .career-card {
+        background: rgba(255,255,255,0.06);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255,255,255,0.12);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        border-radius: 20px;
+    }
+    .career-card:hover {
+        transform: translateY(-8px);
+        border-color: #3b82f6;
+        box-shadow: 0 20px 30px -10px rgba(59,130,246,0.3);
+        background: rgba(59,130,246,0.12);
+    }
+    .career-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+        transition: left 0.5s;
+    }
+    .career-card:hover::before {
+        left: 100%;
+    }
+    .category-header {
+        background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+        backdrop-filter: blur(8px);
+        border-left: 4px solid;
+        padding: 14px 24px;
+        border-radius: 16px;
+        margin-bottom: 24px;
+    }
+    .save-star {
+        position: absolute;
+        top: 12px;
+        right: 15px;
+        font-size: 20px;
+        color: rgba(255,255,255,0.4);
+        transition: all 0.2s;
+        z-index: 10;
+        cursor: pointer;
+    }
+    .save-star:hover {
+        transform: scale(1.2);
+        color: #facc15;
+    }
+    .save-star.saved {
+        color: #facc15;
+        text-shadow: 0 0 10px rgba(250,204,21,0.5);
+    }
+    .search-bar {
+        background: rgba(255,255,255,0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.2);
+        transition: all 0.3s;
+        border-radius: 50px;
+    }
+    .search-bar:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 20px rgba(59,130,246,0.3);
+        outline: none;
+    }
+    .filter-btn {
+        transition: all 0.2s;
+        cursor: pointer;
+        border-radius: 40px;
+        font-weight: 500;
+    }
+    .filter-btn.active {
+        background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+        box-shadow: 0 4px 15px rgba(59,130,246,0.3);
+    }
+    .toast {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 50px;
+        z-index: 1000;
+        animation: slideIn 0.3s ease;
+        font-weight: bold;
+        box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
+    }
+    @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    .career-icon {
+        font-size: 2.8rem;
+        filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+        transition: transform 0.3s ease;
+        margin-bottom: 8px;
+    }
+    .career-card:hover .career-icon {
+        transform: scale(1.08);
+    }
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<div class="sticky top-0 z-50 backdrop-blur-xl bg-black/40 border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <div class="text-2xl">✨</div>
+            <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">All Careers</h1>
+        </div>
+        <div class="flex gap-3">
+            <a href="dashboard.html" class="bg-white/10 hover:bg-white/20 px-5 py-2 rounded-full transition backdrop-blur-sm">📊 Dashboard</a>
+            <a href="index.html" class="bg-gradient-to-r from-blue-600 to-purple-600 px-5 py-2 rounded-full hover:scale-105 transition shadow-lg">🏠 Home</a>
+        </div>
+    </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-6 py-10">
+    <!-- Header -->
+    <div class="text-center mb-12">
+        <div class="text-7xl mb-4 animate-bounce">🎯</div>
+        <h1 class="text-5xl md:text-6xl font-black bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-4">
+            Explore All Careers
+        </h1>
+        <p class="text-gray-300 text-lg max-w-2xl mx-auto">Click on any career to view detailed roadmap • ⭐ Save your favorite careers</p>
+        
+        <!-- Search Box -->
+        <div class="max-w-md mx-auto mt-8">
+            <input type="text" id="searchInput" placeholder="🔍 Search careers... (e.g., Developer, Doctor, Engineer)" class="search-bar w-full px-6 py-3 rounded-full text-white placeholder-gray-400">
+        </div>
+    </div>
+
+    <!-- Category Filters -->
+    <div class="flex flex-wrap justify-center gap-3 mb-12">
+        <button class="filter-btn active px-6 py-2.5 rounded-full" data-cat="all">All</button>
+        <button class="filter-btn bg-white/10 hover:bg-white/20 px-6 py-2.5 rounded-full" data-cat="tech">💻 Technology</button>
+        <button class="filter-btn bg-white/10 hover:bg-white/20 px-6 py-2.5 rounded-full" data-cat="medical">🩺 Medical</button>
+        <button class="filter-btn bg-white/10 hover:bg-white/20 px-6 py-2.5 rounded-full" data-cat="engineering">⚙️ Engineering</button>
+        <button class="filter-btn bg-white/10 hover:bg-white/20 px-6 py-2.5 rounded-full" data-cat="government">🏛️ Government</button>
+        <button class="filter-btn bg-white/10 hover:bg-white/20 px-6 py-2.5 rounded-full" data-cat="commerce">💼 Commerce</button>
+        <button class="filter-btn bg-white/10 hover:bg-white/20 px-6 py-2.5 rounded-full" data-cat="arts">🎨 Arts</button>
+        <button class="filter-btn bg-white/10 hover:bg-white/20 px-6 py-2.5 rounded-full" data-cat="other">🌍 Other</button>
+    </div>
+
+    <!-- Categories Sections -->
+    <div id="techSection" class="category-section mb-12" data-category="tech">
+        <div class="category-header border-blue-500">
+            <h2 class="text-2xl font-bold text-blue-400">💻 Technology & IT</h2>
+            <p class="text-gray-400 text-sm mt-1">High demand, great salaries, future-proof careers</p>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5" id="techGrid"></div>
+    </div>
+
+    <div id="medicalSection" class="category-section mb-12" data-category="medical">
+        <div class="category-header border-red-500">
+            <h2 class="text-2xl font-bold text-red-400">🩺 Medical & Healthcare</h2>
+            <p class="text-gray-400 text-sm mt-1">Serve humanity, job security, respected profession</p>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5" id="medicalGrid"></div>
+    </div>
+
+    <div id="engineeringSection" class="category-section mb-12" data-category="engineering">
+        <div class="category-header border-green-500">
+            <h2 class="text-2xl font-bold text-green-400">⚙️ Engineering</h2>
+            <p class="text-gray-400 text-sm mt-1">Build the future, innovate, solve real-world problems</p>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5" id="engGrid"></div>
+    </div>
+
+    <div id="governmentSection" class="category-section mb-12" data-category="government">
+        <div class="category-header border-yellow-500">
+            <h2 class="text-2xl font-bold text-yellow-400">🏛️ Government & Defence</h2>
+            <p class="text-gray-400 text-sm mt-1">Prestige, stability, serve the nation</p>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5" id="govGrid"></div>
+    </div>
+
+    <div id="commerceSection" class="category-section mb-12" data-category="commerce">
+        <div class="category-header border-purple-500">
+            <h2 class="text-2xl font-bold text-purple-400">💼 Commerce & Finance</h2>
+            <p class="text-gray-400 text-sm mt-1">High earnings, business leadership, global opportunities</p>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5" id="commerceGrid"></div>
+    </div>
+
+    <div id="artsSection" class="category-section mb-12" data-category="arts">
+        <div class="category-header border-pink-500">
+            <h2 class="text-2xl font-bold text-pink-400">🎨 Arts & Creative</h2>
+            <p class="text-gray-400 text-sm mt-1">Express yourself, creative freedom, digital opportunities</p>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5" id="artsGrid"></div>
+    </div>
+
+    <div id="otherSection" class="category-section mb-12" data-category="other">
+        <div class="category-header border-cyan-500">
+            <h2 class="text-2xl font-bold text-cyan-400">🌍 Other Exciting Careers</h2>
+            <p class="text-gray-400 text-sm mt-1">Unique paths, adventure, specialized skills</p>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5" id="otherGrid"></div>
+    </div>
+</div>
+
+<script>
+    // Beautiful Icons for each career
+    const careerIcons = {
+        "Software Developer": "💻", "Web Developer": "🌐", "App Developer": "📱", "AI Engineer": "🧠", "Machine Learning Engineer": "🤖",
+        "Cyber Security Analyst": "🔐", "Ethical Hacker": "🛡️", "Cloud Engineer": "☁️", "DevOps Engineer": "⚙️", "Data Analyst": "📊",
+        "Data Scientist": "🔬", "Blockchain Developer": "⛓️", "Game Developer": "🎮", "UI/UX Designer": "🎨", "Full Stack Developer": "🏗️",
+        "Doctor (MBBS)": "👨‍⚕️", "Surgeon": "🔪", "Dentist": "🦷", "Pharmacist": "💊", "Nurse": "👩‍⚕️", "Physiotherapist": "💪",
+        "Psychologist": "🧠", "Radiologist": "📷", "Cardiologist": "❤️", "Veterinary Doctor": "🐾", "Mechanical Engineer": "🔧",
+        "Civil Engineer": "🏗️", "Electrical Engineer": "⚡", "Electronics Engineer": "📡", "Robotics Engineer": "🤖", "Aerospace Engineer": "🚀",
+        "Automobile Engineer": "🚗", "Biotech Engineer": "🧬", "IAS": "🇮🇳", "IPS": "👮", "IFS": "🌍", "SSC CGL Officer": "📋",
+        "Bank PO": "🏦", "RBI Grade B": "🏛️", "Police Officer": "👮‍♂️", "Army Officer": "🪖", "Navy Officer": "⚓", "Air Force Officer": "✈️",
+        "Chartered Accountant": "📊", "Company Secretary": "📜", "Investment Banker": "💰", "Financial Analyst": "📈", "Business Analyst": "📋",
+        "Stock Trader": "📉", "Entrepreneur": "🚀", "HR Manager": "👥", "Graphic Designer": "🎨", "Fashion Designer": "👗", "Interior Designer": "🪑",
+        "Photographer": "📸", "Video Editor": "🎬", "Content Creator": "📱", "YouTuber": "📺", "Actor": "🎭", "Musician": "🎵", "Writer": "✍️",
+        "Pilot": "✈️", "Cabin Crew": "🛫", "Hotel Manager": "🏨", "Chef": "🍳", "Teacher": "📚", "Professor": "🎓", "Lawyer": "⚖️", "Judge": "🏛️",
+        "Space Scientist": "🛰️", "Journalist": "📰"
+    };
+
+    // Career lists by category
+    const careersByCategory = {
+        tech: ["Software Developer", "Web Developer", "App Developer", "AI Engineer", "Machine Learning Engineer", "Cyber Security Analyst", "Ethical Hacker", "Cloud Engineer", "DevOps Engineer", "Data Analyst", "Data Scientist", "Blockchain Developer", "Game Developer", "UI/UX Designer", "Full Stack Developer"],
+        medical: ["Doctor (MBBS)", "Surgeon", "Dentist", "Pharmacist", "Nurse", "Physiotherapist", "Psychologist", "Radiologist", "Cardiologist", "Veterinary Doctor"],
+        engineering: ["Mechanical Engineer", "Civil Engineer", "Electrical Engineer", "Electronics Engineer", "Robotics Engineer", "Aerospace Engineer", "Automobile Engineer", "Biotech Engineer"],
+        government: ["IAS", "IPS", "IFS", "SSC CGL Officer", "Bank PO", "RBI Grade B", "Police Officer", "Army Officer", "Navy Officer", "Air Force Officer"],
+        commerce: ["Chartered Accountant", "Company Secretary", "Investment Banker", "Financial Analyst", "Business Analyst", "Stock Trader", "Entrepreneur", "HR Manager"],
+        arts: ["Graphic Designer", "Fashion Designer", "Interior Designer", "Photographer", "Video Editor", "Content Creator", "YouTuber", "Actor", "Musician", "Writer"],
+        other: ["Pilot", "Cabin Crew", "Hotel Manager", "Chef", "Teacher", "Professor", "Lawyer", "Judge", "Space Scientist", "Journalist"]
+    };
+
+    function getCareerIcon(career) {
+        return careerIcons[career] || "✨";
+    }
+
+    function getSavedCareers() {
+        return JSON.parse(localStorage.getItem('savedCareers') || '[]');
+    }
+
+    function saveCareer(career, event) {
+        event.stopPropagation();
+        let saved = getSavedCareers();
+        if (!saved.includes(career)) {
+            saved.push(career);
+            localStorage.setItem('savedCareers', JSON.stringify(saved));
+            showToast(`✅ "${career}" saved to dashboard!`);
+            updateStarIcon(career, true);
+        } else {
+            saved = saved.filter(c => c !== career);
+            localStorage.setItem('savedCareers', JSON.stringify(saved));
+            showToast(`❌ "${career}" removed from saved`);
+            updateStarIcon(career, false);
+        }
+    }
+
+    function updateStarIcon(career, isSaved) {
+        const escapedCareer = career.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const star = document.querySelector(`.save-star[data-career="${escapedCareer}"]`);
+        if (star) {
+            if (isSaved) {
+                star.classList.add('saved');
+                star.innerHTML = '⭐';
+            } else {
+                star.classList.remove('saved');
+                star.innerHTML = '☆';
+            }
+        }
+    }
+
+    function showToast(message) {
+        let toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.innerHTML = message;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2000);
+    }
+
+    function goToRoadmap(career) {
+        window.location.href = `roadmap.html?career=${encodeURIComponent(career)}`;
+    }
+
+    function renderGrid(category, containerId) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        container.innerHTML = "";
+        const saved = getSavedCareers();
+        careersByCategory[category].forEach(career => {
+            const isSaved = saved.includes(career);
+            const card = document.createElement("div");
+            card.className = "career-card p-5 rounded-xl text-center font-medium transition-all relative";
+            card.innerHTML = `
+                <div class="save-star ${isSaved ? 'saved' : ''}" data-career="${career}" onclick="saveCareer('${career.replace(/'/g, "\\'")}', event)">${isSaved ? '⭐' : '☆'}</div>
+                <div class="career-icon">${getCareerIcon(career)}</div>
+                <div class="text-sm font-semibold mt-2">${career}</div>
+                <div class="text-xs text-gray-400 mt-2 opacity-80">Click to view roadmap →</div>
+            `;
+            card.onclick = (e) => {
+                if (e.target.classList.contains('save-star')) return;
+                goToRoadmap(career);
+            };
+            container.appendChild(card);
+        });
+    }
+
+    // Initialize all grids
+    renderGrid("tech", "techGrid");
+    renderGrid("medical", "medicalGrid");
+    renderGrid("engineering", "engGrid");
+    renderGrid("government", "govGrid");
+    renderGrid("commerce", "commerceGrid");
+    renderGrid("arts", "artsGrid");
+    renderGrid("other", "otherGrid");
+
+    // Search functionality
+    document.getElementById("searchInput").addEventListener("input", function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        const allCards = document.querySelectorAll(".career-card");
+        allCards.forEach(card => {
+            const careerName = card.innerText.toLowerCase();
+            if (careerName.includes(searchTerm)) {
+                card.style.display = "flex";
+                card.style.opacity = "1";
+            } else {
+                card.style.display = "none";
+                card.style.opacity = "0";
+            }
+        });
+    });
+
+    // Category filter
+    document.querySelectorAll(".filter-btn").forEach(btn => {
+        btn.addEventListener("click", function() {
+            document.querySelectorAll(".filter-btn").forEach(b => {
+                b.classList.remove("active");
+                b.classList.add("bg-white/10");
+            });
+            this.classList.add("active");
+            this.classList.remove("bg-white/10");
+            const category = this.dataset.cat;
+            document.querySelectorAll(".category-section").forEach(section => {
+                if (category === "all" || section.dataset.category === category) {
+                    section.style.display = "block";
+                } else {
+                    section.style.display = "none";
+                }
+            });
+        });
+    });
+
+    window.saveCareer = saveCareer;
+    window.goToRoadmap = goToRoadmap;
+</script>
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Career Roadmap | FutureReady</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    * { font-family: 'Inter', sans-serif; }
+    body {
+        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+        background-attachment: fixed;
+        color: white;
+        min-height: 100vh;
+    }
+    .timeline-item {
+        background: rgba(255,255,255,0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 20px;
+        transition: all 0.3s ease;
+    }
+    .timeline-item:hover {
+        transform: translateX(10px);
+        background: rgba(59,130,246,0.15);
+        border-color: #3b82f6;
+    }
+    .timeline-number {
+        background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 1.3rem;
+    }
+    .btn-save {
+        background: rgba(255,255,255,0.1);
+        transition: all 0.2s;
+        cursor: pointer;
+        border-radius: 40px;
+        padding: 8px 20px;
+        border: none;
+        color: white;
+    }
+    .btn-save:hover {
+        background: rgba(59,130,246,0.3);
+        transform: scale(1.02);
+    }
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<div class="sticky top-0 z-50 backdrop-blur-xl bg-black/40 border-b border-white/10">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+            <div class="text-2xl">🗺️</div>
+            <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Career Roadmap</h1>
+        </div>
+        <div class="flex gap-3">
+            <a href="dashboard.html" class="bg-slate-700 hover:bg-slate-600 px-5 py-2 rounded-full transition">📊 Dashboard</a>
+            <a href="careers.html" class="bg-gradient-to-r from-blue-600 to-purple-600 px-5 py-2 rounded-full hover:scale-105 transition">← Back to Careers</a>
+        </div>
+    </div>
+</div>
+
+<div class="max-w-5xl mx-auto px-6 py-12">
+    <div class="text-center mb-8">
+        <div id="careerIcon" class="text-7xl mb-4">🚀</div>
+        <h1 id="careerTitle" class="text-4xl md:text-5xl font-black bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-3">Loading...</h1>
+        
+        <button id="saveBtn" class="btn-save inline-flex items-center gap-2">☆ Save Career</button>
+        
+        <div class="flex justify-center gap-4 mt-4">
+            <div class="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full">
+                <span class="text-yellow-400">📋</span> <span id="stepCount">0 Steps</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="mb-6 p-4 bg-white/5 rounded-xl">
+        <div class="flex justify-between mb-2">
+            <span class="text-sm">Your Progress</span>
+            <span id="progressPercent" class="text-sm text-blue-400">0%</span>
+        </div>
+        <div class="h-2 bg-white/20 rounded-full overflow-hidden">
+            <div id="progressFill" class="progress-bar h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full" style="width: 0%"></div>
+        </div>
+        <p class="text-xs text-gray-400 mt-2">✅ Click on checkboxes to mark steps as completed</p>
+    </div>
+
+    <div id="roadmapSteps" class="space-y-4"></div>
+
+    <div class="mt-12 text-center flex gap-4 justify-center">
+        <a href="careers.html" class="bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-3 rounded-xl transition hover:scale-105">🔍 More Careers</a>
+        <a href="dashboard.html" class="bg-white/10 px-6 py-3 rounded-xl transition hover:bg-white/20">📊 Go to Dashboard</a>
+    </div>
+</div>
+
+<script>
+    // All Careers Roadmap Data
+    const roadmaps = {
+        "Software Developer": { icon: "💻", steps: ["Learn Programming Fundamentals (Python/Java/JavaScript)", "Master Data Structures & Algorithms", "Version Control with Git & GitHub", "Database Management (SQL, MongoDB)", "Object-Oriented Programming & Design Patterns", "Build REST APIs & Backend Services", "Write Unit Tests & Integration Tests", "Build 5+ Portfolio Projects", "Prepare for Technical Interviews", "Apply for Internships & Junior Developer Roles"] },
+        "Web Developer": { icon: "🌐", steps: ["HTML5 & CSS3 (Flexbox, Grid)", "Responsive Design & Mobile-first", "JavaScript (ES6+) - Async/Await", "React.js (Hooks, Context, Redux)", "Node.js & Express.js", "MongoDB & PostgreSQL", "Authentication (JWT, OAuth)", "Deployment (Vercel, Netlify, AWS)", "Build 5+ Full-Stack Projects", "GraphQL & TypeScript"] },
+        "App Developer": { icon: "📱", steps: ["Learn Java/Kotlin (Android) or Swift (iOS)", "Master Mobile UI/UX Principles", "Learn Flutter or React Native", "State Management (Provider, Bloc, Redux)", "REST APIs & Local Databases (SQLite)", "Firebase Services Integration", "Build 3+ Complete Apps", "Testing & Debugging", "Publish on Play Store/App Store", "ASO & Performance Optimization"] },
+        "AI Engineer": { icon: "🤖", steps: ["Advanced Python Programming", "Mathematics (Linear Algebra, Calculus, Statistics)", "Data Analysis (NumPy, Pandas)", "Machine Learning (Scikit-learn)", "Deep Learning (TensorFlow/PyTorch)", "Computer Vision (OpenCV, CNNs)", "Natural Language Processing (NLTK)", "MLOps (Docker, MLflow)", "Kaggle Competitions", "Deploy ML Models on Cloud"] },
+        "Data Scientist": { icon: "📊", steps: ["Advanced Statistics & Probability", "Python (Pandas, Scikit-learn)", "SQL & Data Wrangling", "Feature Engineering & Model Tuning", "Big Data Basics (Spark)", "A/B Testing", "Machine Learning Algorithms", "Data Visualization", "Kaggle Competitions", "Apply for Data Scientist Roles"] },
+        "Cyber Security Analyst": { icon: "🔒", steps: ["Networking Fundamentals", "Linux Command Line", "Security Tools (Wireshark, Nmap)", "Certifications (Security+, CEH)", "Threat Modeling & Risk Assessment", "Incident Response & Forensics", "Web Application Security", "Practice on TryHackMe", "Build Security Portfolio", "Apply for Security Analyst Roles"] },
+        "Cloud Engineer": { icon: "☁️", steps: ["Networking Fundamentals", "Docker & Containerization", "AWS/Azure/GCP Fundamentals", "Infrastructure as Code (Terraform)", "CI/CD Pipelines", "Kubernetes Basics", "Cloud Security & IAM", "Monitoring (Prometheus)", "Get AWS Certification", "Apply for Cloud Engineer Roles"] },
+        "DevOps Engineer": { icon: "⚙️", steps: ["Linux System Administration", "Scripting (Bash, Python)", "Docker & Containerization", "Kubernetes Orchestration", "CI/CD Tools (Jenkins)", "Infrastructure as Code (Terraform)", "Cloud Platforms", "Monitoring (Prometheus, Grafana)", "DevSecOps Practices", "Get Certified (CKA)"] },
+        "Doctor (MBBS)": { icon: "👨‍⚕️", steps: ["Clear NEET-UG Exam", "Complete MBBS (5.5 years)", "Rotatory Internship", "Prepare for NEET-PG", "Choose Specialization (MD/MS)", "Complete Residency (3 years)", "Register with Medical Council", "Start Practice or Join Hospital", "Continue Medical Education", "Consider Super-Specialization"] },
+        "IAS": { icon: "🇮🇳", steps: ["Understand UPSC Pattern", "Master NCERT Books", "Daily Newspaper Reading", "Choose Optional Subject", "Practice Answer Writing", "Take Mock Tests", "Prepare for Interview", "Current Affairs", "Crack UPSC", "Join LBSNAA Training"] },
+        "Chartered Accountant": { icon: "📊", steps: ["Register for CA Foundation", "Clear Foundation", "Register for Intermediate", "Complete 3 Years Articleship", "Clear Intermediate & Final", "Get ICAI Membership", "Start Practice", "Taxation & Audit", "Financial Consulting", "Career Growth"] }
+    };
+    
+    function getDefaultRoadmap(career) {
+        return { icon: "🎯", steps: ["Research the career path thoroughly", "Get relevant education & certifications", "Gain practical experience through internships", "Build professional network", "Prepare resume & portfolio", "Apply for jobs", "Continuous learning & skill upgrade", "Achieve career goals"] };
+    }
+    
+    // Get career from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    let careerName = urlParams.get('career');
+    if (!careerName) careerName = "Software Developer";
+    careerName = decodeURIComponent(careerName);
+    
+    let roadmap = roadmaps[careerName] || getDefaultRoadmap(careerName);
+    let completedTasks = JSON.parse(localStorage.getItem('roadmapProgress')) || {};
+    
+    // Update UI
+    document.getElementById('careerIcon').textContent = roadmap.icon;
+    document.getElementById('careerTitle').textContent = careerName;
+    document.getElementById('stepCount').textContent = roadmap.steps.length + " Steps";
+    
+    function updateProgress() {
+        let completed = 0;
+        for (let i = 0; i < roadmap.steps.length; i++) {
+            if (completedTasks[`${careerName}_${i}`]) completed++;
+        }
+        const percent = Math.round((completed / roadmap.steps.length) * 100);
+        document.getElementById('progressFill').style.width = percent + '%';
+        document.getElementById('progressPercent').textContent = percent + '%';
+    }
+    
+    function renderSteps() {
+        const container = document.getElementById('roadmapSteps');
+        container.innerHTML = "";
+        roadmap.steps.forEach((step, index) => {
+            const isCompleted = completedTasks[`${careerName}_${index}`];
+            const stepDiv = document.createElement('div');
+            stepDiv.className = 'timeline-item p-5';
+            stepDiv.innerHTML = `
+                <div class="flex gap-5 items-start">
+                    <div class="timeline-number shrink-0">${index + 1}</div>
+                    <div class="flex-1">
+                        <p class="text-gray-200 text-lg leading-relaxed">${step}</p>
+                    </div>
+                    <div class="w-7 h-7 rounded-full border-2 border-blue-500 flex items-center justify-center cursor-pointer" onclick="toggleTask(${index})">
+                        <div class="w-3 h-3 rounded-full bg-blue-500 transition" style="opacity: ${isCompleted ? '1' : '0'}"></div>
+                    </div>
+                </div>
+            `;
+            container.appendChild(stepDiv);
+        });
+        updateProgress();
+    }
+    
+    function toggleTask(index) {
+        const key = `${careerName}_${index}`;
+        if (completedTasks[key]) {
+            delete completedTasks[key];
+        } else {
+            completedTasks[key] = true;
+        }
+        localStorage.setItem('roadmapProgress', JSON.stringify(completedTasks));
+        renderSteps();
+    }
+    
+    function saveCareer() {
+        let saved = JSON.parse(localStorage.getItem('savedCareers') || '[]');
+        if (!saved.includes(careerName)) {
+            saved.push(careerName);
+            localStorage.setItem('savedCareers', JSON.stringify(saved));
+            document.getElementById('saveBtn').innerHTML = '⭐ Saved!';
+            alert(`✅ "${careerName}" saved to dashboard!`);
+        } else {
+            alert(`❌ "${careerName}" is already saved!`);
+        }
+    }
+    
+    document.getElementById('saveBtn').addEventListener('click', saveCareer);
+    
+    let saved = JSON.parse(localStorage.getItem('savedCareers') || '[]');
+    if (saved.includes(careerName)) {
+        document.getElementById('saveBtn').innerHTML = '⭐ Saved!';
+    }
+    
+    let explored = JSON.parse(localStorage.getItem('exploredCareers') || '[]');
+    if (!explored.includes(careerName)) {
+        explored.push(careerName);
+        localStorage.setItem('exploredCareers', JSON.stringify(explored));
+    }
+    
+    window.toggleTask = toggleTask;
+    renderSteps();
+</script>
+</body>
+</html>

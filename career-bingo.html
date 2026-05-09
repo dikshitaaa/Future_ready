@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Career Bingo | LOGRA</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    * { font-family: 'Inter', sans-serif; }
+    body {
+        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+        background-attachment: fixed;
+        color: white;
+        min-height: 100vh;
+    }
+    .checklist-card {
+        background: rgba(255,255,255,0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.1);
+        transition: all 0.3s;
+        border-radius: 20px;
+    }
+    .checklist-card:hover {
+        transform: translateY(-3px);
+        border-color: #10b981;
+    }
+    .checklist-item {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.08);
+        transition: all 0.2s;
+        cursor: pointer;
+        border-radius: 12px;
+    }
+    .checklist-item:hover {
+        background: rgba(59,130,246,0.15);
+        transform: translateX(5px);
+    }
+    .checklist-item.completed {
+        background: rgba(16,185,129,0.15);
+        border-color: #10b981;
+    }
+    .checklist-item.completed .check-icon {
+        background: #10b981;
+        border-color: #10b981;
+    }
+    .check-icon {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        border: 2px solid rgba(255,255,255,0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+    }
+    .category-tab {
+        transition: all 0.2s;
+        cursor: pointer;
+        border-radius: 40px;
+    }
+    .category-tab.active {
+        background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    }
+    .toast {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 50px;
+        z-index: 1000;
+        animation: slideIn 0.3s ease;
+        font-weight: bold;
+    }
+    @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    .achievement-popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: linear-gradient(135deg, #1e1e3a, #2d2d5e);
+        border: 2px solid #f59e0b;
+        border-radius: 20px;
+        padding: 30px;
+        text-align: center;
+        z-index: 1001;
+        animation: bounceIn 0.5s ease;
+        box-shadow: 0 0 50px rgba(245,158,11,0.5);
+    }
+    @keyframes bounceIn {
+        0% { transform: translate(-50%, -50%) scale(0.3); opacity: 0; }
+        50% { transform: translate(-50%, -50%) scale(1.05); }
+        100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    }
+    .career-select {
+        background: rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 50px;
+        padding: 10px 20px;
+        color: white;
+        outline: none;
+        cursor: pointer;
+    }
+    .career-select option {
+        background: #1e1e3a;
+    }
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<div class="sticky top-0 z-50 backdrop-blur-xl bg-black/40 border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <div class="text-2xl">🎯</div>
+            <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Career Bingo</h1>
+        </div>
+        <div class="flex gap-3">
+            <a href="index.html" class="bg-white/10 hover:bg-white/20 px-5 py-2 rounded-full transition">🏠 Home</a>
+            <a href="dashboard.html" class="bg-gradient-to-r from-blue-600 to-purple-600 px-5 py-2 rounded-full hover:scale-105 transition">📊 Dashboard</a>
+        </div>
+    </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-6 py-10">
+    <div class="text-center mb-10">
+        <div class="text-7xl mb-4 animate-bounce">🎯</div>
+        <h1 class="text-5xl font-black bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-3">
+            Career Bingo Checklist
+        </h1>
+        <p class="text-gray-300 text-lg max-w-2xl mx-auto">Track your career progress • Complete tasks • Earn badges • Stay motivated</p>
+    </div>
+
+    <!-- Category Tabs -->
+    <div class="flex flex-wrap justify-center gap-3 mb-8">
+        <button class="category-tab active px-5 py-2 rounded-full" data-cat="tech">💻 Technology</button>
+        <button class="category-tab bg-white/10 hover:bg-white/20 px-5 py-2 rounded-full" data-cat="medical">🩺 Medical</button>
+        <button class="category-tab bg-white/10 hover:bg-white/20 px-5 py-2 rounded-full" data-cat="engineering">⚙️ Engineering</button>
+        <button class="category-tab bg-white/10 hover:bg-white/20 px-5 py-2 rounded-full" data-cat="government">🏛 Government</button>
+        <button class="category-tab bg-white/10 hover:bg-white/20 px-5 py-2 rounded-full" data-cat="commerce">💼 Commerce</button>
+        <button class="category-tab bg-white/10 hover:bg-white/20 px-5 py-2 rounded-full" data-cat="arts">🎨 Arts</button>
+        <button class="category-tab bg-white/10 hover:bg-white/20 px-5 py-2 rounded-full" data-cat="other">🌍 Other</button>
+    </div>
+
+    <!-- Career Selector -->
+    <div class="mb-8 text-center">
+        <label class="block text-sm font-semibold mb-2 text-gray-400">🎯 SELECT YOUR CAREER</label>
+        <select id="careerSelect" class="career-select w-full max-w-md"></select>
+    </div>
+
+    <!-- Progress Section -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="checklist-card p-5 text-center">
+            <div class="text-3xl mb-2">📊</div>
+            <div class="text-2xl font-bold text-blue-400" id="progressPercent">0%</div>
+            <div class="text-sm text-gray-400">Overall Progress</div>
+            <div class="mt-3 h-2 bg-white/20 rounded-full overflow-hidden">
+                <div id="progressBar" class="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full" style="width: 0%"></div>
+            </div>
+        </div>
+        <div class="checklist-card p-5 text-center">
+            <div class="text-3xl mb-2">✅</div>
+            <div class="text-2xl font-bold text-green-400" id="completedCount">0</div>
+            <div class="text-sm text-gray-400">Tasks Completed</div>
+        </div>
+        <div class="checklist-card p-5 text-center">
+            <div class="text-3xl mb-2">🏆</div>
+            <div class="text-2xl font-bold text-yellow-400" id="badgeCount">0</div>
+            <div class="text-sm text-gray-400">Badges Earned</div>
+        </div>
+    </div>
+
+    <!-- Checklist Items -->
+    <div class="checklist-card p-6">
+        <div class="flex justify-between items-center mb-6 flex-wrap gap-4">
+            <h2 class="text-2xl font-bold" id="careerTitle">💻 Software Developer Checklist</h2>
+            <button id="resetBtn" class="bg-red-600/50 hover:bg-red-600 px-4 py-2 rounded-full text-sm transition">Reset Progress</button>
+        </div>
+        <div id="checklistContainer" class="space-y-3"></div>
+    </div>
+
+    <!-- Badges Section -->
+    <div class="checklist-card p-6 mt-8">
+        <h2 class="text-2xl font-bold mb-4">🏆 Your Achievements</h2>
+        <div id="badgesContainer" class="flex flex-wrap gap-3"></div>
+    </div>
+</div>
+
+<script>
+    // Complete Career Checklist Data for ALL 60+ CAREERS
+    const careerChecklists = {
+        // ========== TECHNOLOGY (15 careers) ==========
+        "Software Developer": {
+            icon: "💻", category: "tech",
+            tasks: ["✅ Learn Python/Java/JavaScript basics", "✅ Master Data Structures & Algorithms", "✅ Learn Git & GitHub version control", "✅ Complete SQL & Database course", "✅ Build first CLI project", "✅ Learn OOP concepts", "✅ Build REST API", "✅ Complete 5+ coding projects", "✅ Solve 100+ LeetCode problems", "✅ Apply for internships", "✅ Prepare for technical interviews", "✅ Get first job offer"],
+            badges: ["🌱 Coding Beginner", "🏗️ Project Builder", "📊 DSA Pro", "🎯 Job Ready", "🏆 Full Stack Hero"]
+        },
+        "Web Developer": {
+            icon: "🌐", category: "tech",
+            tasks: ["✅ Learn HTML5 & CSS3", "✅ Master JavaScript (ES6+)", "✅ Learn Responsive Design", "✅ Learn React.js or Vue.js", "✅ Learn Node.js & Express", "✅ Learn MongoDB/PostgreSQL", "✅ Build first full-stack app", "✅ Learn authentication (JWT)", "✅ Deploy project on Vercel/Netlify", "✅ Build portfolio with 3+ projects", "✅ Learn TypeScript", "✅ Get first web dev job"],
+            badges: ["🎨 HTML Master", "⚡ JS Ninja", "⚛️ React Expert", "🏗️ Full Stack Dev", "🏆 Web Legend"]
+        },
+        "App Developer": {
+            icon: "📱", category: "tech",
+            tasks: ["✅ Learn Java/Kotlin (Android) or Swift (iOS)", "✅ Learn Flutter or React Native", "✅ Understand mobile UI/UX", "✅ Learn REST API integration", "✅ Learn Firebase services", "✅ Build first simple app", "✅ Learn state management", "✅ Add local database (SQLite)", "✅ Build e-commerce app", "✅ Test app on multiple devices", "✅ Publish app on Play Store", "✅ Get app developer job"],
+            badges: ["📱 Mobile Beginner", "🔨 App Builder", "🔥 Firebase Expert", "📤 Published Dev", "🏆 App Master"]
+        },
+        "AI Engineer": {
+            icon: "🤖", category: "tech",
+            tasks: ["✅ Learn Python advanced", "✅ Master NumPy, Pandas, Matplotlib", "✅ Learn Linear Algebra & Calculus", "✅ Complete ML course (Scikit-learn)", "✅ Build first ML model", "✅ Learn Deep Learning (TensorFlow/PyTorch)", "✅ Build neural network from scratch", "✅ Learn Computer Vision basics", "✅ Learn NLP basics", "✅ Complete 2+ AI projects", "✅ Learn model deployment", "✅ Get AI engineer job"],
+            badges: ["🔍 AI Explorer", "📈 ML Enthusiast", "🧠 Deep Learner", "🤖 AI Creator", "🏆 AI Master"]
+        },
+        "Data Scientist": {
+            icon: "📊", category: "tech",
+            tasks: ["✅ Learn Python programming", "✅ Master NumPy & Pandas", "✅ Learn data visualization (Matplotlib/Seaborn)", "✅ Understand statistics & probability", "✅ Learn SQL for data analysis", "✅ Complete ML basics (Scikit-learn)", "✅ Build first ML model", "✅ Learn Deep Learning basics", "✅ Participate in Kaggle competition", "✅ Learn Big Data tools (Spark)", "✅ Build data science portfolio", "✅ Get data scientist job"],
+            badges: ["📊 Data Beginner", "🐼 Pandas Pro", "🤖 ML Engineer", "🏅 Kaggle Rookie", "🏆 Data Master"]
+        },
+        "Cyber Security Analyst": {
+            icon: "🔒", category: "tech",
+            tasks: ["✅ Learn networking basics", "✅ Master Linux command line", "✅ Learn Python for security", "✅ Understand cryptography basics", "✅ Learn Wireshark & Nmap", "✅ Complete Security+ course", "✅ Practice on TryHackMe", "✅ Learn web security (OWASP)", "✅ Complete CEH certification", "✅ Participate in bug bounty", "✅ Build security portfolio", "✅ Get cyber security job"],
+            badges: ["🛡️ Security Novice", "🌐 Network Defender", "💻 Ethical Hacker", "🐛 Bug Hunter", "🏆 Security Pro"]
+        },
+        "Cloud Engineer": {
+            icon: "☁️", category: "tech",
+            tasks: ["✅ Learn networking basics", "✅ Learn Linux administration", "✅ Learn Docker & containers", "✅ Choose cloud platform (AWS/Azure/GCP)", "✅ Learn Infrastructure as Code", "✅ Learn CI/CD pipelines", "✅ Learn Kubernetes basics", "✅ Get cloud certification", "✅ Build cloud projects", "✅ Learn cloud security", "✅ Learn monitoring tools", "✅ Get cloud engineer job"],
+            badges: ["☁️ Cloud Novice", "🐳 Docker Expert", "📦 K8s Learner", "🎓 Certified", "🏆 Cloud Master"]
+        },
+        "DevOps Engineer": {
+            icon: "⚙️", category: "tech",
+            tasks: ["✅ Learn Linux system admin", "✅ Learn scripting (Bash/Python)", "✅ Learn Docker & containers", "✅ Learn CI/CD (Jenkins/GitLab)", "✅ Learn Kubernetes", "✅ Learn Infrastructure as Code", "✅ Learn cloud platforms", "✅ Learn monitoring tools", "✅ Learn GitOps", "✅ Build DevOps projects", "✅ Get DevOps certification", "✅ Get DevOps engineer job"],
+            badges: ["⚙️ DevOps Beginner", "🐳 Container Pro", "🔄 CI/CD Expert", "📦 K8s Master", "🏆 DevOps Hero"]
+        },
+        "Full Stack Developer": {
+            icon: "🏗️", category: "tech",
+            tasks: ["✅ Learn HTML/CSS/JS", "✅ Learn React/Angular", "✅ Learn Node.js/Express", "✅ Learn MongoDB/PostgreSQL", "✅ Build frontend projects", "✅ Build backend APIs", "✅ Learn authentication", "✅ Build full-stack projects", "✅ Learn deployment", "✅ Learn Docker basics", "✅ Learn testing", "✅ Get full stack job"],
+            badges: ["🎨 Frontend Basic", "⚙️ Backend Basic", "🔗 API Expert", "🏗️ Full Stack Dev", "🏆 Full Stack Master"]
+        },
+        "UI/UX Designer": {
+            icon: "🎨", category: "tech",
+            tasks: ["✅ Learn design principles", "✅ Learn Figma/Adobe XD", "✅ Learn typography & color", "✅ Learn wireframing", "✅ Learn prototyping", "✅ Learn user research", "✅ Learn usability testing", "✅ Build UI portfolio", "✅ Learn HTML/CSS basics", "✅ Learn interaction design", "✅ Learn design systems", "✅ Get UI/UX job"],
+            badges: ["🎨 Design Basic", "✏️ Wireframe Pro", "🎯 UX Researcher", "📱 UI Expert", "🏆 Design Master"]
+        },
+
+        // ========== MEDICAL (10 careers) ==========
+        "Doctor (MBBS)": {
+            icon: "👨‍⚕️", category: "medical",
+            tasks: ["✅ Complete 12th with PCB", "✅ Clear NEET-UG exam", "✅ Join MBBS college", "✅ Complete 1st year MBBS", "✅ Complete 2nd year MBBS", "✅ Complete 3rd year MBBS", "✅ Complete 4th year MBBS", "✅ Complete internship", "✅ Clear NEET-PG", "✅ Choose specialization", "✅ Complete residency", "✅ Start practice as doctor"],
+            badges: ["📚 Med Aspirant", "🎓 MBBS Student", "🏥 Intern Doctor", "👨‍⚕️ PG Resident", "🏆 Doctor"]
+        },
+        "Surgeon": {
+            icon: "🔪", category: "medical",
+            tasks: ["✅ Complete MBBS", "✅ Clear NEET-PG", "✅ Join MS General Surgery", "✅ Complete 1st year residency", "✅ Complete 2nd year residency", "✅ Complete 3rd year residency", "✅ Learn surgical techniques", "✅ Assist in surgeries", "✅ Perform independent surgeries", "✅ Publish research paper", "✅ Get MCh super specialization", "✅ Become senior surgeon"],
+            badges: ["🔪 Surgery Aspirant", "🏥 Surgical Resident", "👨‍⚕️ Junior Surgeon", "🎓 MCh Scholar", "🏆 Master Surgeon"]
+        },
+        "Dentist": {
+            icon: "🦷", category: "medical",
+            tasks: ["✅ Complete 12th with PCB", "✅ Clear NEET-UG", "✅ Join BDS college", "✅ Complete 1st year BDS", "✅ Complete 2nd year BDS", "✅ Complete 3rd year BDS", "✅ Complete 4th year BDS", "✅ Complete internship", "✅ Clear NEET-MDS", "✅ Choose MDS specialization", "✅ Complete MDS", "✅ Start dental practice"],
+            badges: ["🦷 Dental Aspirant", "🎓 BDS Student", "🏥 Intern Dentist", "👨‍⚕️ MDS Scholar", "🏆 Dentist"]
+        },
+        "Pharmacist": {
+            icon: "💊", category: "medical",
+            tasks: ["✅ Complete 12th with PCB", "✅ Join B.Pharm college", "✅ Complete 1st year", "✅ Complete 2nd year", "✅ Complete 3rd year", "✅ Complete 4th year", "✅ Complete internship", "✅ Pass license exam", "✅ Work in hospital pharmacy", "✅ Get clinical pharmacist role", "✅ Open own pharmacy", "✅ Become senior pharmacist"],
+            badges: ["💊 Pharma Aspirant", "🎓 B.Pharm Student", "🏥 Intern Pharmacist", "💊 Clinical Pharmacist", "🏆 Master Pharmacist"]
+        },
+        "Physiotherapist": {
+            icon: "💪", category: "medical",
+            tasks: ["✅ Complete 12th with PCB", "✅ Join BPT college", "✅ Complete 1st year", "✅ Complete 2nd year", "✅ Complete 3rd year", "✅ Complete 4th year", "✅ Complete clinical internship", "✅ Pass license exam", "✅ Work in hospital", "✅ Start own clinic", "✅ Get sports physio role", "✅ Become senior physio"],
+            badges: ["💪 Physio Aspirant", "🎓 BPT Student", "🏥 Intern Physio", "💪 Sports Physio", "🏆 Master Physio"]
+        },
+        "Psychologist": {
+            icon: "🧠", category: "medical",
+            tasks: ["✅ Complete 12th", "✅ Join BA Psychology", "✅ Complete graduation", "✅ Join MA Psychology", "✅ Complete masters", "✅ Complete internship", "✅ Get RCI license", "✅ Start therapy practice", "✅ Get specialization", "✅ Open own clinic", "✅ Become clinical psychologist", "✅ Become senior psychologist"],
+            badges: ["🧠 Psychology Aspirant", "🎓 BA Graduate", "📚 MA Scholar", "👨‍⚕️ Clinical Psychologist", "🏆 Master Psychologist"]
+        },
+
+        // ========== ENGINEERING (8 careers) ==========
+        "Mechanical Engineer": {
+            icon: "🔧", category: "engineering",
+            tasks: ["✅ Complete 12th PCM", "✅ Clear JEE Main", "✅ Join B.Tech Mechanical", "✅ Complete 1st year", "✅ Complete 2nd year", "✅ Complete 3rd year", "✅ Complete 4th year", "✅ Learn CAD software", "✅ Complete internship", "✅ Build mechanical projects", "✅ Prepare for GATE", "✅ Get mechanical job"],
+            badges: ["🔧 Mech Aspirant", "🎓 B.Tech Student", "📐 CAD Expert", "🏭 Intern Engineer", "🏆 Mech Engineer"]
+        },
+        "Civil Engineer": {
+            icon: "🏗️", category: "engineering",
+            tasks: ["✅ Complete 12th PCM", "✅ Clear JEE Main", "✅ Join B.Tech Civil", "✅ Complete 1st year", "✅ Complete 2nd year", "✅ Complete 3rd year", "✅ Complete 4th year", "✅ Learn AutoCAD/Revit", "✅ Complete site internship", "✅ Build civil projects", "✅ Prepare for GATE", "✅ Get civil job"],
+            badges: ["🏗️ Civil Aspirant", "🎓 B.Tech Student", "📐 AutoCAD Expert", "🏭 Site Engineer", "🏆 Civil Engineer"]
+        },
+        "Electrical Engineer": {
+            icon: "⚡", category: "engineering",
+            tasks: ["✅ Complete 12th PCM", "✅ Clear JEE Main", "✅ Join B.Tech Electrical", "✅ Complete 1st year", "✅ Complete 2nd year", "✅ Complete 3rd year", "✅ Complete 4th year", "✅ Learn PLC/SCADA", "✅ Complete power internship", "✅ Build electrical projects", "✅ Prepare for GATE", "✅ Get electrical job"],
+            badges: ["⚡ Electrical Aspirant", "🎓 B.Tech Student", "🔌 PLC Expert", "⚡ Power Engineer", "🏆 Electrical Engineer"]
+        },
+        "Robotics Engineer": {
+            icon: "🤖", category: "engineering",
+            tasks: ["✅ Complete 12th PCM", "✅ Clear JEE Main", "✅ Join B.Tech Robotics", "✅ Complete 1st year", "✅ Complete 2nd year", "✅ Complete 3rd year", "✅ Complete 4th year", "✅ Learn ROS", "✅ Build robotics projects", "✅ Complete internship", "✅ Learn AI for robotics", "✅ Get robotics job"],
+            badges: ["🤖 Robotics Aspirant", "🎓 B.Tech Student", "🔧 ROS Expert", "🤖 Robotics Builder", "🏆 Robotics Engineer"]
+        },
+        "Aerospace Engineer": {
+            icon: "🚀", category: "engineering",
+            tasks: ["✅ Complete 12th PCM", "✅ Clear JEE Advanced", "✅ Join B.Tech Aerospace", "✅ Complete 1st year", "✅ Complete 2nd year", "✅ Complete 3rd year", "✅ Complete 4th year", "✅ Learn CFD/ANSYS", "✅ Complete ISRO internship", "✅ Build aerospace projects", "✅ Prepare for GATE", "✅ Get aerospace job"],
+            badges: ["🚀 Aerospace Aspirant", "🎓 B.Tech Student", "🛰️ CFD Expert", "🚀 ISRO Intern", "🏆 Aerospace Engineer"]
+        },
+
+        // ========== GOVERNMENT (10 careers) ==========
+        "IAS": {
+            icon: "🇮🇳", category: "government",
+            tasks: ["✅ Understand UPSC pattern", "✅ Complete NCERT books", "✅ Start newspaper reading daily", "✅ Choose optional subject", "✅ Complete optional syllabus", "✅ Practice answer writing", "✅ Take mock tests", "✅ Clear UPSC Prelims", "✅ Clear UPSC Mains", "✅ Clear interview", "✅ Get final rank", "✅ Join LBSNAA training"],
+            badges: ["📖 UPSC Beginner", "✅ Syllabus Complete", "✍️ Answer Writer", "🏅 Prelims Qualifier", "🏆 Civil Servant"]
+        },
+        "IPS": {
+            icon: "👮", category: "government",
+            tasks: ["✅ Understand UPSC pattern", "✅ Complete NCERT books", "✅ Daily newspaper reading", "✅ Choose optional subject", "✅ Practice answer writing", "✅ Take mock tests", "✅ Maintain physical fitness", "✅ Clear UPSC Prelims", "✅ Clear UPSC Mains", "✅ Clear interview", "✅ Get final rank", "✅ Join SVPNPA training"],
+            badges: ["👮 IPS Aspirant", "📚 Syllabus Complete", "💪 Physical Fit", "🏅 IPS Selected", "🏆 Police Officer"]
+        },
+        "Bank PO": {
+            icon: "🏦", category: "government",
+            tasks: ["✅ Understand bank exam pattern", "✅ Learn reasoning & quant", "✅ Learn English & GA", "✅ Take mock tests", "✅ Clear IBPS PO Prelims", "✅ Clear IBPS PO Mains", "✅ Clear interview", "✅ Get selected", "✅ Complete training", "✅ Join as PO", "✅ Learn banking operations", "✅ Become senior officer"],
+            badges: ["🏦 Bank Aspirant", "📚 Syllabus Complete", "🎯 Mock Tester", "🏅 PO Selected", "🏆 Bank Officer"]
+        },
+        "SSC CGL Officer": {
+            icon: "📋", category: "government",
+            tasks: ["✅ Understand SSC pattern", "✅ Learn reasoning & quant", "✅ Learn English & GK", "✅ Take mock tests", "✅ Clear SSC CGL Tier 1", "✅ Clear SSC CGL Tier 2", "✅ Clear SSC CGL Tier 3", "✅ Clear document verification", "✅ Get selected", "✅ Join as officer", "✅ Complete training", "✅ Work in ministry"],
+            badges: ["📋 SSC Aspirant", "📚 Syllabus Complete", "🎯 Mock Tester", "🏅 CGL Selected", "🏆 Govt Officer"]
+        },
+
+        // ========== COMMERCE (8 careers) ==========
+        "Chartered Accountant": {
+            icon: "📊", category: "commerce",
+            tasks: ["✅ Register for CA Foundation", "✅ Clear CA Foundation", "✅ Register for Intermediate", "✅ Clear Intermediate Group 1", "✅ Clear Intermediate Group 2", "✅ Register for Articleship", "✅ Complete 3 years articleship", "✅ Register for Final", "✅ Clear Final Group 1", "✅ Clear Final Group 2", "✅ Get ICAI membership", "✅ Start CA practice"],
+            badges: ["📚 CA Aspirant", "✅ Foundation Clear", "📝 Articleship", "🎯 Final Clear", "🏆 Chartered Accountant"]
+        },
+        "Investment Banker": {
+            icon: "💰", category: "commerce",
+            tasks: ["✅ Complete B.Com/BBA", "✅ Learn financial modeling", "✅ Learn Excel advanced", "✅ Complete MBA Finance", "✅ Learn valuation techniques", "✅ Complete CFA Level 1", "✅ Complete CFA Level 2", "✅ Complete CFA Level 3", "✅ Get investment banking internship", "✅ Build financial portfolio", "✅ Get IB analyst role", "✅ Become investment banker"],
+            badges: ["💰 Finance Aspirant", "📊 Modeling Expert", "🎓 MBA Graduate", "📈 CFA Charterholder", "🏆 Investment Banker"]
+        },
+        "Financial Analyst": {
+            icon: "📈", category: "commerce",
+            tasks: ["✅ Complete B.Com/BBA", "✅ Learn financial modeling", "✅ Learn Excel advanced", "✅ Learn data analysis", "✅ Complete CFA Level 1", "✅ Get internship", "✅ Build financial reports", "✅ Learn valuation", "✅ Get financial analyst role", "✅ Learn forecasting", "✅ Get CFA Level 2", "✅ Become senior analyst"],
+            badges: ["📈 Finance Aspirant", "📊 Excel Expert", "📚 CFA Level 1", "🎯 Financial Analyst", "🏆 Senior Analyst"]
+        },
+
+        // ========== ARTS (10 careers) ==========
+        "Graphic Designer": {
+            icon: "🎨", category: "arts",
+            tasks: ["✅ Learn design principles", "✅ Master Photoshop", "✅ Master Illustrator", "✅ Learn Figma", "✅ Learn typography", "✅ Learn color theory", "✅ Build design portfolio", "✅ Learn branding", "✅ Start freelancing", "✅ Get design internship", "✅ Learn motion graphics", "✅ Get graphic designer job"],
+            badges: ["🎨 Design Basic", "📐 Photoshop Pro", "🎨 Illustrator Expert", "📱 Figma Master", "🏆 Graphic Designer"]
+        },
+        "Content Creator": {
+            icon: "📱", category: "arts",
+            tasks: ["✅ Choose your niche", "✅ Learn content writing", "✅ Learn video editing", "✅ Learn photography basics", "✅ Create social media accounts", "✅ Post consistently", "✅ Grow audience", "✅ Learn SEO", "✅ Collaborate with brands", "✅ Monetize content", "✅ Build personal brand", "✅ Become full-time creator"],
+            badges: ["📱 Content Beginner", "✍️ Writing Expert", "🎬 Video Editor", "📈 Social Growth", "🏆 Top Creator"]
+        },
+        "YouTuber": {
+            icon: "📺", category: "arts",
+            tasks: ["✅ Choose YouTube niche", "✅ Learn video recording", "✅ Learn video editing", "✅ Create YouTube channel", "✅ Design channel art", "✅ Create thumbnails", "✅ Upload first video", "✅ Learn YouTube SEO", "✅ Post consistently", "✅ Grow subscribers", "✅ Get monetized", "✅ Become full-time YouTuber"],
+            badges: ["📺 YouTube Beginner", "🎬 Video Editor", "🎨 Thumbnail Pro", "📈 1K Subs", "🏆 YouTube Star"]
+        },
+
+        // ========== OTHER (8 careers) ==========
+        "Pilot": {
+            icon: "✈️", category: "other",
+            tasks: ["✅ Complete 12th PCM", "✅ Clear DGCA medical", "✅ Join flying school", "✅ Complete ground training", "✅ Pass DGCA exams", "✅ Start flying training", "✅ Complete 200 hours flying", "✅ Get CPL license", "✅ Get type rating", "✅ Clear airline interview", "✅ Join as first officer", "✅ Become captain"],
+            badges: ["✈️ Pilot Aspirant", "📚 Ground Training", "🛩️ Flying Hours", "🎓 CPL Holder", "👨‍✈️ Captain"]
+        },
+        "Teacher": {
+            icon: "📚", category: "other",
+            tasks: ["✅ Complete graduation", "✅ Complete B.Ed", "✅ Clear CTET/TET", "✅ Complete teaching internship", "✅ Apply for schools", "✅ Clear interview", "✅ Join as teacher", "✅ Complete probation", "✅ Learn classroom management", "✅ Get permanent position", "✅ Become senior teacher", "✅ Become vice principal"],
+            badges: ["📚 Teacher Aspirant", "🎓 B.Ed Graduate", "📝 CTET Qualified", "👩‍🏫 Teacher", "🏆 Senior Teacher"]
+        },
+        "Lawyer": {
+            icon: "⚖️", category: "other",
+            tasks: ["✅ Complete 12th", "✅ Join LLB college", "✅ Complete 1st year", "✅ Complete 2nd year", "✅ Complete 3rd year", "✅ Complete internship", "✅ Clear AIBE exam", "✅ Register as advocate", "✅ Join senior's chamber", "✅ Start independent practice", "✅ Specialize in field", "✅ Become senior lawyer"],
+            badges: ["⚖️ Law Aspirant", "🎓 LLB Graduate", "📜 AIBE Qualified", "👨‍⚖️ Advocate", "🏆 Senior Lawyer"]
+        }
+    };
+
+    // All careers list by category
+    const allCareers = {
+        tech: ["Software Developer", "Web Developer", "App Developer", "AI Engineer", "Data Scientist", "Cyber Security Analyst", "Cloud Engineer", "DevOps Engineer", "Full Stack Developer", "UI/UX Designer"],
+        medical: ["Doctor (MBBS)", "Surgeon", "Dentist", "Pharmacist", "Physiotherapist", "Psychologist"],
+        engineering: ["Mechanical Engineer", "Civil Engineer", "Electrical Engineer", "Robotics Engineer", "Aerospace Engineer"],
+        government: ["IAS", "IPS", "Bank PO", "SSC CGL Officer"],
+        commerce: ["Chartered Accountant", "Investment Banker", "Financial Analyst"],
+        arts: ["Graphic Designer", "Content Creator", "YouTuber"],
+        other: ["Pilot", "Teacher", "Lawyer"]
+    };
+
+    let currentCareer = "Software Developer";
+    let completedTasks = JSON.parse(localStorage.getItem('careerBingoTasks')) || {};
+    let earnedBadges = JSON.parse(localStorage.getItem('careerBingoBadges')) || {};
+
+    function showToast(message, isError = false) {
+        let toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.style.background = isError ? 'linear-gradient(135deg, #ef4444, #dc2626)' : 'linear-gradient(135deg, #10b981, #059669)';
+        toast.innerHTML = message;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    }
+
+    function showAchievement(badgeName) {
+        const popup = document.createElement('div');
+        popup.className = 'achievement-popup';
+        popup.innerHTML = `
+            <div class="text-6xl mb-3">🏆</div>
+            <div class="text-2xl font-bold text-yellow-400 mb-2">ACHIEVEMENT UNLOCKED!</div>
+            <div class="text-xl font-bold mb-2">${badgeName}</div>
+            <p class="text-gray-300">Great progress! Keep going!</p>
+            <button onclick="this.parentElement.remove()" class="mt-4 bg-blue-600 px-6 py-2 rounded-full text-sm">Continue →</button>
+        `;
+        document.body.appendChild(popup);
+        setTimeout(() => popup.remove(), 4000);
+    }
+
+    function checkBadges(career, completedCount) {
+        const data = careerChecklists[career];
+        if (!data) return;
+        
+        const careerBadges = earnedBadges[career] || [];
+        const badgeNames = data.badges;
+        
+        // Badge requirements: 2,4,6,9,12 tasks
+        const requirements = [2, 4, 6, 9, 12];
+        
+        requirements.forEach((req, idx) => {
+            if (completedCount >= req && !careerBadges.includes(badgeNames[idx])) {
+                careerBadges.push(badgeNames[idx]);
+                earnedBadges[career] = careerBadges;
+                localStorage.setItem('careerBingoBadges', JSON.stringify(earnedBadges));
+                showAchievement(badgeNames[idx]);
+                renderBadges();
+            }
+        });
+    }
+
+    function toggleTask(career, taskIndex) {
+        const key = `${career}_${taskIndex}`;
+        if (completedTasks[key]) {
+            delete completedTasks[key];
+            showToast(`❌ Task unchecked`, true);
+        } else {
+            completedTasks[key] = true;
+            showToast(`✅ Task completed! Great job!`);
+        }
+        localStorage.setItem('careerBingoTasks', JSON.stringify(completedTasks));
+        
+        const completedCount = getCompletedCount(career);
+        checkBadges(career, completedCount);
+        renderChecklist();
+        updateProgress();
+    }
+
+    function getCompletedCount(career) {
+        const data = careerChecklists[career];
+        if (!data) return 0;
+        let count = 0;
+        for (let i = 0; i < data.tasks.length; i++) {
+            if (completedTasks[`${career}_${i}`]) count++;
+        }
+        return count;
+    }
+
+    function updateProgress() {
+        const data = careerChecklists[currentCareer];
+        if (!data) return;
+        
+        const completed = getCompletedCount(currentCareer);
+        const total = data.tasks.length;
+        const percent = Math.round((completed / total) * 100);
+        
+        document.getElementById('progressPercent').innerText = percent + '%';
+        document.getElementById('progressBar').style.width = percent + '%';
+        document.getElementById('completedCount').innerText = completed;
+        
+        const badges = earnedBadges[currentCareer] || [];
+        document.getElementById('badgeCount').innerText = badges.length;
+    }
+
+    function renderChecklist() {
+        const data = careerChecklists[currentCareer];
+        if (!data) return;
+        
+        document.getElementById('careerTitle').innerHTML = `${data.icon} ${currentCareer} Checklist`;
+        
+        const container = document.getElementById('checklistContainer');
+        container.innerHTML = data.tasks.map((task, index) => {
+            const isCompleted = completedTasks[`${currentCareer}_${index}`];
+            return `
+                <div class="checklist-item p-4 ${isCompleted ? 'completed' : ''}" onclick="toggleTask('${currentCareer}', ${index})">
+                    <div class="flex items-center gap-4">
+                        <div class="check-icon">${isCompleted ? '✓' : ''}</div>
+                        <span class="flex-1 ${isCompleted ? 'line-through text-gray-400' : ''}">${task}</span>
+                        ${isCompleted ? '<span class="text-green-400 text-sm">✓ Done</span>' : '<span class="text-gray-500 text-sm">Click to complete</span>'}
+                    </div>
+                </div>
+            `;
+        }).join('');
+        
+        updateProgress();
+        renderBadges();
+    }
+
+    function renderBadges() {
+        const data = careerChecklists[currentCareer];
+        if (!data) return;
+        
+        const earned = earnedBadges[currentCareer] || [];
+        const badgeNames = data.badges;
+        const requirements = [2, 4, 6, 9, 12];
+        
+        const container = document.getElementById('badgesContainer');
+        container.innerHTML = badgeNames.map((badge, idx) => {
+            const isEarned = earned.includes(badge);
+            return `
+                <div class="bg-white/5 rounded-xl p-3 text-center ${isEarned ? 'border border-yellow-400' : 'opacity-50'}" style="min-width: 100px;">
+                    <div class="text-3xl">${isEarned ? '🏆' : '🔒'}</div>
+                    <div class="text-xs font-semibold mt-1">${badge}</div>
+                    <div class="text-xs text-gray-400">${requirements[idx]} tasks</div>
+                    ${isEarned ? '<div class="text-yellow-400 text-xs mt-1">✓ Unlocked</div>' : '<div class="text-gray-500 text-xs mt-1">Locked</div>'}
+                </div>
+            `;
+        }).join('');
+    }
+
+    function populateCareerSelect() {
+        const select = document.getElementById('careerSelect');
+        select.innerHTML = '';
+        
+        for (const [category, careers] of Object.entries(allCareers)) {
+            const optgroup = document.createElement('optgroup');
+            optgroup.label = category.toUpperCase();
+            careers.forEach(career => {
+                const option = document.createElement('option');
+                option.value = career;
+                option.textContent = `${careerChecklists[career]?.icon || '🎯'} ${career}`;
+                optgroup.appendChild(option);
+            });
+            select.appendChild(optgroup);
+        }
+        
+        select.value = currentCareer;
+        select.addEventListener('change', (e) => {
+            currentCareer = e.target.value;
+            renderChecklist();
+        });
+    }
+
+    function resetProgress() {
+        if (confirm(`Are you sure you want to reset all progress for ${currentCareer}?`)) {
+            for (let key in completedTasks) {
+                if (key.startsWith(currentCareer + '_')) {
+                    delete completedTasks[key];
+                }
+            }
+            localStorage.setItem('careerBingoTasks', JSON.stringify(completedTasks));
+            
+            if (earnedBadges[currentCareer]) {
+                delete earnedBadges[currentCareer];
+                localStorage.setItem('careerBingoBadges', JSON.stringify(earnedBadges));
+            }
+            
+            renderChecklist();
+            showToast(`Progress reset for ${currentCareer}`);
+        }
+    }
+
+    // Category tabs
+    document.querySelectorAll('.category-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.category-tab').forEach(t => {
+                t.classList.remove('active');
+                t.classList.add('bg-white/10');
+            });
+            tab.classList.add('active');
+            tab.classList.remove('bg-white/10');
+            
+            const category = tab.dataset.cat;
+            const careers = allCareers[category];
+            const select = document.getElementById('careerSelect');
+            
+            if (careers && careers.length > 0) {
+                currentCareer = careers[0];
+                select.value = currentCareer;
+                renderChecklist();
+            }
+        });
+    });
+
+    document.getElementById('resetBtn').addEventListener('click', resetProgress);
+    
+    populateCareerSelect();
+    renderChecklist();
+
+    window.toggleTask = toggleTask;
+</script>
+</body>
+</html>

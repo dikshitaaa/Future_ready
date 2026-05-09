@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | LOGRA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: white;
+        }
+        .login-card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 32px;
+            transition: all 0.3s;
+        }
+        .login-card:hover {
+            transform: translateY(-5px);
+            border-color: #3b82f6;
+        }
+        .input-field {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 16px;
+            padding: 12px 16px;
+            width: 100%;
+            color: white;
+            outline: none;
+            transition: all 0.3s;
+        }
+        .input-field:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 15px rgba(59,130,246,0.3);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            transition: all 0.3s;
+        }
+        .btn-primary:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(59,130,246,0.4);
+        }
+    </style>
+</head>
+<body>
+
+<div class="min-h-screen flex items-center justify-center px-6 py-12">
+    <div class="w-full max-w-md">
+        <!-- Logo -->
+        <div class="text-center mb-8">
+            <div class="text-5xl mb-3 animate-bounce">🔐</div>
+            <h1 class="text-4xl font-black bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">LOGRA</h1>
+            <p class="text-gray-400 text-sm mt-2">Sign in to continue your career journey</p>
+        </div>
+
+        <!-- Login Card -->
+        <div class="login-card p-8">
+            <div class="flex gap-4 mb-6">
+                <button id="loginTab" class="flex-1 py-2 rounded-xl font-semibold bg-gradient-to-r from-blue-600 to-purple-600">Login</button>
+                <button id="signupTab" class="flex-1 py-2 rounded-xl font-semibold bg-white/10 hover:bg-white/20 transition">Sign Up</button>
+            </div>
+
+            <!-- Login Form -->
+            <div id="loginForm">
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-2">Email Address</label>
+                    <input type="email" id="loginEmail" placeholder="Enter your email" class="input-field">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-sm font-semibold mb-2">Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter your password" class="input-field">
+                </div>
+                <button id="doLoginBtn" class="btn-primary w-full py-3 rounded-xl font-bold transition">Login →</button>
+                <p class="text-center text-sm text-gray-400 mt-4">
+                    Don't have an account? <button id="switchToSignup" class="text-blue-400 hover:underline">Sign Up</button>
+                </p>
+            </div>
+
+            <!-- Signup Form (Hidden Initially) -->
+            <div id="signupForm" class="hidden">
+                <div class="mb-3">
+                    <label class="block text-sm font-semibold mb-2">Full Name</label>
+                    <input type="text" id="signupName" placeholder="Enter your full name" class="input-field">
+                </div>
+                <div class="mb-3">
+                    <label class="block text-sm font-semibold mb-2">Email Address</label>
+                    <input type="email" id="signupEmail" placeholder="Enter your email" class="input-field">
+                </div>
+                <div class="mb-3">
+                    <label class="block text-sm font-semibold mb-2">Password</label>
+                    <input type="password" id="signupPassword" placeholder="Create a password" class="input-field">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-2">Career Interest</label>
+                    <select id="signupInterest" class="input-field">
+                        <option value="">Select your interest</option>
+                        <option>💻 Software Development</option>
+                        <option>🔒 Cyber Security</option>
+                        <option>☁️ Cloud Computing</option>
+                        <option>📊 Data Science</option>
+                        <option>🎨 UI/UX Design</option>
+                        <option>🏛️ Government Exams</option>
+                        <option>💰 Finance & Banking</option>
+                        <option>👨‍⚕️ Healthcare</option>
+                    </select>
+                </div>
+                <button id="doSignupBtn" class="btn-primary w-full py-3 rounded-xl font-bold transition">Create Account →</button>
+                <p class="text-center text-sm text-gray-400 mt-4">
+                    Already have an account? <button id="switchToLogin" class="text-blue-400 hover:underline">Login</button>
+                </p>
+            </div>
+
+            <div id="message" class="mt-4 text-center text-sm hidden"></div>
+        </div>
+
+        <!-- Back to Home -->
+        <div class="text-center mt-6">
+            <a href="index.html" class="text-gray-400 hover:text-white text-sm transition">← Back to Home</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Tab Switching
+    const loginTab = document.getElementById('loginTab');
+    const signupTab = document.getElementById('signupTab');
+    const loginFormDiv = document.getElementById('loginForm');
+    const signupFormDiv = document.getElementById('signupForm');
+    const switchToSignup = document.getElementById('switchToSignup');
+    const switchToLogin = document.getElementById('switchToLogin');
+
+    function showLogin() {
+        loginFormDiv.classList.remove('hidden');
+        signupFormDiv.classList.add('hidden');
+        loginTab.classList.add('bg-gradient-to-r', 'from-blue-600', 'to-purple-600');
+        signupTab.classList.remove('bg-gradient-to-r', 'from-blue-600', 'to-purple-600');
+        signupTab.classList.add('bg-white/10');
+    }
+
+    function showSignup() {
+        loginFormDiv.classList.add('hidden');
+        signupFormDiv.classList.remove('hidden');
+        signupTab.classList.add('bg-gradient-to-r', 'from-blue-600', 'to-purple-600');
+        loginTab.classList.remove('bg-gradient-to-r', 'from-blue-600', 'to-purple-600');
+        loginTab.classList.add('bg-white/10');
+    }
+
+    loginTab.addEventListener('click', showLogin);
+    signupTab.addEventListener('click', showSignup);
+    switchToSignup.addEventListener('click', showSignup);
+    switchToLogin.addEventListener('click', showLogin);
+
+    function showMessage(msg, isError = false) {
+        const msgDiv = document.getElementById('message');
+        msgDiv.textContent = msg;
+        msgDiv.classList.remove('hidden');
+        msgDiv.style.color = isError ? '#f87171' : '#4ade80';
+        setTimeout(() => msgDiv.classList.add('hidden'), 3000);
+    }
+
+    // Login
+    document.getElementById('doLoginBtn').addEventListener('click', () => {
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+
+        if (!email || !password) {
+            showMessage('⚠️ Please enter email and password', true);
+            return;
+        }
+
+        const users = JSON.parse(localStorage.getItem('lograUsers') || '[]');
+        const user = users.find(u => u.email === email && u.password === password);
+
+        if (user) {
+            localStorage.setItem('lograUser', JSON.stringify(user));
+            showMessage('✅ Login successful! Redirecting...');
+            setTimeout(() => window.location.href = 'dashboard.html', 1500);
+        } else {
+            showMessage('❌ Invalid email or password', true);
+        }
+    });
+
+    // Signup
+    document.getElementById('doSignupBtn').addEventListener('click', () => {
+        const name = document.getElementById('signupName').value.trim();
+        const email = document.getElementById('signupEmail').value.trim();
+        const password = document.getElementById('signupPassword').value;
+        const interest = document.getElementById('signupInterest').value;
+
+        if (!name || !email || !password || !interest) {
+            showMessage('⚠️ Please fill all fields', true);
+            return;
+        }
+
+        let users = JSON.parse(localStorage.getItem('lograUsers') || '[]');
+        
+        if (users.find(u => u.email === email)) {
+            showMessage('❌ Email already registered', true);
+            return;
+        }
+
+        const newUser = { name, email, password, interest, joinedDate: new Date().toISOString() };
+        users.push(newUser);
+        localStorage.setItem('lograUsers', JSON.stringify(users));
+        localStorage.setItem('lograUser', JSON.stringify(newUser));
+        
+        showMessage('✅ Account created successfully! Redirecting...');
+        setTimeout(() => window.location.href = 'dashboard.html', 1500);
+    });
+</script>
+</body>
+</html>

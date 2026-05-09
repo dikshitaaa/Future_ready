@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Quiz | LOGRA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            min-height: 100vh;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        .quiz-box {
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px;
+            backdrop-filter: blur(10px);
+        }
+        .option {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            margin: 10px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-align: center;
+        }
+        .option:hover {
+            background: rgba(59,130,246,0.4);
+            transform: scale(1.02);
+        }
+        .option.selected {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+        }
+        .btn {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            padding: 12px 30px;
+            border-radius: 30px;
+            border: none;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px;
+            transition: 0.3s;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+        }
+        .btn-outline {
+            background: rgba(255,255,255,0.2);
+        }
+        .progress-bar {
+            height: 8px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            width: 0%;
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; background: rgba(0,0,0,0.3);">
+    <h1 style="font-size: 24px;">📝 LOGRA | Career Quiz</h1>
+    <div>
+        <a href="index.html" style="background: rgba(255,255,255,0.2); padding: 8px 20px; border-radius: 30px; text-decoration: none; color: white; margin-right: 10px;">← Back</a>
+        <a href="career.html" style="background: linear-gradient(135deg, #3b82f6, #8b5cf6); padding: 8px 20px; border-radius: 30px; text-decoration: none; color: white;">🎯 Careers</a>
+    </div>
+</div>
+
+<div style="max-width: 700px; margin: auto; padding: 20px;">
+    <div style="text-align: center; margin-bottom: 30px;">
+        <div style="font-size: 50px;">🤔</div>
+        <h1 style="font-size: 32px; margin: 10px 0;">Find Your Perfect Career</h1>
+        <p>Answer 10 questions and get personalized career recommendations</p>
+    </div>
+
+    <!-- Progress Bar -->
+    <div style="margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+            <span>Progress</span>
+            <span id="progressText">0%</span>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+    </div>
+
+    <!-- Quiz Content -->
+    <div class="quiz-box" id="quizContent">
+        <!-- Questions will appear here -->
+    </div>
+</div>
+
+<script>
+    // Questions Array
+    const questions = [
+        {
+            text: "What subjects do you enjoy the most?",
+            options: ["💻 Mathematics & Computers", "🔬 Science & Biology", "📊 Commerce & Business", "🎨 Arts & Creative"]
+        },
+        {
+            text: "What kind of work environment do you prefer?",
+            options: ["🏢 Office/Corporate", "🏠 Remote/Work from Home", "🌍 Field/Outdoor", "🔬 Lab/Research"]
+        },
+        {
+            text: "What is your most important career goal?",
+            options: ["💰 High Salary", "📋 Job Security", "❤️ Follow My Passion", "📈 Growth & Learning"]
+        },
+        {
+            text: "How do you like to solve problems?",
+            options: ["🧮 Analytical & Logical", "🎨 Creative & Intuitive", "🔧 Practical & Hands-on", "👥 Collaborative & Team-based"]
+        },
+        {
+            text: "What is your preferred working style?",
+            options: ["🎯 Independent Worker", "🤝 Team Player", "👑 Leadership Role", "🎨 Creative Freedom"]
+        },
+        {
+            text: "What kind of impact do you want to make?",
+            options: ["🌍 Social Impact", "💰 Financial Success", "💡 Innovation & Technology", "❤️ Healthcare & Wellness"]
+        },
+        {
+            text: "How important is work-life balance to you?",
+            options: ["😊 Very Important", "⚖️ Moderately Important", "💪 Career is Top Priority"]
+        },
+        {
+            text: "What is your expected salary range?",
+            options: ["💰 High (10 LPA+)", "📊 Moderate (5-10 LPA)", "📋 Stable with Benefits"]
+        },
+        {
+            text: "Do you enjoy continuous learning?",
+            options: ["📚 Yes, Love Learning", "⚡ Sometimes", "🎯 Prefer Fixed Skills"]
+        },
+        {
+            text: "Which industry excites you the most?",
+            options: ["💻 Technology", "🏥 Healthcare", "🏦 Finance & Banking", "🎨 Creative Arts", "🏛️ Government"]
+        }
+    ];
+
+    let currentQ = 0;
+    let answers = [];
+
+    function updateProgress() {
+        let percent = (answers.length / questions.length) * 100;
+        document.getElementById('progressFill').style.width = percent + '%';
+        document.getElementById('progressText').innerText = Math.round(percent) + '%';
+    }
+
+    function showQuestion() {
+        let q = questions[currentQ];
+        let optionsHtml = '';
+        
+        for(let i = 0; i < q.options.length; i++) {
+            let isSelected = (answers[currentQ] === q.options[i]);
+            let selectedClass = isSelected ? 'selected' : '';
+            optionsHtml += `<div class="option ${selectedClass}" onclick="selectOption(this, '${q.options[i].replace(/'/g, "\\'")}')">${q.options[i]}</div>`;
+        }
+        
+        let html = `
+            <h2 style="font-size: 24px; margin-bottom: 20px;">${currentQ + 1}. ${q.text}</h2>
+            <div id="optionsContainer">
+                ${optionsHtml}
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 30px;">
+                ${currentQ > 0 ? '<button class="btn btn-outline" onclick="prevQuestion()">← Previous</button>' : '<div></div>'}
+                <button class="btn" onclick="nextQuestion()">${currentQ === questions.length - 1 ? '🎯 See Results' : 'Next →'}</button>
+            </div>
+        `;
+        
+        document.getElementById('quizContent').innerHTML = html;
+    }
+
+    function selectOption(element, value) {
+        // Remove selected class from all options
+        let allOptions = document.querySelectorAll('.option');
+        allOptions.forEach(opt => opt.classList.remove('selected'));
+        
+        // Add selected class to clicked option
+        element.classList.add('selected');
+        
+        // Save answer
+        answers[currentQ] = value;
+        updateProgress();
+    }
+
+    function nextQuestion() {
+        if (!answers[currentQ]) {
+            alert('Please select an answer!');
+            return;
+        }
+        
+        if (currentQ === questions.length - 1) {
+            showResults();
+        } else {
+            currentQ++;
+            showQuestion();
+        }
+    }
+
+    function prevQuestion() {
+        currentQ--;
+        showQuestion();
+    }
+
+    function showResults() {
+        // Calculate scores based on answers
+        let techScore = 0;
+        let medicalScore = 0;
+        let commerceScore = 0;
+        let artsScore = 0;
+        let govScore = 0;
+        
+        for(let i = 0; i < answers.length; i++) {
+            let ans = answers[i];
+            
+            // Question 1: Favorite subject
+            if(i === 0) {
+                if(ans.includes("Computers")) techScore += 3;
+                if(ans.includes("Science")) medicalScore += 3;
+                if(ans.includes("Commerce")) commerceScore += 3;
+                if(ans.includes("Arts")) artsScore += 3;
+            }
+            // Question 10: Industry preference
+            if(i === 9) {
+                if(ans.includes("Technology")) techScore += 3;
+                if(ans.includes("Healthcare")) medicalScore += 3;
+                if(ans.includes("Finance")) commerceScore += 3;
+                if(ans.includes("Creative")) artsScore += 3;
+                if(ans.includes("Government")) govScore += 3;
+            }
+            // Other scoring
+            if(ans.includes("Analytical") || ans.includes("Technology") || ans.includes("Innovation")) techScore += 1;
+            if(ans.includes("Healthcare") || ans.includes("Lab") || ans.includes("Science")) medicalScore += 1;
+            if(ans.includes("Financial") || ans.includes("Commerce") || ans.includes("Salary")) commerceScore += 1;
+            if(ans.includes("Creative") || ans.includes("Arts")) artsScore += 1;
+            if(ans.includes("Government") || ans.includes("Security") || ans.includes("Social Impact")) govScore += 1;
+        }
+        
+        // Find top category
+        let scores = [
+            { name: "tech", score: techScore, title: "Technology & IT", icon: "💻", careers: ["Software Developer", "Web Developer", "App Developer", "AI Engineer", "Data Scientist"] },
+            { name: "medical", score: medicalScore, title: "Medical & Healthcare", icon: "👨‍⚕️", careers: ["Doctor (MBBS)", "Surgeon", "Dentist", "Pharmacist", "Physiotherapist"] },
+            { name: "commerce", score: commerceScore, title: "Commerce & Finance", icon: "💰", careers: ["Chartered Accountant", "Investment Banker", "Financial Analyst", "Business Analyst", "Stock Trader"] },
+            { name: "arts", score: artsScore, title: "Arts & Creative", icon: "🎨", careers: ["Graphic Designer", "UI/UX Designer", "Content Creator", "Photographer", "Video Editor"] },
+            { name: "gov", score: govScore, title: "Government & Defence", icon: "🇮🇳", careers: ["IAS", "IPS", "Bank PO", "SSC CGL Officer", "Army Officer"] }
+        ];
+        
+        scores.sort((a, b) => b.score - a.score);
+        let top = scores[0];
+        
+        // Build careers buttons
+        let careersHtml = '';
+        for(let i = 0; i < top.careers.length; i++) {
+            careersHtml += `<button onclick="goToRoadmap('${top.careers[i]}')" style="background: rgba(255,255,255,0.1); padding: 12px; margin: 5px; border-radius: 12px; cursor: pointer; border: none; color: white; width: calc(50% - 10px);">${top.careers[i]}</button>`;
+        }
+        
+        let resultHtml = `
+            <div style="text-align: center;">
+                <div style="font-size: 70px;">${top.icon}</div>
+                <h2 style="font-size: 28px; margin: 15px 0;">🎉 Your Top Match!</h2>
+                <h3 style="font-size: 24px; color: #60a5fa; margin-bottom: 15px;">${top.title}</h3>
+                <p style="color: #ccc; margin-bottom: 25px;">Based on your answers, here are the best careers for you:</p>
+                
+                <div style="background: rgba(255,255,255,0.05); border-radius: 20px; padding: 20px; margin-bottom: 25px;">
+                    <h3 style="font-size: 18px; margin-bottom: 15px;">✨ Recommended Careers</h3>
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                        ${careersHtml}
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                    <button class="btn btn-outline" onclick="restartQuiz()">🔄 Take Quiz Again</button>
+                    <button class="btn" onclick="window.location.href='career.html'">🎯 Browse All Careers</button>
+                </div>
+            </div>
+        `;
+        
+        document.getElementById('quizContent').innerHTML = resultHtml;
+    }
+    
+    function goToRoadmap(career) {
+        window.location.href = 'roadmap.html?career=' + encodeURIComponent(career);
+    }
+    
+    function restartQuiz() {
+        currentQ = 0;
+        answers = [];
+        updateProgress();
+        showQuestion();
+    }
+    
+    // Start the quiz
+    showQuestion();
+</script>
+
+</body>
+</html>

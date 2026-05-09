@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Challenge | FutureReady</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    * { font-family: 'Inter', sans-serif; }
+    body {
+        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+        background-attachment: fixed;
+        color: white;
+        min-height: 100vh;
+    }
+    .challenge-card {
+        background: rgba(255,255,255,0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 24px;
+        transition: all 0.3s;
+    }
+    .challenge-card:hover {
+        transform: translateY(-5px);
+        border-color: #f59e0b;
+    }
+    .streak-card {
+        background: linear-gradient(135deg, rgba(245,158,11,0.2), rgba(239,68,68,0.2));
+        border: 1px solid rgba(245,158,11,0.3);
+    }
+    .option-btn {
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.1);
+        transition: all 0.2s;
+        cursor: pointer;
+        border-radius: 12px;
+        padding: 12px;
+    }
+    .option-btn:hover {
+        background: rgba(59,130,246,0.2);
+        border-color: #3b82f6;
+    }
+    .option-btn.selected {
+        background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+        border-color: transparent;
+    }
+    .career-select {
+        background: rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 50px;
+        padding: 10px 20px;
+        color: white;
+        outline: none;
+        cursor: pointer;
+        width: 100%;
+        max-width: 300px;
+    }
+    .toast {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 50px;
+        z-index: 1000;
+        animation: slideIn 0.3s ease;
+    }
+    @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<div class="sticky top-0 z-50 backdrop-blur-xl bg-black/40 border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <div class="text-2xl">🔥</div>
+            <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Daily Challenge</h1>
+        </div>
+        <div class="flex gap-3">
+            <a href="index.html" class="bg-white/10 hover:bg-white/20 px-5 py-2 rounded-full transition">🏠 Home</a>
+            <a href="dashboard.html" class="bg-gradient-to-r from-blue-600 to-purple-600 px-5 py-2 rounded-full hover:scale-105 transition">📊 Dashboard</a>
+        </div>
+    </div>
+</div>
+
+<div class="max-w-4xl mx-auto px-6 py-10">
+    <div class="text-center mb-10">
+        <div class="text-7xl mb-4 animate-bounce">🔥</div>
+        <h1 class="text-5xl font-black bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-3">
+            Daily Challenge
+        </h1>
+        <p class="text-gray-300 text-lg">Select your career • Solve career-specific challenges • Track your streak</p>
+    </div>
+
+    <!-- Career Selector -->
+    <div class="text-center mb-8">
+        <label class="block text-sm font-semibold mb-2 text-gray-400">🎯 SELECT YOUR CAREER</label>
+        <select id="careerSelect" class="career-select">
+            <option value="Software Developer">💻 Software Developer</option>
+            <option value="Web Developer">🌐 Web Developer</option>
+            <option value="App Developer">📱 App Developer</option>
+            <option value="Data Scientist">📊 Data Scientist</option>
+            <option value="AI Engineer">🤖 AI Engineer</option>
+            <option value="Cyber Security">🔒 Cyber Security</option>
+            <option value="Cloud Engineer">☁️ Cloud Engineer</option>
+            <option value="DevOps Engineer">⚙️ DevOps Engineer</option>
+            <option value="Doctor (MBBS)">👨‍⚕️ Doctor (MBBS)</option>
+            <option value="IAS">🇮🇳 IAS Officer</option>
+            <option value="Chartered Accountant">📊 Chartered Accountant</option>
+            <option value="Graphic Designer">🎨 Graphic Designer</option>
+            <option value="Pilot">✈️ Pilot</option>
+            <option value="Teacher">📚 Teacher</option>
+        </select>
+    </div>
+
+    <!-- Streak Card -->
+    <div class="streak-card rounded-2xl p-6 mb-8 text-center">
+        <div class="flex justify-center items-center gap-8 flex-wrap">
+            <div>
+                <div class="text-4xl font-bold text-yellow-400" id="streakCount">0</div>
+                <div class="text-sm text-gray-400">Current Streak 🔥</div>
+            </div>
+            <div>
+                <div class="text-4xl font-bold text-blue-400" id="totalPoints">0</div>
+                <div class="text-sm text-gray-400">Total Points ⭐</div>
+            </div>
+            <div>
+                <div class="text-4xl font-bold text-green-400" id="challengesCompleted">0</div>
+                <div class="text-sm text-gray-400">Completed 🎯</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Today's Challenge -->
+    <div class="challenge-card p-8">
+        <div class="flex justify-between items-center mb-4">
+            <span class="bg-orange-500/30 px-3 py-1 rounded-full text-xs" id="challengeBadge">🎯 TODAY'S CHALLENGE</span>
+            <span class="text-gray-400 text-sm" id="dateDisplay"></span>
+        </div>
+        
+        <h2 class="text-2xl font-bold mb-4" id="questionTitle">Loading...</h2>
+        <p class="text-gray-300 mb-6" id="questionText"></p>
+        
+        <div id="optionsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6"></div>
+        
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+            <button id="submitBtn" class="bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-3 rounded-xl font-semibold hover:scale-105 transition">
+                Submit Answer
+            </button>
+            <button id="nextChallengeBtn" class="bg-gradient-to-r from-green-600 to-emerald-600 px-8 py-3 rounded-xl font-semibold hover:scale-105 transition hidden">
+                Next Challenge →
+            </button>
+            <div id="feedback" class="text-sm"></div>
+        </div>
+        
+        <div id="explanation" class="mt-4 p-4 bg-white/5 rounded-xl hidden">
+            <div class="font-semibold text-green-400 mb-2">📖 Explanation:</div>
+            <p id="explanationText" class="text-gray-300"></p>
+        </div>
+    </div>
+
+    <!-- Today's Progress -->
+    <div class="challenge-card p-6 mt-8">
+        <h3 class="text-xl font-bold mb-4">📊 Today's Progress</h3>
+        <div class="flex justify-between items-center mb-2">
+            <span class="text-sm">Challenges Completed Today</span>
+            <span id="todayProgressText" class="text-sm text-green-400">0/5</span>
+        </div>
+        <div class="h-2 bg-white/20 rounded-full overflow-hidden">
+            <div id="todayProgressBar" class="h-full bg-gradient-to-r from-green-500 to-emerald-500 rounded-full" style="width: 0%"></div>
+        </div>
+    </div>
+
+    <!-- Challenge History -->
+    <div class="challenge-card p-6 mt-8">
+        <h3 class="text-xl font-bold mb-4">📜 Challenge History</h3>
+        <div id="historyList" class="space-y-2 max-h-60 overflow-y-auto"></div>
+    </div>
+</div>
+
+<script>
+    // Career-Based Challenges Database
+    const careerChallenges = {
+        "Software Developer": [
+            { question: "What is the time complexity of binary search?", options: ["O(n)", "O(log n)", "O(n²)", "O(1)"], correct: 1, points: 10, explanation: "Binary search has O(log n) time complexity as it divides the search space in half each time." },
+            { question: "Which data structure uses LIFO (Last In First Out)?", options: ["Queue", "Stack", "Array", "Linked List"], correct: 1, points: 10, explanation: "Stack follows LIFO principle - last element added is first to be removed." },
+            { question: "What does OOP stand for?", options: ["Object Oriented Programming", "Output Oriented Programming", "Object Organization Protocol", "Online Operating Program"], correct: 0, points: 10, explanation: "OOP stands for Object Oriented Programming - a programming paradigm based on objects." },
+            { question: "What is the default value of a boolean variable in Java?", options: ["true", "false", "0", "null"], correct: 1, points: 10, explanation: "The default value of a boolean variable in Java is false." }
+        ],
+        "Web Developer": [
+            { question: "What does HTML stand for?", options: ["Hyper Text Markup Language", "High Tech Modern Language", "Hyper Transfer Markup Language", "Home Tool Markup Language"], correct: 0, points: 10, explanation: "HTML stands for Hyper Text Markup Language." },
+            { question: "What does CSS stand for?", options: ["Creative Style Sheets", "Computer Style Sheets", "Cascading Style Sheets", "Colorful Style Sheets"], correct: 2, points: 10, explanation: "CSS stands for Cascading Style Sheets." },
+            { question: "Which company developed JavaScript?", options: ["Microsoft", "Google", "Netscape", "Apple"], correct: 2, points: 10, explanation: "JavaScript was developed by Netscape in 1995." },
+            { question: "What is React.js?", options: ["Database", "JavaScript Framework", "CSS Framework", "Backend Language"], correct: 1, points: 10, explanation: "React.js is a JavaScript library for building user interfaces." }
+        ],
+        "App Developer": [
+            { question: "Which language is used for Android app development?", options: ["Swift", "Kotlin/Java", "C#", "Python"], correct: 1, points: 10, explanation: "Kotlin and Java are the primary languages for Android development." },
+            { question: "Which language is used for iOS app development?", options: ["Kotlin", "Swift", "Java", "Dart"], correct: 1, points: 10, explanation: "Swift is the primary language for iOS app development." },
+            { question: "What is Flutter?", options: ["A database", "A UI framework by Google", "A backend language", "A testing tool"], correct: 1, points: 10, explanation: "Flutter is Google's UI framework for building cross-platform apps." }
+        ],
+        "Data Scientist": [
+            { question: "Which Python library is used for data manipulation?", options: ["Matplotlib", "Pandas", "Scikit-learn", "TensorFlow"], correct: 1, points: 10, explanation: "Pandas is the primary library for data manipulation in Python." },
+            { question: "What does SQL stand for?", options: ["Structured Query Language", "Simple Query Language", "Structured Question Language", "System Query Language"], correct: 0, points: 10, explanation: "SQL stands for Structured Query Language." },
+            { question: "What is overfitting in machine learning?", options: ["Model performs well on training but poorly on test", "Model performs poorly on both", "Model performs well on test data", "Model is too simple"], correct: 0, points: 10, explanation: "Overfitting happens when model learns training data too well but fails on new data." }
+        ],
+        "AI Engineer": [
+            { question: "What is TensorFlow?", options: ["A database", "A machine learning framework", "A programming language", "A cloud platform"], correct: 1, points: 10, explanation: "TensorFlow is an open-source machine learning framework by Google." },
+            { question: "What is the activation function used in output layer for binary classification?", options: ["ReLU", "Tanh", "Sigmoid", "Softmax"], correct: 2, points: 10, explanation: "Sigmoid is used for binary classification output." },
+            { question: "What is a Neural Network?", options: ["A type of database", "A network of interconnected neurons", "A programming paradigm", "A data structure"], correct: 1, points: 10, explanation: "Neural networks are computing systems inspired by biological neural networks." }
+        ],
+        "Cyber Security": [
+            { question: "What does VPN stand for?", options: ["Virtual Private Network", "Very Private Network", "Virtual Protected Network", "Verified Public Network"], correct: 0, points: 10, explanation: "VPN stands for Virtual Private Network." },
+            { question: "What is phishing?", options: ["A type of fishing", "A cyber attack to steal credentials", "A network protocol", "A security software"], correct: 1, points: 10, explanation: "Phishing is a cyber attack where attackers trick users into revealing sensitive information." },
+            { question: "What is the CIA triad in cybersecurity?", options: ["Central Intelligence Agency", "Confidentiality, Integrity, Availability", "Code, Input, Access", "Computer, Internet, Access"], correct: 1, points: 10, explanation: "CIA triad stands for Confidentiality, Integrity, and Availability - core security principles." }
+        ],
+        "Cloud Engineer": [
+            { question: "What does AWS stand for?", options: ["Amazon Web Services", "Advanced Web Services", "Automated Web System", "American Web Server"], correct: 0, points: 10, explanation: "AWS stands for Amazon Web Services - a cloud computing platform." },
+            { question: "What is Docker?", options: ["A programming language", "A containerization platform", "A database", "A web server"], correct: 1, points: 10, explanation: "Docker is a platform for containerizing applications." },
+            { question: "What is Kubernetes?", options: ["A database", "Container orchestration platform", "A programming language", "A cloud provider"], correct: 1, points: 10, explanation: "Kubernetes is an open-source container orchestration platform." }
+        ],
+        "DevOps Engineer": [
+            { question: "What does CI/CD stand for?", options: ["Code Integration/Code Deployment", "Continuous Integration/Continuous Delivery", "Computer Integration/Computer Deployment", "Code Implementation/Code Development"], correct: 1, points: 10, explanation: "CI/CD stands for Continuous Integration and Continuous Delivery." },
+            { question: "What is Jenkins?", options: ["A database", "A CI/CD tool", "A programming language", "A cloud platform"], correct: 1, points: 10, explanation: "Jenkins is an open-source automation server for CI/CD." },
+            { question: "What is Git?", options: ["A cloud platform", "A version control system", "A database", "A testing tool"], correct: 1, points: 10, explanation: "Git is a distributed version control system." }
+        ],
+        "Doctor (MBBS)": [
+            { question: "Which organ is responsible for pumping blood?", options: ["Liver", "Kidney", "Heart", "Lungs"], correct: 2, points: 10, explanation: "The heart pumps blood throughout the body." },
+            { question: "What does ECG stand for?", options: ["Electrocardiogram", "Echocardiogram", "Electroencephalogram", "Electromyogram"], correct: 0, points: 10, explanation: "ECG stands for Electrocardiogram - records electrical activity of the heart." },
+            { question: "Which vitamin is produced by human skin when exposed to sunlight?", options: ["Vitamin A", "Vitamin C", "Vitamin D", "Vitamin E"], correct: 2, points: 10, explanation: "Vitamin D is synthesized in the skin when exposed to sunlight." }
+        ],
+        "IAS": [
+            { question: "Who is known as the 'Father of the Indian Constitution'?", options: ["Jawaharlal Nehru", "Dr. B.R. Ambedkar", "Mahatma Gandhi", "Sardar Patel"], correct: 1, points: 10, explanation: "Dr. B.R. Ambedkar is the chief architect of the Indian Constitution." },
+            { question: "What is the capital of India?", options: ["Mumbai", "Kolkata", "New Delhi", "Chennai"], correct: 2, points: 10, explanation: "New Delhi is the capital of India." },
+            { question: "How many schedules does the Indian Constitution have?", options: ["10", "12", "14", "16"], correct: 1, points: 10, explanation: "Indian Constitution has 12 schedules currently." }
+        ],
+        "Chartered Accountant": [
+            { question: "What does GDP stand for?", options: ["Gross Domestic Product", "Gross Development Product", "General Domestic Product", "Gross Domestic Production"], correct: 0, points: 10, explanation: "GDP stands for Gross Domestic Product." },
+            { question: "What is the full form of GST?", options: ["Goods and Services Tax", "General Sales Tax", "Government Service Tax", "Goods Sales Tax"], correct: 0, points: 10, explanation: "GST stands for Goods and Services Tax." },
+            { question: "What is the main function of RBI?", options: ["Printing currency", "Controlling inflation", "Banking regulation", "All of the above"], correct: 3, points: 10, explanation: "RBI performs multiple functions including currency printing, inflation control, and banking regulation." }
+        ],
+        "Graphic Designer": [
+            { question: "Which software is used for vector graphics?", options: ["Photoshop", "Illustrator", "Lightroom", "Premiere Pro"], correct: 1, points: 10, explanation: "Adobe Illustrator is used for creating vector graphics." },
+            { question: "What does UI stand for?", options: ["User Interface", "User Integration", "Universal Interface", "Unique Interface"], correct: 0, points: 10, explanation: "UI stands for User Interface." },
+            { question: "What does UX stand for?", options: ["User Experience", "User Extension", "Universal X-ray", "Unique Xylophone"], correct: 0, points: 10, explanation: "UX stands for User Experience." }
+        ]
+    };
+
+    // Default challenges for other careers
+    const defaultChallenges = [
+        { question: "What is the most important skill for career growth?", options: ["Technical Skills", "Communication Skills", "Leadership Skills", "All of the above"], correct: 3, points: 10, explanation: "A combination of technical, communication, and leadership skills is essential." },
+        { question: "What does SWOT stand for in career planning?", options: ["Strengths, Weaknesses, Opportunities, Threats", "Skills, Work, Objectives, Targets", "Success, Wisdom, Opportunity, Time", "Strategy, Work, Organization, Team"], correct: 0, points: 10, explanation: "SWOT analysis helps in career planning." },
+        { question: "What is networking in career context?", options: ["Computer networks", "Building professional relationships", "Social media usage", "Job searching websites"], correct: 1, points: 10, explanation: "Networking means building professional relationships." }
+    ];
+
+    let currentCareer = "Software Developer";
+    let currentChallenges = [];
+    let currentChallengeIndex = 0;
+    let selectedOption = null;
+    let todayCompleted = 0;
+    let totalTodayChallenges = 5;
+    
+    let userStats = JSON.parse(localStorage.getItem('dailyChallengeStats')) || {
+        streak: 0,
+        totalPoints: 0,
+        completed: [],
+        todayCompletions: 0,
+        lastCompletedDate: null
+    };
+    
+    let todaysKey = new Date().toDateString();
+
+    function getChallengesForCareer(career) {
+        let careerQuestions = careerChallenges[career];
+        if (!careerQuestions) {
+            careerQuestions = defaultChallenges;
+        }
+        // Shuffle and take 5 questions
+        const shuffled = [...careerQuestions];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled.slice(0, totalTodayChallenges);
+    }
+
+    function resetForNewCareer() {
+        currentChallenges = getChallengesForCareer(currentCareer);
+        currentChallengeIndex = 0;
+        selectedOption = null;
+        todayCompleted = 0;
+        
+        if (userStats.lastCompletedDate !== todaysKey) {
+            userStats.todayCompletions = 0;
+        }
+        
+        localStorage.setItem('dailyChallengeStats', JSON.stringify(userStats));
+        
+        document.getElementById('submitBtn').classList.remove('hidden');
+        document.getElementById('nextChallengeBtn').classList.add('hidden');
+        document.getElementById('explanation').classList.add('hidden');
+        document.getElementById('feedback').innerHTML = '';
+        
+        renderCurrentChallenge();
+        updateStatsDisplay();
+        updateTodayProgress();
+    }
+
+    function renderCurrentChallenge() {
+        if (currentChallengeIndex >= currentChallenges.length) {
+            document.getElementById('questionTitle').innerHTML = "🎉 Congratulations!";
+            document.getElementById('questionText').innerHTML = "You've completed all challenges for today! Come back tomorrow for more.";
+            document.getElementById('optionsContainer').innerHTML = '';
+            document.getElementById('submitBtn').classList.add('hidden');
+            document.getElementById('nextChallengeBtn').classList.add('hidden');
+            
+            if (todayCompleted === totalTodayChallenges && userStats.lastCompletedDate !== todaysKey) {
+                const yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+                if (userStats.lastCompletedDate === yesterday.toDateString()) {
+                    userStats.streak++;
+                } else {
+                    userStats.streak = 1;
+                }
+                userStats.lastCompletedDate = todaysKey;
+                userStats.todayCompletions = totalTodayChallenges;
+                localStorage.setItem('dailyChallengeStats', JSON.stringify(userStats));
+                updateStatsDisplay();
+                showToast(`🔥 Streak: ${userStats.streak} days! Keep going!`);
+            }
+            return;
+        }
+        
+        const challenge = currentChallenges[currentChallengeIndex];
+        const careers = { "Software Developer": "💻", "Web Developer": "🌐", "App Developer": "📱", "Data Scientist": "📊", "AI Engineer": "🤖", "Cyber Security": "🔒", "Cloud Engineer": "☁️", "DevOps Engineer": "⚙️", "Doctor (MBBS)": "👨‍⚕️", "IAS": "🇮🇳", "Chartered Accountant": "📊", "Graphic Designer": "🎨", "Pilot": "✈️", "Teacher": "📚" };
+        const icon = careers[currentCareer] || "🎯";
+        document.getElementById('challengeBadge').innerHTML = `${icon} ${currentCareer} CHALLENGE`;
+        document.getElementById('questionTitle').innerHTML = challenge.question;
+        document.getElementById('questionText').innerHTML = challenge.question;
+        
+        const optionsContainer = document.getElementById('optionsContainer');
+        optionsContainer.innerHTML = challenge.options.map((opt, idx) => `
+            <div class="option-btn" data-opt="${idx}">${opt}</div>
+        `).join('');
+        
+        document.querySelectorAll('.option-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (selectedOption !== null) return;
+                document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                selectedOption = parseInt(btn.dataset.opt);
+            });
+        });
+        
+        document.getElementById('submitBtn').classList.remove('hidden');
+        document.getElementById('nextChallengeBtn').classList.add('hidden');
+        document.getElementById('explanation').classList.add('hidden');
+        document.getElementById('feedback').innerHTML = '';
+        selectedOption = null;
+        
+        updateTodayProgress();
+    }
+    
+    function submitAnswer() {
+        if (selectedOption === null) {
+            alert('Please select an answer!');
+            return;
+        }
+        
+        const challenge = currentChallenges[currentChallengeIndex];
+        const isCorrect = (selectedOption === challenge.correct);
+        const feedbackDiv = document.getElementById('feedback');
+        
+        if (isCorrect) {
+            feedbackDiv.innerHTML = '✅ Correct! Great job! +' + challenge.points + ' points';
+            feedbackDiv.classList.add('text-green-400');
+            
+            userStats.totalPoints += challenge.points;
+            todayCompleted++;
+            userStats.todayCompletions = todayCompleted;
+            
+            if (!userStats.completed.includes(todaysKey)) {
+                userStats.completed.push(todaysKey);
+            }
+            
+            localStorage.setItem('dailyChallengeStats', JSON.stringify(userStats));
+            
+            document.getElementById('submitBtn').classList.add('hidden');
+            document.getElementById('nextChallengeBtn').classList.remove('hidden');
+        } else {
+            feedbackDiv.innerHTML = '❌ Incorrect! The correct answer is: ' + challenge.options[challenge.correct];
+            feedbackDiv.classList.add('text-red-400');
+        }
+        
+        document.getElementById('explanationText').innerHTML = challenge.explanation;
+        document.getElementById('explanation').classList.remove('hidden');
+        
+        updateStatsDisplay();
+        updateTodayProgress();
+    }
+    
+    function nextChallenge() {
+        currentChallengeIndex++;
+        selectedOption = null;
+        document.getElementById('submitBtn').classList.remove('hidden');
+        document.getElementById('nextChallengeBtn').classList.add('hidden');
+        document.getElementById('explanation').classList.add('hidden');
+        document.getElementById('feedback').innerHTML = '';
+        renderCurrentChallenge();
+    }
+    
+    function updateStatsDisplay() {
+        document.getElementById('streakCount').innerHTML = userStats.streak;
+        document.getElementById('totalPoints').innerHTML = userStats.totalPoints;
+        document.getElementById('challengesCompleted').innerHTML = userStats.completed.length;
+    }
+    
+    function updateTodayProgress() {
+        const percent = (todayCompleted / totalTodayChallenges) * 100;
+        document.getElementById('todayProgressText').innerHTML = `${todayCompleted}/${totalTodayChallenges}`;
+        document.getElementById('todayProgressBar').style.width = percent + '%';
+    }
+    
+    function renderHistory() {
+        const historyContainer = document.getElementById('historyList');
+        const last10 = userStats.completed.slice(-10).reverse();
+        
+        if (last10.length === 0) {
+            historyContainer.innerHTML = '<div class="text-center text-gray-400 py-4">No challenges completed yet. Start today!</div>';
+            return;
+        }
+        
+        historyContainer.innerHTML = last10.map(date => `
+            <div class="bg-white/5 p-3 rounded-xl flex justify-between items-center">
+                <span>📅 ${date}</span>
+                <span class="text-green-400">✓ Completed</span>
+            </div>
+        `).join('');
+    }
+    
+    function showToast(message) {
+        let toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.innerHTML = message;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    }
+    
+    // Career selection change
+    document.getElementById('careerSelect').addEventListener('change', (e) => {
+        currentCareer = e.target.value;
+        resetForNewCareer();
+    });
+    
+    document.getElementById('submitBtn').addEventListener('click', submitAnswer);
+    document.getElementById('nextChallengeBtn').addEventListener('click', nextChallenge);
+    
+    document.getElementById('dateDisplay').innerHTML = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+    
+    // Load saved career preference
+    const savedCareer = localStorage.getItem('dailyChallengeCareer');
+    if (savedCareer && document.getElementById('careerSelect').querySelector(`option[value="${savedCareer}"]`)) {
+        currentCareer = savedCareer;
+        document.getElementById('careerSelect').value = savedCareer;
+    }
+    
+    // Save career preference when changed
+    document.getElementById('careerSelect').addEventListener('change', (e) => {
+        localStorage.setItem('dailyChallengeCareer', e.target.value);
+    });
+    
+    // Check if already completed today
+    if (userStats.lastCompletedDate === todaysKey && userStats.todayCompletions >= totalTodayChallenges) {
+        currentChallenges = [];
+        currentChallengeIndex = totalTodayChallenges;
+        renderCurrentChallenge();
+    } else {
+        resetForNewCareer();
+    }
+    
+    renderHistory();
+    updateStatsDisplay();
+</script>
+</body>
+</html>

@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FutureReady | AI Powered Career Guidance</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body { 
+            font-family: 'Poppins', sans-serif; 
+        }
+        
+        h1, h2, h3, .logo-text {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .heading-bold {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        @keyframes float-path {
+            0%, 100% { transform: translateY(0) scale(1); opacity: 0.9; }
+            50% { transform: translateY(-8px) scale(1.02); opacity: 1; filter: drop-shadow(0 0 10px currentColor); }
+        }
+        .path-animate { animation: float-path 4s ease-in-out infinite; }
+
+        @keyframes scan-core {
+            0% { transform: scale(1) translateY(0); opacity: 0.8; }
+            50% { transform: scale(1.1) translateY(-5px); opacity: 1; filter: drop-shadow(0 0 15px currentColor); }
+            100% { transform: scale(1) translateY(0); opacity: 0.8; }
+        }
+        .scan-animate { animation: scan-core 3s ease-in-out infinite; }
+
+        .orbit-fast-animate {
+            animation: spin-slow 8s linear infinite;
+            transform-origin: center;
+        }
+        @keyframes spin-slow {
+            to { transform: rotate(360deg); }
+        }
+
+        .card-illustration {
+            height: 13rem;
+            width: 100%;
+            border-top-left-radius: 2.5rem;
+            border-top-right-radius: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .group:hover .card-svg { transform: scale(1.05); }
+        .card-svg { transition: transform 0.5s ease-out; }
+
+        .modal-backdrop {
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(59,130,246,0.4);
+        }
+        
+        .feature-card {
+            transition: all 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-8px);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec489a);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: gradientShift 3s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 flex flex-col min-h-screen transition-colors duration-300 selection:bg-blue-100 dark:selection:bg-blue-900">
+
+    <!-- Navbar -->
+    <nav class="bg-white/90 dark:bg-slate-900/90 backdrop-blur-lg sticky top-0 z-50 border-b border-slate-200 dark:border-slate-800 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-4 group">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center text-white text-2xl font-bold shadow-xl group-hover:rotate-6 transition-transform">
+                    FR
+                </div>
+                <span class="logo-text text-4xl md:text-5xl font-black tracking-tighter gradient-text uppercase">
+                    FutureReady
+                </span>
+            </a>
+
+            <div class="flex items-center gap-4 md:gap-6">
+                <div class="flex items-center gap-2 sm:gap-4">
+                    <a href="code.html" class="text-xs font-bold uppercase tracking-widest text-slate-600 dark:text-slate-300 hover:text-blue-600 transition-colors px-2 py-2">
+                        Login
+                    </a>
+
+                    <button id="openSignupBtn" class="bg-blue-600 text-white px-5 py-2.5 rounded-full font-bold text-xs uppercase tracking-widest hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/30 transition-all">
+                        Sign Up
+                    </button>
+                </div>
+
+                <button id="theme-toggle" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
+                    <span class="dark:hidden text-lg">🌙</span>
+                    <span class="hidden dark:inline text-lg">☀️</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative overflow-hidden bg-slate-950 text-white py-24 px-6">
+        <div class="absolute inset-0 opacity-20">
+            <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-600 rounded-full blur-[160px] translate-x-1/2 -translate-y-1/2"></div>
+            <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-cyan-500 rounded-full blur-[150px] -translate-x-1/3 translate-y-1/3"></div>
+        </div>
+
+        <div class="relative max-w-4xl mx-auto text-center">
+            <div class="inline-flex items-center gap-2 bg-white/10 border border-white/10 rounded-full px-4 py-2 text-xs uppercase tracking-[0.25em] font-bold text-blue-300 mb-8">
+                ✨ AI POWERED CAREER GUIDANCE
+            </div>
+
+            <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight tracking-tight">
+                Shape Your <span class="gradient-text">Future.</span><br>
+                Start <span class="text-blue-400">Today.</span>
+            </h1>
+
+            <p class="text-lg md:text-xl text-slate-300 mb-12 max-w-2xl mx-auto leading-relaxed font-light">
+                FutureReady helps you discover the right career path with AI guidance, skill roadmaps, and future-ready job insights.
+            </p>
+
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="quiz.html">
+                    <button class="btn-primary w-full sm:w-auto text-white px-8 py-4 rounded-xl font-bold uppercase text-sm tracking-wide">
+                        📝 TAKE CAREER QUIZ
+                    </button>
+                </a>
+
+                <a href="careers.html">
+                    <button class="w-full sm:w-auto bg-slate-800 text-white px-8 py-4 rounded-xl font-bold uppercase text-sm border border-slate-700 hover:bg-slate-700 transition-all hover:scale-105 tracking-wide">
+                        🎯 BROWSE CAREERS
+                    </button>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Stats Section -->
+    <div class="max-w-7xl mx-auto px-6 py-16">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div class="bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-2xl p-6 text-center backdrop-blur-sm hover:scale-105 transition">
+                <div class="text-4xl font-bold text-blue-400">100+</div>
+                <div class="text-gray-400 text-sm mt-1 font-light">Careers</div>
+            </div>
+            <div class="bg-gradient-to-r from-green-600/20 to-emerald-600/20 rounded-2xl p-6 text-center backdrop-blur-sm hover:scale-105 transition">
+                <div class="text-4xl font-bold text-green-400">500+</div>
+                <div class="text-gray-400 text-sm mt-1 font-light">Roadmap Steps</div>
+            </div>
+            <div class="bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-2xl p-6 text-center backdrop-blur-sm hover:scale-105 transition">
+                <div class="text-4xl font-bold text-purple-400">50+</div>
+                <div class="text-gray-400 text-sm mt-1 font-light">Skills</div>
+            </div>
+            <div class="bg-gradient-to-r from-yellow-600/20 to-orange-600/20 rounded-2xl p-6 text-center backdrop-blur-sm hover:scale-105 transition">
+                <div class="text-4xl font-bold text-yellow-400">10k+</div>
+                <div class="text-gray-400 text-sm mt-1 font-light">Active Users</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Daily Motivation Quote -->
+    <div class="max-w-7xl mx-auto px-6">
+        <div id="dailyQuoteContainer"></div>
+    </div>
+
+    <!-- Features Section -->
+    <main class="max-w-7xl mx-auto px-6 py-16 mb-12">
+        <h2 class="text-4xl md:text-5xl font-black mb-12 text-center gradient-text">
+            Explore Our Features
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Feature 1: Skill Roadmap -->
+            <a href="skill-roadmap.html" class="feature-card group">
+                <div class="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:shadow-2xl transition-all duration-300 h-full">
+                    <div class="bg-gradient-to-br from-blue-500 to-cyan-500 p-6 text-center">
+                        <div class="text-5xl mb-2">📚</div>
+                    </div>
+                    <div class="p-5 text-center">
+                        <h3 class="text-lg font-bold mb-2 text-slate-900 dark:text-white">Skill Roadmap</h3>
+                        <p class="text-slate-600 dark:text-slate-400 text-sm font-light">Get personalized skill development roadmaps</p>
+                        <div class="mt-3 text-blue-600 font-semibold text-xs group-hover:translate-x-1 transition">Explore Now →</div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Feature 2: AI Counselor -->
+            <a href="ai-counsellor.html" class="feature-card group">
+                <div class="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:shadow-2xl transition-all duration-300 h-full">
+                    <div class="bg-gradient-to-br from-purple-500 to-pink-500 p-6 text-center">
+                        <div class="text-5xl mb-2">🤖</div>
+                    </div>
+                    <div class="p-5 text-center">
+                        <h3 class="text-lg font-bold mb-2 text-slate-900 dark:text-white">AI Counselor</h3>
+                        <p class="text-slate-600 dark:text-slate-400 text-sm font-light">Chat with AI for personalized career advice</p>
+                        <div class="mt-3 text-purple-600 font-semibold text-xs group-hover:translate-x-1 transition">Start Chatting →</div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Feature 3: Jobs in Demand -->
+            <a href="jobs-demand.html" class="feature-card group">
+                <div class="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:shadow-2xl transition-all duration-300 h-full">
+                    <div class="bg-gradient-to-br from-green-500 to-emerald-500 p-6 text-center">
+                        <div class="text-5xl mb-2">💼</div>
+                    </div>
+                    <div class="p-5 text-center">
+                        <h3 class="text-lg font-bold mb-2 text-slate-900 dark:text-white">Jobs in Demand</h3>
+                        <p class="text-slate-600 dark:text-slate-400 text-sm font-light">Discover top hiring industries and salary insights</p>
+                        <div class="mt-3 text-green-600 font-semibold text-xs group-hover:translate-x-1 transition">View Trends →</div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Feature 4: Career Bingo -->
+            <a href="career-bingo.html" class="feature-card group">
+                <div class="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:shadow-2xl transition-all duration-300 h-full">
+                    <div class="bg-gradient-to-br from-yellow-500 to-orange-500 p-6 text-center">
+                        <div class="text-5xl mb-2">🎯</div>
+                    </div>
+                    <div class="p-5 text-center">
+                        <h3 class="text-lg font-bold mb-2 text-slate-900 dark:text-white">Career Bingo</h3>
+                        <p class="text-slate-600 dark:text-slate-400 text-sm font-light">Track your progress, complete tasks, earn badges!</p>
+                        <div class="mt-3 text-yellow-600 font-semibold text-xs group-hover:translate-x-1 transition">Start Playing →</div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Feature 5: Resume Builder -->
+            <a href="resume-builder.html" class="feature-card group">
+                <div class="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:shadow-2xl transition-all duration-300 h-full">
+                    <div class="bg-gradient-to-br from-teal-500 to-cyan-500 p-6 text-center">
+                        <div class="text-5xl mb-2">📄</div>
+                    </div>
+                    <div class="p-5 text-center">
+                        <h3 class="text-lg font-bold mb-2 text-slate-900 dark:text-white">Resume Builder</h3>
+                        <p class="text-slate-600 dark:text-slate-400 text-sm font-light">Create professional resume in minutes, download as PDF</p>
+                        <div class="mt-3 text-teal-600 font-semibold text-xs group-hover:translate-x-1 transition">Build Resume →</div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Feature 6: Daily Challenge -->
+            <a href="daily-challenge.html" class="feature-card group">
+                <div class="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:shadow-2xl transition-all duration-300 h-full">
+                    <div class="bg-gradient-to-br from-orange-500 to-red-500 p-6 text-center">
+                        <div class="text-5xl mb-2">🔥</div>
+                    </div>
+                    <div class="p-5 text-center">
+                        <h3 class="text-lg font-bold mb-2 text-slate-900 dark:text-white">Daily Challenge</h3>
+                        <p class="text-slate-600 dark:text-slate-400 text-sm font-light">Solve daily challenges, maintain streak, earn points</p>
+                        <div class="mt-3 text-orange-600 font-semibold text-xs group-hover:translate-x-1 transition">Start Challenge →</div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Feature 7: Notes Diary (NEW) -->
+            <a href="notes-diary.html" class="feature-card group">
+                <div class="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:shadow-2xl transition-all duration-300 h-full">
+                    <div class="bg-gradient-to-br from-pink-500 to-rose-500 p-6 text-center">
+                        <div class="text-5xl mb-2">📔</div>
+                    </div>
+                    <div class="p-5 text-center">
+                        <h3 class="text-lg font-bold mb-2 text-slate-900 dark:text-white">Notes Diary</h3>
+                        <p class="text-slate-600 dark:text-slate-400 text-sm font-light">Write your thoughts, goals, daily tasks - auto save</p>
+                        <div class="mt-3 text-pink-600 font-semibold text-xs group-hover:translate-x-1 transition">Start Writing →</div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </main>
+
+    <!-- Quick Actions Section -->
+    <div class="max-w-7xl mx-auto px-6 pb-20">
+        <div class="bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-3xl p-10 text-center">
+            <h3 class="text-2xl font-bold mb-4">Ready to Start Your Journey?</h3>
+            <p class="text-gray-300 mb-6 font-light">Take the career quiz or browse all careers to find your perfect path</p>
+            <div class="flex flex-wrap gap-4 justify-center">
+                <a href="quiz.html" class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-full font-semibold transition hover:scale-105">
+                    📝 Take Career Quiz
+                </a>
+                <a href="careers.html" class="bg-white/10 hover:bg-white/20 px-6 py-3 rounded-full font-semibold transition hover:scale-105">
+                    🎯 Browse All Careers
+                </a>
+                <a href="dashboard.html" class="bg-purple-600 hover:bg-purple-700 px-6 py-3 rounded-full font-semibold transition hover:scale-105">
+                    📊 Go to Dashboard
+                </a>
+                <a href="resume-builder.html" class="bg-teal-600 hover:bg-teal-700 px-6 py-3 rounded-full font-semibold transition hover:scale-105">
+                    📄 Build Resume
+                </a>
+                <a href="notes-diary.html" class="bg-pink-600 hover:bg-pink-700 px-6 py-3 rounded-full font-semibold transition hover:scale-105">
+                    📔 Notes Diary
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/10 py-8 text-center text-gray-400">
+        <p class="font-light">© 2024 FutureReady - AI Powered Career Guidance | Shape Your Future</p>
+        <p class="text-sm mt-2 font-light">🌟 Start your journey to success today</p>
+        <div class="flex justify-center gap-6 mt-4">
+            <a href="#" class="hover:text-blue-400 transition text-sm">About Us</a>
+            <a href="#" class="hover:text-blue-400 transition text-sm">Contact</a>
+            <a href="#" class="hover:text-blue-400 transition text-sm">Privacy Policy</a>
+            <a href="#" class="hover:text-blue-400 transition text-sm">Terms of Service</a>
+        </div>
+    </footer>
+
+    <!-- Signup Modal -->
+    <div id="signupModal" class="fixed inset-0 bg-black/50 modal-backdrop hidden items-center justify-center z-[100] px-4">
+        <div class="w-full max-w-lg bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden animate-[fadeIn_.3s_ease]">
+            <div class="bg-gradient-to-r from-blue-600 to-cyan-500 p-6 text-white flex justify-between items-center">
+                <div>
+                    <h2 class="text-2xl font-black">Create Your Account</h2>
+                    <p class="text-blue-100 text-sm mt-1 font-light">Start your career journey with FutureReady</p>
+                </div>
+                <button id="closeSignupBtn" class="text-white text-2xl font-bold hover:scale-110 transition-transform">
+                    &times;
+                </button>
+            </div>
+
+            <div class="p-8">
+                <form id="signupForm" class="space-y-5">
+                    <div>
+                        <label class="block text-sm font-bold mb-2 text-slate-700 dark:text-slate-200">Full Name</label>
+                        <input type="text" id="name" placeholder="Enter your full name" class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-white outline-none focus:ring-2 focus:ring-blue-500" required>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold mb-2 text-slate-700 dark:text-slate-200">Email Address</label>
+                        <input type="email" id="email" placeholder="Enter your email" class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-white outline-none focus:ring-2 focus:ring-blue-500" required>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold mb-2 text-slate-700 dark:text-slate-200">Password</label>
+                        <input type="password" id="password" placeholder="Create a strong password" class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-white outline-none focus:ring-2 focus:ring-blue-500" required>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold mb-2 text-slate-700 dark:text-slate-200">Career Interest</label>
+                        <select id="interest" class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-white outline-none focus:ring-2 focus:ring-blue-500" required>
+                            <option value="">Select your primary interest</option>
+                            <option>💻 Software Development</option>
+                            <option>🔒 Cyber Security</option>
+                            <option>☁️ Cloud Computing</option>
+                            <option>📊 Data Science</option>
+                            <option>🎨 UI/UX Design</option>
+                            <option>🏛️ Government Exams</option>
+                            <option>💰 Finance & Banking</option>
+                            <option>👨‍⚕️ Healthcare</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3.5 rounded-xl font-bold uppercase tracking-wider transition-all hover:shadow-lg hover:shadow-blue-500/30">
+                        Sign Up Now
+                    </button>
+                </form>
+
+                <p id="signupMessage" class="hidden mt-5 text-center text-sm font-semibold text-green-600">
+                    ✅ Signup successful! Welcome to FutureReady 💙
+                </p>
+                
+                <p class="text-center text-xs text-gray-500 mt-4 font-light">
+                    By signing up, you agree to our Terms of Service and Privacy Policy
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dark Mode Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+
+        if (localStorage.getItem('theme') === 'dark') {
+            html.classList.add('dark');
+        } else if (localStorage.getItem('theme') === 'light') {
+            html.classList.remove('dark');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+        });
+
+        // Signup Modal
+        const signupModal = document.getElementById('signupModal');
+        const openSignupBtn = document.getElementById('openSignupBtn');
+        const closeSignupBtn = document.getElementById('closeSignupBtn');
+        const signupForm = document.getElementById('signupForm');
+        const signupMessage = document.getElementById('signupMessage');
+
+        openSignupBtn.addEventListener('click', () => {
+            signupModal.classList.remove('hidden');
+            signupModal.classList.add('flex');
+        });
+
+        closeSignupBtn.addEventListener('click', () => {
+            signupModal.classList.add('hidden');
+            signupModal.classList.remove('flex');
+        });
+
+        signupModal.addEventListener('click', (e) => {
+            if (e.target === signupModal) {
+                signupModal.classList.add('hidden');
+                signupModal.classList.remove('flex');
+            }
+        });
+
+        signupForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const interest = document.getElementById('interest').value;
+
+            if (!name || !email || !password || !interest) {
+                alert('⚠️ Please fill all fields to continue.');
+                return;
+            }
+
+            const userData = { name, email, password, interest, joinedDate: new Date().toISOString() };
+            
+            let users = JSON.parse(localStorage.getItem('lograUsers') || '[]');
+            users.push(userData);
+            localStorage.setItem('lograUsers', JSON.stringify(users));
+            localStorage.setItem('lograUser', JSON.stringify(userData));
+            
+            signupMessage.classList.remove('hidden');
+            signupForm.reset();
+
+            setTimeout(() => {
+                signupModal.classList.add('hidden');
+                signupModal.classList.remove('flex');
+                signupMessage.classList.add('hidden');
+                window.location.href = 'dashboard.html';
+            }, 1500);
+        });
+        
+        // Animation on scroll
+        const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.feature-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+
+    <!-- Daily Quote Script -->
+    <script src="daily-quote.js"></script>
+
+</body>
+</html>

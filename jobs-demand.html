@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jobs in Demand | LOGRA</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    * { font-family: 'Inter', sans-serif; }
+    body {
+        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+        background-attachment: fixed;
+        color: white;
+        min-height: 100vh;
+    }
+    .job-card {
+        background: rgba(255,255,255,0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.1);
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+    .job-card:hover {
+        transform: translateY(-5px);
+        border-color: #10b981;
+        box-shadow: 0 10px 30px rgba(16,185,129,0.2);
+    }
+    .trend-up {
+        animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+        0%, 100% { opacity: 0.5; }
+        50% { opacity: 1; }
+    }
+    .category-tab {
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .category-tab.active {
+        background: linear-gradient(135deg, #10b981, #059669);
+    }
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<div class="sticky top-0 z-50 backdrop-blur-xl bg-black/40 border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+            <div class="text-2xl">💼</div>
+            <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Jobs in Demand</h1>
+        </div>
+        <div class="flex gap-3">
+            <a href="index.html" class="bg-slate-700 hover:bg-slate-600 px-5 py-2 rounded-full transition">← Back to Home</a>
+            <a href="careers.html" class="bg-gradient-to-r from-blue-600 to-purple-600 px-5 py-2 rounded-full hover:scale-105 transition">🎯 Careers</a>
+        </div>
+    </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-6 py-10">
+    <div class="text-center mb-10">
+        <div class="text-6xl mb-3">📈</div>
+        <h1 class="text-5xl font-black bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-3">
+            Jobs in Demand 2024-2025
+        </h1>
+        <p class="text-gray-300 text-lg">Discover top hiring industries, salary insights, and future job trends</p>
+    </div>
+
+    <!-- Category Tabs -->
+    <div class="flex flex-wrap justify-center gap-3 mb-10">
+        <div class="category-tab active px-6 py-2 rounded-full bg-emerald-600" data-cat="tech">💻 Technology</div>
+        <div class="category-tab px-6 py-2 rounded-full bg-white/10 hover:bg-white/20" data-cat="healthcare">🩺 Healthcare</div>
+        <div class="category-tab px-6 py-2 rounded-full bg-white/10 hover:bg-white/20" data-cat="finance">💰 Finance</div>
+        <div class="category-tab px-6 py-2 rounded-full bg-white/10 hover:bg-white/20" data-cat="government">🏛️ Government</div>
+        <div class="category-tab px-6 py-2 rounded-full bg-white/10 hover:bg-white/20" data-cat="creative">🎨 Creative</div>
+    </div>
+
+    <!-- Jobs Grid -->
+    <div id="jobsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Jobs will be loaded here -->
+    </div>
+
+    <!-- Market Trends Section -->
+    <div class="mt-12 bg-white/5 rounded-2xl p-6">
+        <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">📊 Market Trends 2024</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-emerald-500/20 p-4 rounded-xl">
+                <div class="text-2xl mb-2">🚀</div>
+                <div class="font-bold">Fastest Growing</div>
+                <div class="text-sm text-gray-300">AI/ML, Cyber Security, Cloud Computing</div>
+            </div>
+            <div class="bg-blue-500/20 p-4 rounded-xl">
+                <div class="text-2xl mb-2">💰</div>
+                <div class="font-bold">Highest Paying</div>
+                <div class="text-sm text-gray-300">AI Engineer, Data Scientist, Investment Banker</div>
+            </div>
+            <div class="bg-purple-500/20 p-4 rounded-xl">
+                <div class="text-2xl mb-2">📈</div>
+                <div class="font-bold">Future Demand</div>
+                <div class="text-sm text-gray-300">Green Jobs, Healthcare, Digital Marketing</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const jobsData = {
+        tech: [
+            { title: "AI/ML Engineer", salary: "₹8-25 LPA", growth: "+45%", demand: "Very High", skills: "Python, TensorFlow, PyTorch, NLP", icon: "🤖" },
+            { title: "Full Stack Developer", salary: "₹5-18 LPA", growth: "+32%", demand: "High", skills: "React, Node.js, MongoDB, AWS", icon: "🌐" },
+            { title: "Cyber Security Analyst", salary: "₹6-20 LPA", growth: "+50%", demand: "Very High", skills: "Networking, Linux, Security Tools", icon: "🔒" },
+            { title: "Cloud Engineer", salary: "₹7-22 LPA", growth: "+48%", demand: "Very High", skills: "AWS/Azure, Docker, Kubernetes", icon: "☁️" },
+            { title: "Data Scientist", salary: "₹8-24 LPA", growth: "+40%", demand: "High", skills: "Python, SQL, ML, Statistics", icon: "📊" },
+            { title: "DevOps Engineer", salary: "₹6-20 LPA", growth: "+42%", demand: "High", skills: "CI/CD, Jenkins, Docker, K8s", icon: "⚙️" }
+        ],
+        healthcare: [
+            { title: "Doctor (MBBS/MD)", salary: "₹6-25 LPA", growth: "+25%", demand: "Very High", skills: "Medical Knowledge, Patient Care", icon: "👨‍⚕️" },
+            { title: "Surgeon", salary: "₹12-40 LPA", growth: "+20%", demand: "High", skills: "Surgical Skills, Precision", icon: "🔪" },
+            { title: "Pharmacist", salary: "₹3-8 LPA", growth: "+18%", demand: "Medium", skills: "Medication Knowledge, Patient Counseling", icon: "💊" },
+            { title: "Physiotherapist", salary: "₹3-10 LPA", growth: "+30%", demand: "High", skills: "Rehabilitation, Exercise Therapy", icon: "💪" },
+            { title: "Psychologist", salary: "₹4-12 LPA", growth: "+35%", demand: "High", skills: "Counseling, Therapy, Analysis", icon: "🧠" }
+        ],
+        finance: [
+            { title: "Chartered Accountant", salary: "₹8-25 LPA", growth: "+28%", demand: "High", skills: "Accounting, Taxation, Audit", icon: "📊" },
+            { title: "Investment Banker", salary: "₹10-35 LPA", growth: "+30%", demand: "High", skills: "Financial Modeling, Valuation", icon: "💰" },
+            { title: "Financial Analyst", salary: "₹5-15 LPA", growth: "+25%", demand: "Medium", skills: "Excel, Financial Analysis", icon: "📈" },
+            { title: "Risk Manager", salary: "₹8-20 LPA", growth: "+28%", demand: "Medium", skills: "Risk Assessment, Compliance", icon: "⚠️" }
+        ],
+        government: [
+            { title: "IAS/IPS Officer", salary: "₹12-25 LPA", growth: "Stable", demand: "Very High", skills: "Leadership, Administration", icon: "🇮🇳" },
+            { title: "Bank PO", salary: "₹7-15 LPA", growth: "+15%", demand: "High", skills: "Banking, Customer Service", icon: "🏦" },
+            { title: "SSC CGL Officer", salary: "₹6-12 LPA", growth: "Stable", demand: "High", skills: "General Awareness, Aptitude", icon: "📋" },
+            { title: "Railway Officer", salary: "₹6-14 LPA", growth: "+12%", demand: "High", skills: "Technical/Administrative", icon: "🚂" }
+        ],
+        creative: [
+            { title: "UI/UX Designer", salary: "₹5-18 LPA", growth: "+38%", demand: "High", skills: "Figma, Adobe XD, Research", icon: "🎨" },
+            { title: "Video Editor", salary: "₹3-12 LPA", growth: "+35%", demand: "High", skills: "Premiere Pro, After Effects", icon: "🎬" },
+            { title: "Content Creator", salary: "₹3-15 LPA", growth: "+50%", demand: "Very High", skills: "Scripting, Editing, Social Media", icon: "📱" },
+            { title: "Graphic Designer", salary: "₹3-10 LPA", growth: "+28%", demand: "Medium", skills: "Photoshop, Illustrator", icon: "🖌️" }
+        ]
+    };
+
+    function getDemandColor(demand) {
+        if (demand === 'Very High') return 'text-emerald-400';
+        if (demand === 'High') return 'text-blue-400';
+        return 'text-yellow-400';
+    }
+
+    function renderJobs(category) {
+        const jobs = jobsData[category];
+        const container = document.getElementById('jobsContainer');
+        container.innerHTML = jobs.map(job => `
+            <div class="job-card rounded-2xl p-6" onclick="window.location.href='roadmap.html?career=${encodeURIComponent(job.title)}'">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="text-4xl">${job.icon}</div>
+                    <div class="text-right">
+                        <div class="text-emerald-400 font-bold text-lg">${job.growth}</div>
+                        <div class="text-xs text-gray-400">Growth</div>
+                    </div>
+                </div>
+                <h3 class="text-xl font-bold mb-2">${job.title}</h3>
+                <div class="text-2xl font-bold text-emerald-400 mb-2">${job.salary}</div>
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="text-sm">Demand:</span>
+                    <span class="${getDemandColor(job.demand)} font-semibold">${job.demand}</span>
+                    <span class="trend-up text-green-400">▲</span>
+                </div>
+                <div class="flex flex-wrap gap-2 mt-3">
+                    ${job.skills.split(', ').map(skill => `<span class="bg-white/10 px-2 py-1 rounded-full text-xs">${skill}</span>`).join('')}
+                </div>
+                <div class="mt-4 text-emerald-400 text-sm flex items-center gap-1">
+                    Click to view roadmap →
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // Category tabs
+    document.querySelectorAll('.category-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.category-tab').forEach(t => {
+                t.classList.remove('active');
+                t.classList.add('bg-white/10');
+            });
+            tab.classList.add('active');
+            tab.classList.remove('bg-white/10');
+            renderJobs(tab.dataset.cat);
+        });
+    });
+
+    // Initial render
+    renderJobs('tech');
+</script>
+</body>
+</html>
