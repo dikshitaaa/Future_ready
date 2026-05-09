@@ -2,7 +2,7 @@
 <html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
 
   <title>FutureReady | AI Powered Career Guidance</title>
 
@@ -56,72 +56,86 @@
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
     }
+
+    /* Better touch targets for mobile */
+    button, a {
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Smooth scrolling */
+    html {
+      scroll-behavior: smooth;
+    }
   </style>
 </head>
 
 <body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 flex flex-col min-h-screen transition-colors duration-300">
 
-  <!-- Navbar -->
+  <!-- Navbar - Responsive -->
   <nav class="bg-white/90 dark:bg-slate-900/90 backdrop-blur-lg sticky top-0 z-50 border-b border-slate-200 dark:border-slate-800">
-    <div class="max-w-7xl mx-auto px-4 md:px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
-
-      <a href="index.html" class="flex items-center gap-3 md:gap-4 group">
-        <div class="w-11 h-11 md:w-14 md:h-14 rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center text-white text-lg md:text-2xl font-bold shadow-xl">
-          FR
-        </div>
-
-        <span class="logo-text text-2xl sm:text-3xl md:text-5xl font-black tracking-tighter gradient-text uppercase">
-          FutureReady
-        </span>
-      </a>
-
-      <div class="flex items-center gap-3 flex-wrap justify-center">
-        <a href="code.html" class="text-xs font-bold uppercase tracking-widest text-slate-600 dark:text-slate-300 hover:text-blue-600 px-2 py-2">
-          Login
+    <div class="max-w-7xl mx-auto px-4 py-3 sm:py-4">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        
+        <!-- Logo Section -->
+        <a href="index.html" class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+          <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center text-white font-bold shadow-lg">
+            <span class="text-sm sm:text-base">FR</span>
+          </div>
+          <span class="logo-text text-xl sm:text-2xl md:text-3xl font-black tracking-tighter gradient-text uppercase">
+            FutureReady
+          </span>
         </a>
 
-        <button id="openSignupBtn" class="bg-blue-600 text-white px-4 md:px-5 py-2.5 rounded-full font-bold text-xs uppercase tracking-widest hover:bg-blue-700 transition-all">
-          Sign Up
-        </button>
+        <!-- Right Side Buttons -->
+        <div class="flex items-center gap-2 sm:gap-3">
+          <a href="code.html" class="text-xs sm:text-sm font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300 hover:text-blue-600 px-2 py-1.5 transition">
+            Login
+          </a>
 
-        <button id="theme-toggle" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700">
-          <span class="dark:hidden text-lg">🌙</span>
-          <span class="hidden dark:inline text-lg">☀️</span>
-        </button>
+          <button id="openSignupBtn" class="bg-blue-600 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-full font-bold text-[10px] sm:text-xs uppercase tracking-wider hover:bg-blue-700 transition-all shadow-md">
+            Sign Up
+          </button>
+
+          <button id="theme-toggle" class="p-1.5 sm:p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+            <span class="dark:hidden text-base sm:text-lg">🌙</span>
+            <span class="hidden dark:inline text-base sm:text-lg">☀️</span>
+          </button>
+        </div>
       </div>
     </div>
   </nav>
 
-  <!-- Hero -->
-  <header class="relative overflow-hidden bg-slate-950 text-white py-16 md:py-24 px-4 md:px-6">
+  <!-- Hero Section - Responsive -->
+  <header class="relative overflow-hidden bg-slate-950 text-white py-12 sm:py-16 md:py-20 lg:py-24 px-4">
     <div class="absolute inset-0 opacity-20">
-      <div class="absolute top-0 right-0 w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-blue-600 rounded-full blur-[120px] translate-x-1/2 -translate-y-1/2"></div>
-      <div class="absolute bottom-0 left-0 w-[280px] md:w-[400px] h-[280px] md:h-[400px] bg-cyan-500 rounded-full blur-[120px] -translate-x-1/3 translate-y-1/3"></div>
+      <div class="absolute top-0 right-0 w-64 h-64 sm:w-96 sm:h-96 md:w-[500px] md:h-[500px] bg-blue-600 rounded-full blur-[100px] md:blur-[120px] translate-x-1/2 -translate-y-1/2"></div>
+      <div class="absolute bottom-0 left-0 w-56 h-56 sm:w-80 sm:h-80 md:w-[400px] md:h-[400px] bg-cyan-500 rounded-full blur-[100px] md:blur-[120px] -translate-x-1/3 translate-y-1/3"></div>
     </div>
 
-    <div class="relative max-w-4xl mx-auto text-center">
-      <div class="inline-flex items-center gap-2 bg-white/10 border border-white/10 rounded-full px-4 py-2 text-[10px] sm:text-xs uppercase tracking-[0.18em] md:tracking-[0.25em] font-bold text-blue-300 mb-8">
+    <div class="relative max-w-4xl mx-auto text-center px-2">
+      <div class="inline-flex items-center gap-1.5 sm:gap-2 bg-white/10 border border-white/10 rounded-full px-3 sm:px-4 py-1.5 sm:py-2 text-[9px] sm:text-[10px] md:text-xs uppercase tracking-[0.15em] sm:tracking-[0.2em] font-bold text-blue-300 mb-6 sm:mb-8">
         ✨ AI Powered Career Guidance
       </div>
 
-      <h1 class="text-3xl sm:text-5xl md:text-7xl font-black mb-6 leading-tight tracking-tight">
+      <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black mb-4 sm:mb-5 md:mb-6 leading-tight tracking-tight">
         Shape Your <span class="gradient-text">Future.</span><br>
         Start <span class="text-blue-400">Today.</span>
       </h1>
 
-      <p class="text-base sm:text-lg md:text-xl text-slate-300 mb-10 md:mb-12 max-w-2xl mx-auto leading-relaxed font-light">
+      <p class="text-sm sm:text-base md:text-lg lg:text-xl text-slate-300 mb-8 sm:mb-10 md:mb-12 max-w-2xl mx-auto leading-relaxed font-light px-2">
         FutureReady helps you discover the right career path with AI guidance, skill roadmaps, and future-ready job insights.
       </p>
 
-      <div class="flex flex-col sm:flex-row justify-center gap-4">
+      <div class="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 px-2">
         <a href="quiz.html" class="w-full sm:w-auto">
-          <button class="btn-primary w-full text-white px-6 md:px-8 py-4 rounded-xl font-bold uppercase text-sm tracking-wide">
+          <button class="btn-primary w-full text-white px-4 sm:px-6 md:px-8 py-3 sm:py-3.5 md:py-4 rounded-xl font-bold uppercase text-[11px] sm:text-xs md:text-sm tracking-wide">
             📝 Take Career Quiz
           </button>
         </a>
 
         <a href="careers.html" class="w-full sm:w-auto">
-          <button class="w-full bg-slate-800 text-white px-6 md:px-8 py-4 rounded-xl font-bold uppercase text-sm border border-slate-700 hover:bg-slate-700 transition-all tracking-wide">
+          <button class="w-full bg-slate-800 text-white px-4 sm:px-6 md:px-8 py-3 sm:py-3.5 md:py-4 rounded-xl font-bold uppercase text-[11px] sm:text-xs md:text-sm border border-slate-700 hover:bg-slate-700 transition-all tracking-wide">
             🎯 Browse Careers
           </button>
         </a>
@@ -129,133 +143,140 @@
     </div>
   </header>
 
-  <!-- Stats -->
-  <section class="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-16 w-full">
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+  <!-- Stats Section - Responsive -->
+  <section class="max-w-7xl mx-auto px-4 py-10 sm:py-12 md:py-16 w-full">
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
 
-      <div class="bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-2xl p-5 md:p-6 text-center">
-        <div class="text-2xl sm:text-3xl md:text-4xl font-bold text-blue-400">100+</div>
-        <div class="text-gray-400 text-xs sm:text-sm mt-1 font-light">Careers</div>
+      <div class="bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-6 text-center">
+        <div class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-blue-400">70+</div>
+        <div class="text-gray-400 text-[10px] sm:text-xs md:text-sm mt-0.5 sm:mt-1 font-light">Careers</div>
       </div>
 
-      <div class="bg-gradient-to-r from-green-600/20 to-emerald-600/20 rounded-2xl p-5 md:p-6 text-center">
-        <div class="text-2xl sm:text-3xl md:text-4xl font-bold text-green-400">500+</div>
-        <div class="text-gray-400 text-xs sm:text-sm mt-1 font-light">Roadmap Steps</div>
+      <div class="bg-gradient-to-r from-green-600/20 to-emerald-600/20 rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-6 text-center">
+        <div class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-green-400">600+</div>
+        <div class="text-gray-400 text-[10px] sm:text-xs md:text-sm mt-0.5 sm:mt-1 font-light">Roadmap Steps</div>
       </div>
 
-      <div class="bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-2xl p-5 md:p-6 text-center">
-        <div class="text-2xl sm:text-3xl md:text-4xl font-bold text-purple-400">50+</div>
-        <div class="text-gray-400 text-xs sm:text-sm mt-1 font-light">Skills</div>
+      <div class="bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-6 text-center">
+        <div class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-purple-400">1000+</div>
+        <div class="text-gray-400 text-[10px] sm:text-xs md:text-sm mt-0.5 sm:mt-1 font-light">Interview Qs</div>
       </div>
 
-      <div class="bg-gradient-to-r from-yellow-600/20 to-orange-600/20 rounded-2xl p-5 md:p-6 text-center">
-        <div class="text-2xl sm:text-3xl md:text-4xl font-bold text-yellow-400">10k+</div>
-        <div class="text-gray-400 text-xs sm:text-sm mt-1 font-light">Active Users</div>
+      <div class="bg-gradient-to-r from-yellow-600/20 to-orange-600/20 rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-6 text-center">
+        <div class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-yellow-400">15+</div>
+        <div class="text-gray-400 text-[10px] sm:text-xs md:text-sm mt-0.5 sm:mt-1 font-light">Features</div>
       </div>
 
     </div>
   </section>
 
-  <!-- Daily Quote -->
-  <div class="max-w-7xl mx-auto px-4 md:px-6 w-full">
+  <!-- Daily Quote - Responsive -->
+  <div class="max-w-7xl mx-auto px-4 w-full">
     <div id="dailyQuoteContainer"></div>
   </div>
 
-  <!-- Features -->
-  <main class="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-16 mb-12 w-full">
-    <h2 class="text-3xl sm:text-4xl md:text-5xl font-black mb-10 md:mb-12 text-center gradient-text">
+  <!-- Features Section - Responsive Grid -->
+  <main class="max-w-7xl mx-auto px-4 py-10 sm:py-12 md:py-16 mb-8 sm:mb-12 w-full">
+    <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black mb-8 sm:mb-10 md:mb-12 text-center gradient-text px-2">
       Explore Our Features
     </h2>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6">
 
+      <!-- Feature 1 -->
       <a href="skill-roadmap.html" class="feature-card group">
-        <div class="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:shadow-2xl h-full">
-          <div class="bg-gradient-to-br from-blue-500 to-cyan-500 p-6 text-center">
-            <div class="text-5xl">📚</div>
+        <div class="bg-white dark:bg-slate-900 rounded-xl sm:rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:shadow-xl h-full">
+          <div class="bg-gradient-to-br from-blue-500 to-cyan-500 p-4 sm:p-5 md:p-6 text-center">
+            <div class="text-4xl sm:text-5xl">📚</div>
           </div>
-          <div class="p-5 text-center">
-            <h3 class="text-lg font-bold mb-2">Skill Roadmap</h3>
-            <p class="text-slate-600 dark:text-slate-400 text-sm font-light">Get personalized skill development roadmaps</p>
-            <div class="mt-3 text-blue-600 font-semibold text-xs">Explore Now →</div>
+          <div class="p-4 sm:p-5 text-center">
+            <h3 class="text-base sm:text-lg font-bold mb-1.5 sm:mb-2">Skill Roadmap</h3>
+            <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm font-light">Get personalized skill development roadmaps</p>
+            <div class="mt-2 sm:mt-3 text-blue-600 font-semibold text-[10px] sm:text-xs">Explore Now →</div>
           </div>
         </div>
       </a>
 
+      <!-- Feature 2 -->
       <a href="ai-counsellor.html" class="feature-card group">
-        <div class="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:shadow-2xl h-full">
-          <div class="bg-gradient-to-br from-purple-500 to-pink-500 p-6 text-center">
-            <div class="text-5xl">🤖</div>
+        <div class="bg-white dark:bg-slate-900 rounded-xl sm:rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:shadow-xl h-full">
+          <div class="bg-gradient-to-br from-purple-500 to-pink-500 p-4 sm:p-5 md:p-6 text-center">
+            <div class="text-4xl sm:text-5xl">🤖</div>
           </div>
-          <div class="p-5 text-center">
-            <h3 class="text-lg font-bold mb-2">AI Counselor</h3>
-            <p class="text-slate-600 dark:text-slate-400 text-sm font-light">Chat with AI for personalized career advice</p>
-            <div class="mt-3 text-purple-600 font-semibold text-xs">Start Chatting →</div>
+          <div class="p-4 sm:p-5 text-center">
+            <h3 class="text-base sm:text-lg font-bold mb-1.5 sm:mb-2">AI Counselor</h3>
+            <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm font-light">Chat with AI for personalized career advice</p>
+            <div class="mt-2 sm:mt-3 text-purple-600 font-semibold text-[10px] sm:text-xs">Start Chatting →</div>
           </div>
         </div>
       </a>
 
+      <!-- Feature 3 -->
       <a href="jobs-demand.html" class="feature-card group">
-        <div class="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:shadow-2xl h-full">
-          <div class="bg-gradient-to-br from-green-500 to-emerald-500 p-6 text-center">
-            <div class="text-5xl">💼</div>
+        <div class="bg-white dark:bg-slate-900 rounded-xl sm:rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:shadow-xl h-full">
+          <div class="bg-gradient-to-br from-green-500 to-emerald-500 p-4 sm:p-5 md:p-6 text-center">
+            <div class="text-4xl sm:text-5xl">💼</div>
           </div>
-          <div class="p-5 text-center">
-            <h3 class="text-lg font-bold mb-2">Jobs in Demand</h3>
-            <p class="text-slate-600 dark:text-slate-400 text-sm font-light">Discover top hiring industries and salary insights</p>
-            <div class="mt-3 text-green-600 font-semibold text-xs">View Trends →</div>
+          <div class="p-4 sm:p-5 text-center">
+            <h3 class="text-base sm:text-lg font-bold mb-1.5 sm:mb-2">Jobs in Demand</h3>
+            <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm font-light">Discover top hiring industries and salary insights</p>
+            <div class="mt-2 sm:mt-3 text-green-600 font-semibold text-[10px] sm:text-xs">View Trends →</div>
           </div>
         </div>
       </a>
 
+      <!-- Feature 4 -->
       <a href="career-bingo.html" class="feature-card group">
-        <div class="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:shadow-2xl h-full">
-          <div class="bg-gradient-to-br from-yellow-500 to-orange-500 p-6 text-center">
-            <div class="text-5xl">🎯</div>
+        <div class="bg-white dark:bg-slate-900 rounded-xl sm:rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:shadow-xl h-full">
+          <div class="bg-gradient-to-br from-yellow-500 to-orange-500 p-4 sm:p-5 md:p-6 text-center">
+            <div class="text-4xl sm:text-5xl">🎯</div>
           </div>
-          <div class="p-5 text-center">
-            <h3 class="text-lg font-bold mb-2">Career Bingo</h3>
-            <p class="text-slate-600 dark:text-slate-400 text-sm font-light">Track your progress, complete tasks, earn badges!</p>
-            <div class="mt-3 text-yellow-600 font-semibold text-xs">Start Playing →</div>
+          <div class="p-4 sm:p-5 text-center">
+            <h3 class="text-base sm:text-lg font-bold mb-1.5 sm:mb-2">Career Bingo</h3>
+            <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm font-light">Track your progress, complete tasks, earn badges!</p>
+            <div class="mt-2 sm:mt-3 text-yellow-600 font-semibold text-[10px] sm:text-xs">Start Playing →</div>
           </div>
         </div>
       </a>
 
+      <!-- Feature 5 -->
       <a href="resume-builder.html" class="feature-card group">
-        <div class="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:shadow-2xl h-full">
-          <div class="bg-gradient-to-br from-teal-500 to-cyan-500 p-6 text-center">
-            <div class="text-5xl">📄</div>
+        <div class="bg-white dark:bg-slate-900 rounded-xl sm:rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:shadow-xl h-full">
+          <div class="bg-gradient-to-br from-teal-500 to-cyan-500 p-4 sm:p-5 md:p-6 text-center">
+            <div class="text-4xl sm:text-5xl">📄</div>
           </div>
-          <div class="p-5 text-center">
-            <h3 class="text-lg font-bold mb-2">Resume Builder</h3>
-            <p class="text-slate-600 dark:text-slate-400 text-sm font-light">Create professional resume in minutes, download as PDF</p>
-            <div class="mt-3 text-teal-600 font-semibold text-xs">Build Resume →</div>
+          <div class="p-4 sm:p-5 text-center">
+            <h3 class="text-base sm:text-lg font-bold mb-1.5 sm:mb-2">Resume Builder</h3>
+            <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm font-light">Create professional resume in minutes, download as PDF</p>
+            <div class="mt-2 sm:mt-3 text-teal-600 font-semibold text-[10px] sm:text-xs">Build Resume →</div>
           </div>
         </div>
       </a>
 
+      <!-- Feature 6 -->
       <a href="daily-challenge.html" class="feature-card group">
-        <div class="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:shadow-2xl h-full">
-          <div class="bg-gradient-to-br from-orange-500 to-red-500 p-6 text-center">
-            <div class="text-5xl">🔥</div>
+        <div class="bg-white dark:bg-slate-900 rounded-xl sm:rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:shadow-xl h-full">
+          <div class="bg-gradient-to-br from-orange-500 to-red-500 p-4 sm:p-5 md:p-6 text-center">
+            <div class="text-4xl sm:text-5xl">🔥</div>
           </div>
-          <div class="p-5 text-center">
-            <h3 class="text-lg font-bold mb-2">Daily Challenge</h3>
-            <p class="text-slate-600 dark:text-slate-400 text-sm font-light">Solve daily challenges, maintain streak, earn points</p>
-            <div class="mt-3 text-orange-600 font-semibold text-xs">Start Challenge →</div>
+          <div class="p-4 sm:p-5 text-center">
+            <h3 class="text-base sm:text-lg font-bold mb-1.5 sm:mb-2">Daily Challenge</h3>
+            <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm font-light">Solve daily challenges, maintain streak, earn points</p>
+            <div class="mt-2 sm:mt-3 text-orange-600 font-semibold text-[10px] sm:text-xs">Start Challenge →</div>
           </div>
         </div>
       </a>
 
+      <!-- Feature 7 -->
       <a href="notes-diary.html" class="feature-card group sm:col-span-2 lg:col-span-1">
-        <div class="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:shadow-2xl h-full">
-          <div class="bg-gradient-to-br from-pink-500 to-rose-500 p-6 text-center">
-            <div class="text-5xl">📔</div>
+        <div class="bg-white dark:bg-slate-900 rounded-xl sm:rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:shadow-xl h-full">
+          <div class="bg-gradient-to-br from-pink-500 to-rose-500 p-4 sm:p-5 md:p-6 text-center">
+            <div class="text-4xl sm:text-5xl">📔</div>
           </div>
-          <div class="p-5 text-center">
-            <h3 class="text-lg font-bold mb-2">Notes Diary</h3>
-            <p class="text-slate-600 dark:text-slate-400 text-sm font-light">Write your thoughts, goals, daily tasks - auto save</p>
-            <div class="mt-3 text-pink-600 font-semibold text-xs">Start Writing →</div>
+          <div class="p-4 sm:p-5 text-center">
+            <h3 class="text-base sm:text-lg font-bold mb-1.5 sm:mb-2">Notes Diary</h3>
+            <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm font-light">Write your thoughts, goals, daily tasks - auto save</p>
+            <div class="mt-2 sm:mt-3 text-pink-600 font-semibold text-[10px] sm:text-xs">Start Writing →</div>
           </div>
         </div>
       </a>
@@ -263,65 +284,65 @@
     </div>
   </main>
 
-  <!-- Quick Actions -->
-  <section class="max-w-7xl mx-auto px-4 md:px-6 pb-16 md:pb-20 w-full">
-    <div class="bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-3xl p-5 md:p-10 text-center">
-      <h3 class="text-xl sm:text-2xl font-bold mb-4">Ready to Start Your Journey?</h3>
+  <!-- Quick Actions - Responsive -->
+  <section class="max-w-7xl mx-auto px-4 pb-12 sm:pb-16 md:pb-20 w-full">
+    <div class="bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-10 text-center">
+      <h3 class="text-lg sm:text-xl md:text-2xl font-bold mb-2 sm:mb-3 md:mb-4">Ready to Start Your Journey?</h3>
 
-      <p class="text-gray-500 dark:text-gray-300 mb-6 font-light text-sm sm:text-base">
+      <p class="text-gray-600 dark:text-gray-300 mb-4 sm:mb-5 md:mb-6 font-light text-xs sm:text-sm md:text-base">
         Take the career quiz or browse all careers to find your perfect path
       </p>
 
-      <div class="flex flex-col sm:flex-row flex-wrap gap-4 justify-center">
-        <a href="quiz.html" class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-full font-semibold transition text-white">
+      <div class="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-3 md:gap-4 justify-center">
+        <a href="quiz.html" class="bg-blue-600 hover:bg-blue-700 px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full font-semibold transition text-white text-xs sm:text-sm">
           📝 Take Career Quiz
         </a>
 
-        <a href="careers.html" class="bg-slate-800 text-white hover:bg-slate-700 px-6 py-3 rounded-full font-semibold transition">
+        <a href="careers.html" class="bg-slate-800 text-white hover:bg-slate-700 px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full font-semibold transition text-xs sm:text-sm">
           🎯 Browse All Careers
         </a>
 
-        <a href="dashboard.html" class="bg-purple-600 hover:bg-purple-700 px-6 py-3 rounded-full font-semibold transition text-white">
+        <a href="dashboard.html" class="bg-purple-600 hover:bg-purple-700 px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full font-semibold transition text-white text-xs sm:text-sm">
           📊 Go to Dashboard
         </a>
 
-        <a href="resume-builder.html" class="bg-teal-600 hover:bg-teal-700 px-6 py-3 rounded-full font-semibold transition text-white">
+        <a href="resume-builder.html" class="bg-teal-600 hover:bg-teal-700 px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full font-semibold transition text-white text-xs sm:text-sm">
           📄 Build Resume
         </a>
 
-        <a href="notes-diary.html" class="bg-pink-600 hover:bg-pink-700 px-6 py-3 rounded-full font-semibold transition text-white">
+        <a href="notes-diary.html" class="bg-pink-600 hover:bg-pink-700 px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full font-semibold transition text-white text-xs sm:text-sm">
           📔 Notes Diary
         </a>
       </div>
     </div>
   </section>
 
-  <!-- Footer -->
-  <footer class="border-t border-slate-200 dark:border-white/10 py-8 text-center text-gray-400 px-4">
-    <p class="font-light text-sm sm:text-base">
+  <!-- Footer - Responsive -->
+  <footer class="border-t border-slate-200 dark:border-white/10 py-6 sm:py-8 text-center text-gray-400 px-4">
+    <p class="font-light text-xs sm:text-sm">
       © 2024 FutureReady - AI Powered Career Guidance | Shape Your Future
     </p>
 
-    <p class="text-sm mt-2 font-light">
+    <p class="text-[10px] sm:text-xs mt-1.5 sm:mt-2 font-light">
       🌟 Start your journey to success today
     </p>
 
-    <div class="flex flex-wrap justify-center gap-4 md:gap-6 mt-4 text-center">
-      <a href="#" class="hover:text-blue-400 transition text-sm">About Us</a>
-      <a href="#" class="hover:text-blue-400 transition text-sm">Contact</a>
-      <a href="#" class="hover:text-blue-400 transition text-sm">Privacy Policy</a>
-      <a href="#" class="hover:text-blue-400 transition text-sm">Terms of Service</a>
+    <div class="flex flex-wrap justify-center gap-3 sm:gap-4 md:gap-6 mt-3 sm:mt-4">
+      <a href="#" class="hover:text-blue-400 transition text-[10px] sm:text-xs">About Us</a>
+      <a href="#" class="hover:text-blue-400 transition text-[10px] sm:text-xs">Contact</a>
+      <a href="#" class="hover:text-blue-400 transition text-[10px] sm:text-xs">Privacy Policy</a>
+      <a href="#" class="hover:text-blue-400 transition text-[10px] sm:text-xs">Terms of Service</a>
     </div>
   </footer>
 
-  <!-- Signup Modal -->
+  <!-- Signup Modal - Responsive -->
   <div id="signupModal" class="fixed inset-0 bg-black/50 modal-backdrop hidden items-center justify-center z-[100] px-4">
-    <div class="w-full max-w-lg bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+    <div class="w-full max-w-md sm:max-w-lg bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden mx-4">
 
-      <div class="bg-gradient-to-r from-blue-600 to-cyan-500 p-5 md:p-6 text-white flex justify-between items-center">
+      <div class="bg-gradient-to-r from-blue-600 to-cyan-500 p-4 sm:p-5 md:p-6 text-white flex justify-between items-center">
         <div>
-          <h2 class="text-xl md:text-2xl font-black">Create Your Account</h2>
-          <p class="text-blue-100 text-sm mt-1 font-light">Start your career journey with FutureReady</p>
+          <h2 class="text-lg sm:text-xl md:text-2xl font-black">Create Your Account</h2>
+          <p class="text-blue-100 text-[10px] sm:text-xs mt-0.5 sm:mt-1 font-light">Start your career journey with FutureReady</p>
         </div>
 
         <button id="closeSignupBtn" class="text-white text-2xl font-bold hover:scale-110 transition-transform">
@@ -329,27 +350,27 @@
         </button>
       </div>
 
-      <div class="p-5 md:p-8">
-        <form id="signupForm" class="space-y-5">
+      <div class="p-5 sm:p-6 md:p-8">
+        <form id="signupForm" class="space-y-4 sm:space-y-5">
 
           <div>
-            <label class="block text-sm font-bold mb-2">Full Name</label>
-            <input type="text" id="name" placeholder="Enter your full name" class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 outline-none focus:ring-2 focus:ring-blue-500" required>
+            <label class="block text-xs sm:text-sm font-bold mb-1.5 sm:mb-2">Full Name</label>
+            <input type="text" id="name" placeholder="Enter your full name" class="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 outline-none focus:ring-2 focus:ring-blue-500 text-sm" required>
           </div>
 
           <div>
-            <label class="block text-sm font-bold mb-2">Email Address</label>
-            <input type="email" id="email" placeholder="Enter your email" class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 outline-none focus:ring-2 focus:ring-blue-500" required>
+            <label class="block text-xs sm:text-sm font-bold mb-1.5 sm:mb-2">Email Address</label>
+            <input type="email" id="email" placeholder="Enter your email" class="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 outline-none focus:ring-2 focus:ring-blue-500 text-sm" required>
           </div>
 
           <div>
-            <label class="block text-sm font-bold mb-2">Password</label>
-            <input type="password" id="password" placeholder="Create a strong password" class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 outline-none focus:ring-2 focus:ring-blue-500" required>
+            <label class="block text-xs sm:text-sm font-bold mb-1.5 sm:mb-2">Password</label>
+            <input type="password" id="password" placeholder="Create a strong password" class="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 outline-none focus:ring-2 focus:ring-blue-500 text-sm" required>
           </div>
 
           <div>
-            <label class="block text-sm font-bold mb-2">Career Interest</label>
-            <select id="interest" class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 outline-none focus:ring-2 focus:ring-blue-500" required>
+            <label class="block text-xs sm:text-sm font-bold mb-1.5 sm:mb-2">Career Interest</label>
+            <select id="interest" class="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 outline-none focus:ring-2 focus:ring-blue-500 text-sm" required>
               <option value="">Select your primary interest</option>
               <option>💻 Software Development</option>
               <option>🔒 Cyber Security</option>
@@ -362,16 +383,16 @@
             </select>
           </div>
 
-          <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3.5 rounded-xl font-bold uppercase tracking-wider transition-all">
+          <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 sm:py-3.5 rounded-xl font-bold uppercase tracking-wider transition-all text-xs sm:text-sm">
             Sign Up Now
           </button>
         </form>
 
-        <p id="signupMessage" class="hidden mt-5 text-center text-sm font-semibold text-green-600">
+        <p id="signupMessage" class="hidden mt-4 sm:mt-5 text-center text-xs sm:text-sm font-semibold text-green-600">
           ✅ Signup successful! Welcome to FutureReady 💙
         </p>
 
-        <p class="text-center text-xs text-gray-500 mt-4 font-light">
+        <p class="text-center text-[10px] sm:text-xs text-gray-500 mt-3 sm:mt-4 font-light">
           By signing up, you agree to our Terms of Service and Privacy Policy
         </p>
       </div>
@@ -379,6 +400,7 @@
   </div>
 
   <script>
+    // Dark Mode Toggle
     const themeToggle = document.getElementById('theme-toggle');
     const html = document.documentElement;
 
@@ -391,6 +413,7 @@
       localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
     });
 
+    // Signup Modal
     const signupModal = document.getElementById('signupModal');
     const openSignupBtn = document.getElementById('openSignupBtn');
     const closeSignupBtn = document.getElementById('closeSignupBtn');
@@ -452,6 +475,7 @@
       }, 1500);
     });
 
+    // Animation on scroll
     const observerOptions = {
       threshold: 0.1,
       rootMargin: '0px 0px -50px 0px'
