@@ -43,6 +43,3 @@
 | **LocalStorage** | Data persistence (no backend) |
 | **Web Speech API** | Voice search (coming soon) |
 
----
-
-## 📁 Project Structure
