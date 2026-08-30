@@ -43,3 +43,15 @@
 | **LocalStorage** | Data persistence (no backend) |
 | **Web Speech API** | Voice search (coming soon) |
 
+## 📸 Screenshots
+
+<p align="center">
+  <img src="screenshots/home.png" width="48%" alt="FutureReady Home">
+  <img src="screenshots/ai-counselor.png" width="48%" alt="AI Counselor">
+</p>
+
+<p align="center">
+  <img src="screenshots/daily-challenge.png" width="48%" alt="Daily Challenge">
+  <img src="screenshots/roadmap.png" width="48%" alt="Career Roadmap">
+</p>
+
