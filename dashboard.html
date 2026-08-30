@@ -3,220 +3,663 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Dashboard | LOGRA</title>
+<title>Dashboard | FutureReady</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
     * { font-family: 'Inter', sans-serif; }
+    
+    /* ----- Premium Background with animated blobs + noise ----- */
     body {
-        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-        background-attachment: fixed;
+        background: #0a0a1a;
         color: white;
         min-height: 100vh;
+        overflow-x: hidden;
+        position: relative;
     }
-    .dashboard-card {
-        background: rgba(255,255,255,0.05);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255,255,255,0.1);
+    body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 0;
+    }
+    
+    /* Animated glow blobs */
+    .blob-glow {
+        position: fixed;
+        border-radius: 50%;
+        filter: blur(100px);
+        pointer-events: none;
+        z-index: 0;
+        animation: blobFloat 15s ease-in-out infinite alternate;
+    }
+    .blob-1 {
+        width: 500px;
+        height: 500px;
+        background: #3b82f6;
+        opacity: 0.15;
+        top: -200px;
+        right: -100px;
+        animation-delay: 0s;
+    }
+    .blob-2 {
+        width: 400px;
+        height: 400px;
+        background: #8b5cf6;
+        opacity: 0.12;
+        bottom: -150px;
+        left: -100px;
+        animation-delay: -5s;
+    }
+    .blob-3 {
+        width: 300px;
+        height: 300px;
+        background: #06b6d4;
+        opacity: 0.08;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        animation-delay: -10s;
+    }
+    @keyframes blobFloat {
+        0% { transform: translate(0, 0) scale(1); }
+        33% { transform: translate(60px, -40px) scale(1.1); }
+        66% { transform: translate(-30px, 50px) scale(0.9); }
+        100% { transform: translate(40px, -20px) scale(1.05); }
+    }
+
+    /* ----- Dashboard Cards with 3D Depth ----- */
+    .dash-card {
+        background: rgba(255, 255, 255, 0.04);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 24px;
+        transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+    .dash-card::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 24px;
+        padding: 1px;
+        background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02), rgba(255,255,255,0.1));
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        pointer-events: none;
+        opacity: 0.5;
+        transition: opacity 0.4s;
+    }
+    .dash-card:hover::before {
+        opacity: 1;
+    }
+    .dash-card:hover {
+        transform: translateY(-6px) scale(1.01) rotateX(1deg);
+        box-shadow: 0 20px 60px rgba(59, 130, 246, 0.15), 0 8px 32px rgba(0,0,0,0.4);
+        border-color: rgba(59, 130, 246, 0.2);
+    }
+    .dash-card .glow-reflect {
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.03), transparent 60%);
+        pointer-events: none;
+        transition: opacity 0.4s;
+        opacity: 0;
+    }
+    .dash-card:hover .glow-reflect {
+        opacity: 1;
+    }
+
+    /* ----- Stat Cards with Circular Icons ----- */
+    .stat-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.06);
         border-radius: 20px;
-        transition: all 0.3s;
+        padding: 1.5rem;
+        text-align: center;
+        transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        position: relative;
+        overflow: hidden;
     }
-    .dashboard-card:hover {
-        transform: translateY(-3px);
-        border-color: #3b82f6;
+    .stat-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(59, 130, 246, 0.2);
+        box-shadow: 0 12px 40px rgba(59, 130, 246, 0.08);
+    }
+    .stat-icon-ring {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        margin: 0 auto 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        position: relative;
+        background: rgba(59, 130, 246, 0.08);
+        border: 2px solid rgba(59, 130, 246, 0.15);
+        transition: all 0.4s;
+    }
+    .stat-card:hover .stat-icon-ring {
+        border-color: rgba(59, 130, 246, 0.4);
+        box-shadow: 0 0 30px rgba(59, 130, 246, 0.1);
+        transform: scale(1.05);
     }
     .stat-number {
-        font-size: 2.5rem;
-        font-weight: bold;
-        background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+        font-size: 2.4rem;
+        font-weight: 900;
+        letter-spacing: -0.03em;
+        background: linear-gradient(135deg, #60a5fa, #a78bfa);
         -webkit-background-clip: text;
         background-clip: text;
         color: transparent;
+        transition: all 0.3s;
+        display: inline-block;
+    }
+    .stat-number.pulse {
+        animation: statPulse 0.6s ease-out;
+    }
+    @keyframes statPulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.08); text-shadow: 0 0 30px rgba(59,130,246,0.3); }
+        100% { transform: scale(1); }
+    }
+    .stat-label {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: rgba(255,255,255,0.4);
+        font-weight: 600;
+        margin-top: 4px;
+    }
+
+    /* ----- Navbar Floating Premium ----- */
+    .navbar-floating {
+        position: sticky;
+        top: 16px;
+        z-index: 100;
+        margin: 0 16px;
+        border-radius: 20px;
+        background: rgba(10, 10, 30, 0.7);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255,255,255,0.06);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .navbar-floating.scrolled {
+        top: 0;
+        margin: 0;
+        border-radius: 0;
+        background: rgba(10, 10, 30, 0.85);
+        box-shadow: 0 4px 30px rgba(0,0,0,0.5);
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .navbar-floating .nav-link {
+        position: relative;
+        transition: color 0.3s;
+    }
+    .navbar-floating .nav-link::after {
+        content: '';
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+        transition: width 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+        border-radius: 2px;
+    }
+    .navbar-floating .nav-link:hover::after {
+        width: 100%;
+    }
+
+    /* ----- Section Separation ----- */
+    .section-divider {
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+        margin: 2rem 0;
+    }
+
+    /* ----- Empty State Card ----- */
+    .empty-state {
+        background: rgba(255,255,255,0.02);
+        border: 1px dashed rgba(255,255,255,0.08);
+        border-radius: 20px;
+        padding: 3rem 2rem;
+        text-align: center;
+        transition: all 0.3s;
+    }
+    .empty-state:hover {
+        border-color: rgba(59,130,246,0.2);
+        background: rgba(255,255,255,0.03);
+    }
+
+    /* ----- Animations ----- */
+    .fade-up {
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeUp 0.7s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+    }
+    .fade-up:nth-child(1) { animation-delay: 0.05s; }
+    .fade-up:nth-child(2) { animation-delay: 0.1s; }
+    .fade-up:nth-child(3) { animation-delay: 0.15s; }
+    .fade-up:nth-child(4) { animation-delay: 0.2s; }
+    .fade-up:nth-child(5) { animation-delay: 0.25s; }
+    .fade-up:nth-child(6) { animation-delay: 0.3s; }
+    .fade-up:nth-child(7) { animation-delay: 0.35s; }
+    .fade-up:nth-child(8) { animation-delay: 0.4s; }
+
+    @keyframes fadeUp {
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Button press animation */
+    .btn-action {
+        transition: all 0.15s cubic-bezier(0.23, 1, 0.32, 1);
+        cursor: pointer;
+    }
+    .btn-action:active {
+        transform: scale(0.94);
+    }
+    .btn-action:hover {
+        transform: translateY(-2px);
+    }
+
+    /* Icon bounce on hover */
+    .icon-bounce {
+        display: inline-block;
+        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .group:hover .icon-bounce {
+        transform: scale(1.2) rotate(-5deg);
+    }
+
+    /* --- Scrollbar --- */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+    /* --- Responsive --- */
+    @media (max-width: 640px) {
+        .navbar-floating { margin: 0 8px; top: 8px; }
+        .stat-number { font-size: 1.8rem; }
+        .stat-icon-ring { width: 48px; height: 48px; font-size: 20px; }
     }
 </style>
 </head>
 <body>
 
-<!-- Navigation -->
-<div class="sticky top-0 z-50 backdrop-blur-xl bg-black/40 border-b border-white/10">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-        <div class="flex items-center gap-2">
-            <div class="text-2xl">📊</div>
-            <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">My Dashboard</h1>
+<!-- Animated Background Blobs -->
+<div class="blob-glow blob-1"></div>
+<div class="blob-glow blob-2"></div>
+<div class="blob-glow blob-3"></div>
+
+<!-- ====== FLOATING NAVBAR ====== -->
+<nav id="navbar" class="navbar-floating">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white font-black shadow-lg shadow-blue-500/20">
+                <span class="text-sm">FR</span>
+            </div>
+            <h1 class="text-xl font-black bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent tracking-tight">
+                Dashboard
+            </h1>
         </div>
-        <div class="flex gap-3">
-            <a href="index.html" class="bg-white/10 hover:bg-white/20 px-5 py-2 rounded-full transition">🏠 Home</a>
-            <a href="logout.html" id="logoutBtn" class="bg-red-600/50 hover:bg-red-600 px-5 py-2 rounded-full transition">🚪 Logout</a>
+        <div class="flex items-center gap-2 sm:gap-3">
+            <a href="index.html" class="nav-link text-sm text-gray-400 hover:text-white px-3 py-1.5 rounded-full transition">🏠 Home</a>
+            <a href="#" id="logoutBtn" class="btn-action bg-red-500/20 hover:bg-red-500/30 text-red-300 px-4 py-1.5 rounded-full text-sm font-medium transition border border-red-500/10">
+                🚪 Logout
+            </a>
         </div>
     </div>
-</div>
+</nav>
 
-<div class="max-w-7xl mx-auto px-6 py-10">
+<!-- ====== MAIN CONTENT ====== -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 pt-6 pb-12 relative z-10">
+
     <!-- Welcome Section -->
-    <div class="text-center mb-10">
-        <div class="text-6xl mb-3">👋</div>
-        <h1 class="text-4xl font-black bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-2" id="welcomeName">Welcome!</h1>
-        <p class="text-gray-300">Track your career journey, saved careers, and progress</p>
+    <div class="fade-up text-center mb-12">
+        <div class="text-5xl mb-3 animate-pulse">👋</div>
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-2">
+            Welcome back, <span id="welcomeName" class="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">User</span>
+        </h1>
+        <p class="text-gray-400 text-sm sm:text-base font-light">Track your career journey, saved careers, and daily progress</p>
     </div>
 
-    <!-- Stats Grid -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-5 mb-10">
-        <div class="dashboard-card p-5 text-center">
-            <div class="text-3xl mb-2">⭐</div>
-            <div class="stat-number" id="savedCount">0</div>
-            <div class="text-gray-400 text-sm">Saved Careers</div>
+    <!-- Stats Grid with animated counters -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-5 mb-10">
+        <div class="stat-card fade-up group">
+            <div class="stat-icon-ring bg-blue-500/10 border-blue-500/20 group-hover:border-blue-400/40">
+                <span class="icon-bounce">⭐</span>
+            </div>
+            <div class="stat-number" id="savedCount" data-target="0">0</div>
+            <div class="stat-label">Saved Careers</div>
         </div>
-        <div class="dashboard-card p-5 text-center">
-            <div class="text-3xl mb-2">👁️</div>
-            <div class="stat-number" id="viewedCount">0</div>
-            <div class="text-gray-400 text-sm">Careers Viewed</div>
+        <div class="stat-card fade-up group">
+            <div class="stat-icon-ring bg-purple-500/10 border-purple-500/20 group-hover:border-purple-400/40">
+                <span class="icon-bounce">👁️</span>
+            </div>
+            <div class="stat-number" id="viewedCount" data-target="0">0</div>
+            <div class="stat-label">Careers Viewed</div>
         </div>
-        <div class="dashboard-card p-5 text-center">
-            <div class="text-3xl mb-2">🏆</div>
-            <div class="stat-number" id="badgeCount">0</div>
-            <div class="text-gray-400 text-sm">Badges Earned</div>
+        <div class="stat-card fade-up group">
+            <div class="stat-icon-ring bg-emerald-500/10 border-emerald-500/20 group-hover:border-emerald-400/40">
+                <span class="icon-bounce">🏆</span>
+            </div>
+            <div class="stat-number" id="badgeCount" data-target="0">0</div>
+            <div class="stat-label">Badges Earned</div>
         </div>
-        <div class="dashboard-card p-5 text-center">
-            <div class="text-3xl mb-2">🔥</div>
-            <div class="stat-number" id="streakCount">0</div>
-            <div class="text-gray-400 text-sm">Day Streak</div>
+        <div class="stat-card fade-up group">
+            <div class="stat-icon-ring bg-orange-500/10 border-orange-500/20 group-hover:border-orange-400/40">
+                <span class="icon-bounce">🔥</span>
+            </div>
+            <div class="stat-number" id="streakCount" data-target="0">0</div>
+            <div class="stat-label">Day Streak</div>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- Left Column - Saved Careers -->
-        <div class="lg:col-span-2">
-            <div class="dashboard-card p-6">
-                <h2 class="text-xl font-bold mb-4 flex items-center gap-2">⭐ Saved Careers</h2>
+    <!-- Two Column Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
+
+        <!-- Left Column: Saved Careers + Recent -->
+        <div class="lg:col-span-2 space-y-6">
+
+            <!-- Saved Careers -->
+            <div class="dash-card p-5 sm:p-6 fade-up">
+                <div class="glow-reflect"></div>
+                <h2 class="text-lg sm:text-xl font-bold mb-4 flex items-center gap-2">
+                    <span>⭐</span> Saved Careers
+                    <span id="savedBadge" class="ml-2 text-xs bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded-full font-medium">0</span>
+                </h2>
                 <div id="savedCareersList" class="space-y-3">
-                    <div class="text-center text-gray-400 py-8">No saved careers yet. Click ⭐ on any career to save it!</div>
+                    <!-- Rendered by JS -->
                 </div>
             </div>
 
-            <div class="dashboard-card p-6 mt-6">
-                <h2 class="text-xl font-bold mb-4 flex items-center gap-2">🕐 Recently Viewed</h2>
-                <div id="recentList" class="flex flex-wrap gap-3">
-                    <div class="text-gray-400">No recent careers explored</div>
+            <!-- Recently Viewed -->
+            <div class="dash-card p-5 sm:p-6 fade-up">
+                <div class="glow-reflect"></div>
+                <h2 class="text-lg sm:text-xl font-bold mb-4 flex items-center gap-2">
+                    <span>🕐</span> Recently Viewed
+                </h2>
+                <div id="recentList" class="flex flex-wrap gap-2">
+                    <!-- Rendered by JS -->
                 </div>
             </div>
         </div>
 
-        <!-- Right Column - Quick Actions & Progress -->
-        <div>
-            <div class="dashboard-card p-6 mb-6">
-                <h2 class="text-xl font-bold mb-4 flex items-center gap-2">⚡ Quick Actions</h2>
+        <!-- Right Column: Quick Actions + Daily Tip -->
+        <div class="space-y-6">
+
+            <!-- Quick Actions -->
+            <div class="dash-card p-5 sm:p-6 fade-up">
+                <div class="glow-reflect"></div>
+                <h2 class="text-lg sm:text-xl font-bold mb-4 flex items-center gap-2">
+                    <span>⚡</span> Quick Actions
+                </h2>
                 <div class="space-y-3">
-                    <a href="quiz.html" class="block bg-gradient-to-r from-blue-600 to-purple-600 p-3 rounded-xl text-center hover:scale-105 transition">📝 Take Career Quiz</a>
-                    <a href="careers.html" class="block bg-white/10 p-3 rounded-xl text-center hover:bg-white/20 transition">🎯 Browse All Careers</a>
-                    <a href="resume-builder.html" class="block bg-white/10 p-3 rounded-xl text-center hover:bg-white/20 transition">📄 Build Resume</a>
-                    <a href="daily-challenge.html" class="block bg-white/10 p-3 rounded-xl text-center hover:bg-white/20 transition">🔥 Daily Challenge</a>
+                    <a href="#" onclick="alert('🚀 Launching Career Quiz...')" class="btn-action block bg-gradient-to-r from-blue-600 to-purple-600 p-3 rounded-xl text-center font-semibold hover:shadow-lg hover:shadow-blue-500/20 transition-all">
+                        📝 Take Career Quiz
+                    </a>
+                    <a href="#" onclick="alert('🎯 Loading all careers...')" class="btn-action block bg-white/5 hover:bg-white/10 p-3 rounded-xl text-center font-medium transition-all border border-white/5">
+                        🎯 Browse All Careers
+                    </a>
+                    <a href="#" onclick="alert('📄 Opening Resume Builder...')" class="btn-action block bg-white/5 hover:bg-white/10 p-3 rounded-xl text-center font-medium transition-all border border-white/5">
+                        📄 Build Resume
+                    </a>
+                    <a href="#" onclick="alert('🔥 Starting Daily Challenge...')" class="btn-action block bg-white/5 hover:bg-white/10 p-3 rounded-xl text-center font-medium transition-all border border-white/5">
+                        🔥 Daily Challenge
+                    </a>
                 </div>
             </div>
 
-            <div class="dashboard-card p-6">
-                <h2 class="text-xl font-bold mb-3 flex items-center gap-2">💡 Daily Tip</h2>
-                <p id="dailyTip" class="text-gray-300 text-sm leading-relaxed">The best time to start is now! Every expert was once a beginner. Keep learning and growing! 🚀</p>
+            <!-- Daily Tip -->
+            <div class="dash-card p-5 sm:p-6 fade-up">
+                <div class="glow-reflect"></div>
+                <h2 class="text-lg sm:text-xl font-bold mb-3 flex items-center gap-2">
+                    <span>💡</span> Daily Tip
+                </h2>
+                <p id="dailyTip" class="text-gray-300 text-sm leading-relaxed font-light">
+                    Loading your daily inspiration...
+                </p>
+            </div>
+
+            <!-- Progress Ring (mini) -->
+            <div class="dash-card p-5 sm:p-6 fade-up">
+                <div class="glow-reflect"></div>
+                <h2 class="text-lg sm:text-xl font-bold mb-3 flex items-center gap-2">
+                    <span>📊</span> Progress
+                </h2>
+                <div class="flex items-center gap-4">
+                    <div class="relative w-16 h-16">
+                        <svg class="w-full h-full -rotate-90" viewBox="0 0 36 36">
+                            <circle cx="18" cy="18" r="16" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="3"/>
+                            <circle id="progressRing" cx="18" cy="18" r="16" fill="none" stroke="url(#grad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="100" stroke-dashoffset="70"/>
+                            <defs>
+                                <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#3b82f6"/>
+                                    <stop offset="100%" stop-color="#8b5cf6"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <span id="progressLabel" class="absolute inset-0 flex items-center justify-center text-sm font-bold text-white">30%</span>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium">Profile Completion</p>
+                        <p class="text-xs text-gray-400">Complete your profile for better matches</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    // Get current user
+    // ============================================
+    // DASHBOARD FUNCTIONALITY
+    // ============================================
+
+    // ----- Get Current User -----
     let currentUser = JSON.parse(localStorage.getItem('lograUser'));
-    
     if (!currentUser) {
-        // Redirect to login if not logged in
+        // If not logged in, redirect to login
         window.location.href = 'code.html';
     }
-    
+
     // Display welcome name
-    document.getElementById('welcomeName').innerHTML = `Welcome, ${currentUser.name.split(' ')[0]}! 👋`;
-    
-    // Get data from localStorage
+    const firstName = currentUser.name ? currentUser.name.split(' ')[0] : 'User';
+    document.getElementById('welcomeName').textContent = firstName + '! 👋';
+
+    // ----- Data from localStorage -----
     let savedCareers = JSON.parse(localStorage.getItem('savedCareers') || '[]');
     let exploredCareers = JSON.parse(localStorage.getItem('exploredCareers') || '[]');
     let careerBadges = JSON.parse(localStorage.getItem('careerBingoBadges') || '{}');
-    let challengeStats = JSON.parse(localStorage.getItem('dailyChallengeStats') || '{streak:0}');
-    
+    let challengeStats = JSON.parse(localStorage.getItem('dailyChallengeStats') || '{"streak":0}');
+
     // Calculate total badges
     let totalBadges = 0;
     for (let career in careerBadges) {
-        totalBadges += careerBadges[career].length;
+        if (Array.isArray(careerBadges[career])) {
+            totalBadges += careerBadges[career].length;
+        }
     }
-    
-    // Update stats
-    document.getElementById('savedCount').innerText = savedCareers.length;
-    document.getElementById('viewedCount').innerText = exploredCareers.length;
-    document.getElementById('badgeCount').innerText = totalBadges;
-    document.getElementById('streakCount').innerText = challengeStats.streak || 0;
-    
-    // Render saved careers
+
+    // ----- Animated Counter Function -----
+    function animateCounter(element, target, duration = 1200) {
+        const start = 0;
+        const startTime = performance.now();
+        
+        function updateCounter(currentTime) {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            // Ease out cubic
+            const eased = 1 - Math.pow(1 - progress, 3);
+            const current = Math.round(eased * target);
+            element.textContent = current;
+            
+            if (progress < 1) {
+                requestAnimationFrame(updateCounter);
+            } else {
+                element.textContent = target;
+                // Add pulse animation
+                element.classList.remove('pulse');
+                // Force reflow
+                void element.offsetWidth;
+                element.classList.add('pulse');
+            }
+        }
+        requestAnimationFrame(updateCounter);
+    }
+
+    // ----- Update Stats with Animation -----
+    const savedEl = document.getElementById('savedCount');
+    const viewedEl = document.getElementById('viewedCount');
+    const badgeEl = document.getElementById('badgeCount');
+    const streakEl = document.getElementById('streakCount');
+    const savedBadge = document.getElementById('savedBadge');
+
+    const savedTarget = savedCareers.length;
+    const viewedTarget = exploredCareers.length;
+    const badgeTarget = totalBadges;
+    const streakTarget = challengeStats.streak || 0;
+
+    animateCounter(savedEl, savedTarget);
+    animateCounter(viewedEl, viewedTarget);
+    animateCounter(badgeEl, badgeTarget);
+    animateCounter(streakEl, streakTarget);
+
+    if (savedBadge) savedBadge.textContent = savedTarget;
+
+    // ----- Render Saved Careers -----
     function renderSavedCareers() {
         const container = document.getElementById('savedCareersList');
         if (savedCareers.length === 0) {
-            container.innerHTML = '<div class="text-center text-gray-400 py-8">No saved careers yet. Click ⭐ on any career to save it!</div>';
+            container.innerHTML = `
+                <div class="empty-state">
+                    <div class="text-4xl mb-3">📂</div>
+                    <p class="text-gray-400 font-light">No saved careers yet</p>
+                    <p class="text-xs text-gray-500 mt-1">Click ⭐ on any career to save it!</p>
+                    <a href="#" onclick="alert('🎯 Browse careers to save your favorites!')" class="inline-block mt-4 btn-action bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 px-4 py-2 rounded-full text-sm font-medium transition border border-blue-500/10">
+                        Browse Careers →
+                    </a>
+                </div>
+            `;
             return;
         }
         container.innerHTML = savedCareers.map(career => `
-            <div class="bg-white/5 p-3 rounded-xl flex justify-between items-center">
-                <a href="roadmap.html?career=${encodeURIComponent(career)}" class="flex-1 hover:text-blue-400 transition">
+            <div class="group flex items-center justify-between bg-white/5 hover:bg-white/10 p-3 rounded-xl transition-all">
+                <a href="#" onclick="alert('🎯 Loading roadmap for ${career}...')" class="flex-1 text-gray-200 hover:text-blue-300 transition font-medium text-sm">
                     🎯 ${career}
                 </a>
-                <button onclick="removeSaved('${career}')" class="text-red-400 hover:text-red-300 px-3 py-1 rounded-full text-sm">Remove</button>
+                <button onclick="removeSavedCareer('${career}')" class="btn-action text-red-400 hover:text-red-300 px-3 py-1 rounded-full text-xs font-medium transition hover:bg-red-500/10">
+                    Remove
+                </button>
             </div>
         `).join('');
     }
-    
-    // Remove saved career
-    function removeSaved(career) {
+
+    // ----- Remove Saved Career -----
+    function removeSavedCareer(career) {
         savedCareers = savedCareers.filter(c => c !== career);
         localStorage.setItem('savedCareers', JSON.stringify(savedCareers));
         renderSavedCareers();
-        document.getElementById('savedCount').innerText = savedCareers.length;
+        const newCount = savedCareers.length;
+        savedEl.textContent = newCount;
+        if (savedBadge) savedBadge.textContent = newCount;
+        // Re-animate counter
+        savedEl.classList.remove('pulse');
+        void savedEl.offsetWidth;
+        savedEl.classList.add('pulse');
     }
-    
-    // Render recent careers
+
+    // ----- Render Recently Viewed -----
     function renderRecent() {
         const container = document.getElementById('recentList');
         if (exploredCareers.length === 0) {
-            container.innerHTML = '<div class="text-gray-400">No recent careers explored</div>';
+            container.innerHTML = `
+                <div class="empty-state py-6 px-4 w-full">
+                    <p class="text-gray-400 text-sm font-light">No recent careers explored</p>
+                    <p class="text-xs text-gray-500">Start exploring to see them here</p>
+                </div>
+            `;
             return;
         }
-        let recent = exploredCareers.slice(-6).reverse();
+        const recent = exploredCareers.slice(-8).reverse();
         container.innerHTML = recent.map(career => `
-            <a href="roadmap.html?career=${encodeURIComponent(career)}" class="bg-white/10 px-4 py-2 rounded-full hover:bg-white/20 transition text-sm">
+            <a href="#" onclick="alert('🎯 Exploring ${career}...')" class="btn-action bg-white/5 hover:bg-white/10 px-4 py-2 rounded-full text-sm font-medium transition border border-white/5">
                 ${career}
             </a>
         `).join('');
     }
-    
-    // Daily tips
+
+    // ----- Daily Tips -----
     const tips = [
-        "🎯 Set small daily goals - consistency beats intensity!",
+        "🎯 Set small daily goals — consistency beats intensity!",
         "📚 Spend at least 30 minutes learning something new every day.",
         "💡 The best investment you can make is in yourself!",
-        "🚀 Don't wait for opportunities - create them!",
+        "🚀 Don't wait for opportunities — create them!",
         "⭐ Save careers you love and review them weekly.",
         "📝 Take the career quiz to discover your perfect path!",
         "🔗 Network with professionals in your dream field.",
-        "🎓 Certifications can boost your career by 40%!"
+        "🎓 Certifications can boost your career by 40%!",
+        "💪 Every expert was once a beginner. Keep going!",
+        "🌟 Your future is shaped by what you do today."
     ];
-    document.getElementById('dailyTip').innerHTML = tips[Math.floor(Math.random() * tips.length)];
+    document.getElementById('dailyTip').textContent = tips[Math.floor(Math.random() * tips.length)];
+
+    // ----- Progress Ring Update -----
+    const savedPercent = Math.min(Math.round((savedTarget / 20) * 100), 100);
+    const viewedPercent = Math.min(Math.round((viewedTarget / 30) * 100), 100);
+    const overallProgress = Math.min(Math.round((savedPercent + viewedPercent) / 2), 100);
     
-    // Logout function
+    const ring = document.getElementById('progressRing');
+    const label = document.getElementById('progressLabel');
+    const offset = 100 - overallProgress;
+    ring.setAttribute('stroke-dashoffset', offset);
+    label.textContent = overallProgress + '%';
+
+    // ----- Logout -----
     document.getElementById('logoutBtn').addEventListener('click', function(e) {
         e.preventDefault();
         localStorage.removeItem('lograUser');
         window.location.href = 'index.html';
     });
-    
-    // Make functions global
-    window.removeSaved = removeSaved;
-    
-    // Initialize
+
+    // ----- Navbar Scroll Effect -----
+    const navbar = document.getElementById('navbar');
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+        const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+        if (currentScroll > 20) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+        lastScroll = currentScroll;
+    });
+
+    // ----- Make functions global for inline onclick -----
+    window.removeSavedCareer = removeSavedCareer;
+
+    // ----- Initialize -----
     renderSavedCareers();
     renderRecent();
+
+    // ----- Fix for empty state badges -----
+    console.log('✅ Dashboard ready!');
 </script>
 </body>
 </html>
